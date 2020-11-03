@@ -38,6 +38,7 @@ public class CalculationManager {
       e.printStackTrace();
     }
 
+    System.out.println("Single Day 99% VaR is: " + singleDayVar);
     return singleDayVar;
   }
 
