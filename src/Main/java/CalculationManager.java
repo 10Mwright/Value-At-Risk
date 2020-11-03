@@ -9,26 +9,30 @@ import yahoofinance.histquotes.HistoricalQuote;
 
 public class CalculationManager {
 
-  public static double calculateVar(double dailyVolatility, double assetValue){
-    double dailyStandardDeviation = assetValue * (dailyVolatility / 100);
-
+  /**
+   * Method to calculate single day, 99% value at risk.
+   * @param tickerSymbol String representation of the stock's ticker symbol
+   * @param assetValue Double value representing total value in tickerSymbol
+   * @return a double value representing the 99% single day VaR
+   */
+  public static double calculateVar(String tickerSymbol, double assetValue){
     double normSinV = 2.326; //For now we maintain this value i.e. a 99% VaR
-
-    double singleDayVar = normSinV * dailyStandardDeviation;
+    double singleDayVar = 0.0;
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> historicalData = data.getHistoricalPrices("GOOG");
+      List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol);
 
       for (int i = 0; i < historicalData.size(); i++ ) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
         System.out.println(i + ", " + historicalData.get(i).getAdjClose());
-
-
-
       }
 
-      calculateVolatility(historicalData);
+      double dailiyVolatility = calculateVolatility(historicalData);
+
+      double dailyStandardDeviation = assetValue * (dailiyVolatility);
+
+      singleDayVar = normSinV * dailyStandardDeviation;
 
     } catch (IOException e) {
       e.printStackTrace();
