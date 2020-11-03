@@ -19,7 +19,11 @@ public class CalculationManager {
       List<HistoricalQuote> historicalData = data.getHistoricalPrices("GOOG");
 
       for (int i = 0; i < historicalData.size(); i++ ) {
-        System.out.println(historicalData.get(i));
+        // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
+        System.out.println(i + ", " + historicalData.get(i).getAdjClose());
+
+        
+
       }
     } catch (IOException e) {
       e.printStackTrace();
