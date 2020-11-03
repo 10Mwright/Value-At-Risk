@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -52,9 +53,26 @@ public class CalculationManager {
 
     meanStockPrice = meanStockPrice.divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
 
-    System.out.println("Mean: " + meanStockPrice);
+    double[][] deviations = new double[2][historicalData.size()];
+    double sumOfSquaredDeviations = 0.0;
 
-    return 0.0;
+    for(int j = 0; j < historicalData.size(); j++) {
+      deviations[0][j] = meanStockPrice.doubleValue() - historicalData.get(j).getAdjClose().doubleValue();
+      deviations[1][j] = deviations[0][j] * deviations[0][j];
+
+      sumOfSquaredDeviations += deviations[1][j];
+    }
+
+    double stockPriceVariance = sumOfSquaredDeviations / historicalData.size();
+
+    double dailyVolatility = Math.sqrt(stockPriceVariance);
+
+    System.out.println("Mean: " + meanStockPrice);
+    System.out.println("Sum of Squared Deviations: " + sumOfSquaredDeviations);
+    System.out.println("Stock price Variance: " + stockPriceVariance);
+    System.out.println("Daily Volatility: " + dailyVolatility);
+
+    return dailyVolatility;
   }
 
 }
