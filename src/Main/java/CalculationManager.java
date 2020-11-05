@@ -30,6 +30,9 @@ public class CalculationManager {
 
       double dailiyVolatility = calculateVolatility(historicalData);
 
+      // Must convert this volatility to a percentage
+      dailiyVolatility = (dailiyVolatility / findAverage(historicalData)) * 100;
+
       double dailyStandardDeviation = assetValue * (dailiyVolatility);
 
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(dailyStandardDeviation));
@@ -78,6 +81,22 @@ public class CalculationManager {
     System.out.println("Daily Volatility: " + dailyVolatility);
 
     return dailyVolatility;
+  }
+
+  public static double findAverage(List<HistoricalQuote> historicalData) {
+    int dataLength = historicalData.size();
+
+    double average = 0;
+
+    for(int i = 0; i < dataLength; i++) {
+      average += historicalData.get(i).getAdjClose().doubleValue();
+    }
+
+    average = average / dataLength;
+
+    System.out.println("Average: " + average);
+
+    return average;
   }
 
 }
