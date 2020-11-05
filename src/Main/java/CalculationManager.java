@@ -47,8 +47,8 @@ public class CalculationManager {
       e.printStackTrace();
     }
 
-    System.out.println("Single Day 99% VaR is: " + singleDayVar);
-    System.out.println(timeHorizon + " Day 99% VaR is: " + multiDayVar);
+    System.out.println("Single Day " + (probability*100) + "% VaR is: " + singleDayVar);
+    System.out.println(timeHorizon + " Day " + (probability*100) + "VaR is: " + multiDayVar);
     return multiDayVar;
   }
 
