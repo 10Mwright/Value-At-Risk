@@ -1,3 +1,4 @@
+import Objects.Normals;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,8 +13,8 @@ public class CalculationManager {
    * @param assetValue Double value representing total value in tickerSymbol
    * @return a double value representing the 99% single day VaR
    */
-  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon){
-    double normSinV = 2.326; //For now we maintain this value i.e. a 99% VaR
+  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon, double probability){
+    double normSinV = Normals.getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
 
