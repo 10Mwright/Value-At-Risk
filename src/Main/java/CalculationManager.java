@@ -1,10 +1,7 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import yahoofinance.Stock;
-import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 
 public class CalculationManager {
