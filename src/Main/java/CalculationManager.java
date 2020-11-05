@@ -28,12 +28,16 @@ public class CalculationManager {
         System.out.println(i + ", " + historicalData.get(i).getAdjClose());
       }
 
-      double dailiyVolatility = calculateVolatility(historicalData);
+      double dailyVolatility = calculateVolatility(historicalData);
 
       // Must convert this volatility to a percentage
-      dailiyVolatility = (dailiyVolatility / findAverage(historicalData)) * 100;
+      dailyVolatility = dailyVolatility / findAverage(historicalData);
 
-      double dailyStandardDeviation = assetValue * (dailiyVolatility);
+      System.out.println("Daily Volatility: " + dailyVolatility);
+
+      double dailyStandardDeviation = assetValue * (dailyVolatility);
+
+      System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
