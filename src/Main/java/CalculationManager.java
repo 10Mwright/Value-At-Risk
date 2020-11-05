@@ -15,9 +15,10 @@ public class CalculationManager {
    * @param assetValue Double value representing total value in tickerSymbol
    * @return a double value representing the 99% single day VaR
    */
-  public static BigDecimal calculateVar(String tickerSymbol, double assetValue){
+  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon){
     double normSinV = 2.326; //For now we maintain this value i.e. a 99% VaR
     BigDecimal singleDayVar = new BigDecimal(0.0);
+    BigDecimal multiDayVar = new BigDecimal(0.0);
 
     DataManager data = new DataManager();
     try {
@@ -31,6 +32,7 @@ public class CalculationManager {
       double dailyVolatility = calculateVolatility(historicalData);
 
       // Must convert this volatility to a percentage
+      // Note: any better method to calculate as a percentage other than avg?
       dailyVolatility = dailyVolatility / findAverage(historicalData);
 
       System.out.println("Daily Volatility: " + dailyVolatility);
@@ -41,12 +43,16 @@ public class CalculationManager {
 
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
+      System.out.println("Single Day VaR: " + singleDayVar);
+
+      multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     System.out.println("Single Day 99% VaR is: " + singleDayVar);
-    return singleDayVar;
+    return multiDayVar;
   }
 
   /**
