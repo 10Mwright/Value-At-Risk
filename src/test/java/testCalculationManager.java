@@ -9,6 +9,6 @@ public class testCalculationManager {
   @Test
   public void testSingleAsset() {
     CalculationManager calculation = new CalculationManager();
-    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar("GOOG", 1000000));
+    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar("GOOG", 1000000, 10));
   }
 }

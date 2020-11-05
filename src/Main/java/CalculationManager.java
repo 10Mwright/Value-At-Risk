@@ -33,7 +33,7 @@ public class CalculationManager {
 
       // Must convert this volatility to a percentage
       // Note: any better method to calculate as a percentage other than avg?
-      dailyVolatility = dailyVolatility / findAverage(historicalData);
+      dailyVolatility = dailyVolatility;
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -43,8 +43,6 @@ public class CalculationManager {
 
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
-      System.out.println("Single Day VaR: " + singleDayVar);
-
       multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
 
     } catch (IOException e) {
@@ -52,6 +50,7 @@ public class CalculationManager {
     }
 
     System.out.println("Single Day 99% VaR is: " + singleDayVar);
+    System.out.println(timeHorizon + " Day 99% VaR is: " + multiDayVar);
     return multiDayVar;
   }
 
@@ -71,42 +70,28 @@ public class CalculationManager {
 
     meanStockPrice = meanStockPrice.divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
 
-    double[][] deviations = new double[2][historicalData.size()];
-    double sumOfSquaredDeviations = 0.0;
+    BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
+    BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
 
     for(int j = 0; j < historicalData.size(); j++) {
-      deviations[0][j] = meanStockPrice.doubleValue() - historicalData.get(j).getAdjClose().doubleValue();
-      deviations[1][j] = deviations[0][j] * deviations[0][j];
+      deviations[0][j] = meanStockPrice.subtract(historicalData.get(j).getAdjClose());
+      deviations[1][j] = deviations[0][j].multiply(deviations[0][j]);
 
-      sumOfSquaredDeviations += deviations[1][j];
+      sumOfSquaredDeviations = sumOfSquaredDeviations.add(deviations[1][j]);
     }
 
-    double stockPriceVariance = sumOfSquaredDeviations / historicalData.size();
+    BigDecimal stockPriceVariance = sumOfSquaredDeviations.divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
 
-    double dailyVolatility = Math.sqrt(stockPriceVariance);
+    double dailyVolatility = Math.sqrt(stockPriceVariance.doubleValue());
 
     System.out.println("Mean: " + meanStockPrice);
     System.out.println("Sum of Squared Deviations: " + sumOfSquaredDeviations);
     System.out.println("Stock price Variance: " + stockPriceVariance);
-    System.out.println("Daily Volatility: " + dailyVolatility);
+    System.out.println("Daily Volatility (RAW VALUE): " + dailyVolatility);
+
+    dailyVolatility = dailyVolatility / (meanStockPrice.doubleValue());
 
     return dailyVolatility;
-  }
-
-  public static double findAverage(List<HistoricalQuote> historicalData) {
-    int dataLength = historicalData.size();
-
-    double average = 0;
-
-    for(int i = 0; i < dataLength; i++) {
-      average += historicalData.get(i).getAdjClose().doubleValue();
-    }
-
-    average = average / dataLength;
-
-    System.out.println("Average: " + average);
-
-    return average;
   }
 
 }
