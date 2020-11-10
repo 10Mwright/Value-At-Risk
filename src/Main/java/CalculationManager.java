@@ -31,6 +31,7 @@ public class CalculationManager {
 
       // Must convert this volatility to a percentage
       // Note: any better method to calculate as a percentage other than avg?
+      // e.g. TESLA has a massive daily volatility over a 1 year period (60.4%)
       dailyVolatility = dailyVolatility;
 
       System.out.println("Daily Volatility: " + dailyVolatility);
@@ -56,6 +57,7 @@ public class CalculationManager {
    * Method for calculating the daily volatility of a stock based on it's historical data.
    * @param historicalData List of type HistoricalQuote
    * @return A double value representing the daily volatility of the stock
+   * influence from website: https://www.wallstreetmojo.com/volatility-formula/
    */
   public static double calculateVolatility(List<HistoricalQuote> historicalData) {
 
