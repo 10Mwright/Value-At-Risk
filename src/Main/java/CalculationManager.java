@@ -63,6 +63,20 @@ public class CalculationManager {
    * @return
    */
   public static BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon, double probability) {
+    double normSinV = Normals.getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
+    BigDecimal singleDayVar = new BigDecimal(0.0);
+    BigDecimal multiDayVar = new BigDecimal(0.0);
+
+    DataManager data = new DataManager();
+    try {
+      List<HistoricalQuote> positionOneData = data.getHistoricalPrices(positionOne.getTickerSymbol());
+      List<HistoricalQuote> positionTwoData = data.getHistoricalPrices(positionTwo.getTickerSymbol());
+
+      double positionOneVolatility = calculateVolatility(positionOneData);
+      double positionTwoVolatility = calculateVolatility(positionTwoData);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
   }
 
