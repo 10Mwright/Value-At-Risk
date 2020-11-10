@@ -1,4 +1,5 @@
 import Objects.Normals;
+import Objects.Position;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,7 +9,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class CalculationManager {
 
   /**
-   * Method to calculate single day, 99% value at risk.
+   * Method to calculate VaR for 1 stock
    * @param tickerSymbol String representation of the stock's ticker symbol
    * @param assetValue Double value representing total value in tickerSymbol
    * @return a double value representing the 99% single day VaR
@@ -51,6 +52,18 @@ public class CalculationManager {
     System.out.println("Single Day " + (probability*100) + "% VaR is: " + singleDayVar);
     System.out.println(timeHorizon + " Day " + (probability*100) + "VaR is: " + multiDayVar);
     return multiDayVar;
+  }
+
+  /**
+   * Method to calculate VaR for 2 stocks
+   * @param positionOne
+   * @param positionTwo
+   * @param timeHorizon
+   * @param probability
+   * @return
+   */
+  public static BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon, double probability) {
+
   }
 
   /**
