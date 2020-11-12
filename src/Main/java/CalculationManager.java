@@ -59,16 +59,17 @@ public class CalculationManager {
       singleDayVar = BigDecimal.valueOf(normSinV)
           .multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
+      System.out.println("Single Day " + (probability * 100) + "% VaR is: " + singleDayVar);
+
       if (multiDay) {
         multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+        System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + multiDayVar);
       }
 
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    System.out.println("Single Day " + (probability * 100) + "% VaR is: " + singleDayVar);
-    System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + multiDayVar);
 
     if (multiDay) {
       return multiDayVar;
@@ -123,11 +124,11 @@ public class CalculationManager {
       //Finally calculate 1 day VaR
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
 
-      System.out.println("SINGLE DAY (MULTI): " + singleDayVar);
+      System.out.println("Single Day " + (probability * 100) + "% VaR is: " + singleDayVar);
 
       if (multiDay) {
         multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
-        System.out.println("MULTI DAY (MULTI): " + multiDayVar);
+        System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + multiDayVar);
       }
     } catch (IOException e) {
       e.printStackTrace();
