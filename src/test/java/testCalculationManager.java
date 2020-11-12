@@ -22,8 +22,9 @@ public class testCalculationManager {
 
     //Create each position object
     Position google = new Position("GOOG", 1000000);
-    Position microsoft = new Position("MST", 10000000);
+    Position microsoft = new Position("MSFT", 10000000);
 
     assertNotEquals(new BigDecimal(0), calculation.calculateVar(google, microsoft, 10, 0.99));
   }
+
 }

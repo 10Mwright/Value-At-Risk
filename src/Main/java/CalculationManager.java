@@ -8,6 +8,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Class for performing complex value at risk calculations.
+ *
  * @author Matthew Wright
  */
 public class CalculationManager {
@@ -78,12 +79,11 @@ public class CalculationManager {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
 
-
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
 
     Boolean multiDay = false; //Default to false for multi day calculation
-    if(timeHorizon > 1) {
+    if (timeHorizon > 1) {
       multiDay = true;
     }
 
@@ -97,26 +97,31 @@ public class CalculationManager {
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
 
-      // Must calculate coefficient of correlation
-      double coefficientOfCorrelation = 0;
+      // Calculate the coefficient of correlation between each position
+      double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);
 
       // Calculate each standard deviation
       double positionOneSDeviation = positionOne.getPositionValue() * positionOneVolatility;
       double positionTwoSDeviation = positionTwo.getPositionValue() * positionTwoVolatility;
 
-      double standardDeviation = Math.sqrt(Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2 * coefficientOfCorrelation * positionOneSDeviation * positionTwoSDeviation));
+      double standardDeviation = Math.sqrt(
+          Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2
+              * coefficientOfCorrelation * positionOneSDeviation * positionTwoSDeviation));
 
       //Finally calculate 1 day VaR
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
 
-      if(multiDay) {
+      System.out.println("SINGLE DAY (MULTI): " + singleDayVar);
+
+      if (multiDay) {
         multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+        System.out.println("MULTI DAY (MULTI): " + multiDayVar);
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    if(multiDay) {
+    if (multiDay) {
       return multiDayVar;
     } else {
       return singleDayVar;
@@ -159,13 +164,22 @@ public class CalculationManager {
     return dailyVolatility;
   }
 
-  public static double calculateCoefficient(List<HistoricalQuote> positionOneData, List<HistoricalQuote> positionTwoData) {
+  /**
+   * Method for calculating the coefficient of correlation between two positions.
+   *
+   * @param positionOneData List of type HistoricalQuote for position one
+   * @param positionTwoData List of type HistoricalQuote for position two
+   * @return A double value representing the coefficient in range -1 to 1.
+   * Influence for calculation method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
+   */
+  public static double calculateCoefficient(List<HistoricalQuote> positionOneData,
+      List<HistoricalQuote> positionTwoData) {
 
     int dataSize = 0;
 
     // Match length of each dataset if required
-    if(positionOneData.size() != positionTwoData.size()) {
-      if(positionOneData.size() < positionTwoData.size()) {
+    if (positionOneData.size() != positionTwoData.size()) {
+      if (positionOneData.size() < positionTwoData.size()) {
         dataSize = positionOneData.size();
       } else {
         dataSize = positionTwoData.size();
@@ -174,15 +188,46 @@ public class CalculationManager {
       dataSize = positionOneData.size();
     }
 
-    BigDecimal
+    BigDecimal positionOneMean = calculateMean(positionOneData);
+    BigDecimal positionTwoMean = calculateMean(positionTwoData);
 
-    for(int i = 0; i < dataSize; i++) {
+    // Column 1: positionOneMean - positionOnePrice
+    // Column 2: positionTwoMean - positionTwoPrice
+    // Column 3: square(Column 1)
+    // Column 4: square(Column 2)
+    // Column 5: product (multiplied) column 1 and 2
+    BigDecimal[][] deviations = new BigDecimal[dataSize][5];
 
+    BigDecimal sumSquaredOne = new BigDecimal(0.0);
+    BigDecimal sumSquaredTwo = new BigDecimal(0.0);
+    BigDecimal sumProduct = new BigDecimal(0.0);
+
+    for (int i = 0; i < dataSize; i++) {
+      deviations[i][0] = positionOneMean.subtract(positionOneData.get(i).getAdjClose());
+      deviations[i][1] = positionTwoMean.subtract(positionTwoData.get(i).getAdjClose());
+      deviations[i][2] = deviations[i][0].multiply(deviations[i][0]);
+      deviations[i][3] = deviations[i][1].multiply(deviations[i][1]);
+      deviations[i][4] = deviations[i][0].multiply(deviations[i][1]);
+
+      sumSquaredOne = sumSquaredOne.add(deviations[i][2]);
+      sumSquaredTwo = sumSquaredTwo.add(deviations[i][3]);
+      sumProduct = sumProduct.add(deviations[i][4]);
     }
 
+    double coefficient = sumProduct.doubleValue() / (Math
+        .sqrt(sumSquaredOne.doubleValue() * sumSquaredTwo.doubleValue()));
 
+    System.out.println("Coefficient of Correlation: " + coefficient);
+
+    return coefficient;
   }
 
+  /**
+   * Method for calculating the mean close price across a historical data set.
+   *
+   * @param historicalData List of type HistoricalQuote holding previous stock data
+   * @return BigDecimal value representing the mean across the entire data set
+   */
   public static BigDecimal calculateMean(List<HistoricalQuote> historicalData) {
     BigDecimal meanStockPrice = new BigDecimal("0.0");
 
