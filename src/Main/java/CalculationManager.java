@@ -98,13 +98,13 @@ public class CalculationManager {
       double positionTwoVolatility = calculateVolatility(positionTwoData);
 
       // Must calculate coefficient of correlation
-      double coefficient = 0;
+      double coefficientOfCorrelation = 0;
 
       // Calculate each standard deviation
       double positionOneSDeviation = positionOne.getPositionValue() * positionOneVolatility;
       double positionTwoSDeviation = positionTwo.getPositionValue() * positionTwoVolatility;
 
-      double standardDeviation = Math.sqrt(Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2 * coefficient * positionOneSDeviation * positionTwoSDeviation));
+      double standardDeviation = Math.sqrt(Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2 * coefficientOfCorrelation * positionOneSDeviation * positionTwoSDeviation));
 
       //Finally calculate 1 day VaR
       singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
@@ -132,15 +132,7 @@ public class CalculationManager {
    */
   public static double calculateVolatility(List<HistoricalQuote> historicalData) {
 
-    BigDecimal meanStockPrice = new BigDecimal("0.0");
-
-    // Increment through the data and sum them all up
-    for (int i = 0; i < historicalData.size(); i++) {
-      meanStockPrice = meanStockPrice.add(historicalData.get(i).getAdjClose());
-    }
-
-    meanStockPrice = meanStockPrice
-        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
+    BigDecimal meanStockPrice = calculateMean(historicalData);
 
     BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
     BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
@@ -165,6 +157,44 @@ public class CalculationManager {
     dailyVolatility = dailyVolatility / (meanStockPrice.doubleValue());
 
     return dailyVolatility;
+  }
+
+  public static double calculateCoefficient(List<HistoricalQuote> positionOneData, List<HistoricalQuote> positionTwoData) {
+
+    int dataSize = 0;
+
+    // Match length of each dataset if required
+    if(positionOneData.size() != positionTwoData.size()) {
+      if(positionOneData.size() < positionTwoData.size()) {
+        dataSize = positionOneData.size();
+      } else {
+        dataSize = positionTwoData.size();
+      }
+    } else {
+      dataSize = positionOneData.size();
+    }
+
+    BigDecimal
+
+    for(int i = 0; i < dataSize; i++) {
+
+    }
+
+
+  }
+
+  public static BigDecimal calculateMean(List<HistoricalQuote> historicalData) {
+    BigDecimal meanStockPrice = new BigDecimal("0.0");
+
+    // Increment through the data and sum them all up
+    for (int i = 0; i < historicalData.size(); i++) {
+      meanStockPrice = meanStockPrice.add(historicalData.get(i).getAdjClose());
+    }
+
+    meanStockPrice = meanStockPrice
+        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
+
+    return meanStockPrice;
   }
 
 }
