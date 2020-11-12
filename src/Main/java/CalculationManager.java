@@ -6,16 +6,25 @@ import java.math.RoundingMode;
 import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
+/**
+ * Class for performing complex value at risk calculations.
+ * @author Matthew Wright
+ */
 public class CalculationManager {
 
   /**
-   * Method to calculate VaR for 1 stock
+   * Method to calculate VaR for 1 stock.
+   *
    * @param tickerSymbol String representation of the stock's ticker symbol
    * @param assetValue Double value representing total value in tickerSymbol
-   * @return a double value representing the 99% single day VaR
+   * @param timeHorizon number of days as an integer to act as the time horizon
+   * @param probability A double value representing the percentage probability in decimal form
+   * @return BigDecimal value representing the VaR of the single stock portfolio
    */
-  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon, double probability){
-    double normSinV = Normals.getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
+  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon,
+      double probability) {
+    double normSinV = Normals
+        .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
 
@@ -23,7 +32,7 @@ public class CalculationManager {
     try {
       List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol);
 
-      for (int i = 0; i < historicalData.size(); i++ ) {
+      for (int i = 0; i < historicalData.size(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
         System.out.println(i + ", " + historicalData.get(i).getAdjClose());
       }
@@ -41,7 +50,8 @@ public class CalculationManager {
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
-      singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(dailyStandardDeviation));
+      singleDayVar = BigDecimal.valueOf(normSinV)
+          .multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
       multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
 
@@ -49,28 +59,33 @@ public class CalculationManager {
       e.printStackTrace();
     }
 
-    System.out.println("Single Day " + (probability*100) + "% VaR is: " + singleDayVar);
-    System.out.println(timeHorizon + " Day " + (probability*100) + "VaR is: " + multiDayVar);
+    System.out.println("Single Day " + (probability * 100) + "% VaR is: " + singleDayVar);
+    System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + multiDayVar);
     return multiDayVar;
   }
 
   /**
-   * Method to calculate VaR for 2 stocks
-   * @param positionOne
-   * @param positionTwo
-   * @param timeHorizon
-   * @param probability
-   * @return
+   * Method to calculate VaR for 2 stocks.
+   *
+   * @param positionOne Position object for the first stock position
+   * @param positionTwo Position object for the second stock position
+   * @param timeHorizon number of days as an integer to act as the time horizon
+   * @param probability A double value representing the percentage probability in decimal form
+   * @return BigDecimal value representing the VaR of the two stock portfolio
    */
-  public static BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon, double probability) {
-    double normSinV = Normals.getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
+  public static BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon,
+      double probability) {
+    double normSinV = Normals
+        .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> positionOneData = data.getHistoricalPrices(positionOne.getTickerSymbol());
-      List<HistoricalQuote> positionTwoData = data.getHistoricalPrices(positionTwo.getTickerSymbol());
+      List<HistoricalQuote> positionOneData = data
+          .getHistoricalPrices(positionOne.getTickerSymbol());
+      List<HistoricalQuote> positionTwoData = data
+          .getHistoricalPrices(positionTwo.getTickerSymbol());
 
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
@@ -82,32 +97,35 @@ public class CalculationManager {
 
   /**
    * Method for calculating the daily volatility of a stock based on it's historical data.
+   *
    * @param historicalData List of type HistoricalQuote
-   * @return A double value representing the daily volatility of the stock
-   * influence from website: https://www.wallstreetmojo.com/volatility-formula/
+   * @return A double value representing the daily volatility of the stock influence from website:
+   * https://www.wallstreetmojo.com/volatility-formula/
    */
   public static double calculateVolatility(List<HistoricalQuote> historicalData) {
 
     BigDecimal meanStockPrice = new BigDecimal("0.0");
 
     // Increment through the data and sum them all up
-    for(int i = 0; i < historicalData.size(); i++) {
+    for (int i = 0; i < historicalData.size(); i++) {
       meanStockPrice = meanStockPrice.add(historicalData.get(i).getAdjClose());
     }
 
-    meanStockPrice = meanStockPrice.divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
+    meanStockPrice = meanStockPrice
+        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
 
     BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
     BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
 
-    for(int j = 0; j < historicalData.size(); j++) {
+    for (int j = 0; j < historicalData.size(); j++) {
       deviations[0][j] = meanStockPrice.subtract(historicalData.get(j).getAdjClose());
       deviations[1][j] = deviations[0][j].multiply(deviations[0][j]);
 
       sumOfSquaredDeviations = sumOfSquaredDeviations.add(deviations[1][j]);
     }
 
-    BigDecimal stockPriceVariance = sumOfSquaredDeviations.divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
+    BigDecimal stockPriceVariance = sumOfSquaredDeviations
+        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
 
     double dailyVolatility = Math.sqrt(stockPriceVariance.doubleValue());
 
