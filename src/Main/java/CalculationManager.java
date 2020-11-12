@@ -77,8 +77,15 @@ public class CalculationManager {
       double probability) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
+
+
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
+
+    Boolean multiDay = false; //Default to false for multi day calculation
+    if(timeHorizon > 1) {
+      multiDay = true;
+    }
 
     DataManager data = new DataManager();
     try {
@@ -89,10 +96,31 @@ public class CalculationManager {
 
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
+
+      // Must calculate coefficient of correlation
+      double coefficient = 0;
+
+      // Calculate each standard deviation
+      double positionOneSDeviation = positionOne.getPositionValue() * positionOneVolatility;
+      double positionTwoSDeviation = positionTwo.getPositionValue() * positionTwoVolatility;
+
+      double standardDeviation = Math.sqrt(Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2 * coefficient * positionOneSDeviation * positionTwoSDeviation));
+
+      //Finally calculate 1 day VaR
+      singleDayVar = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
+
+      if(multiDay) {
+        multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
+    if(multiDay) {
+      return multiDayVar;
+    } else {
+      return singleDayVar;
+    }
   }
 
   /**
