@@ -29,6 +29,11 @@ public class CalculationManager {
     BigDecimal singleDayVar = new BigDecimal(0.0);
     BigDecimal multiDayVar = new BigDecimal(0.0);
 
+    Boolean multiDay = false; //Default to false for multi day calculation
+    if (timeHorizon > 1) {
+      multiDay = true;
+    }
+
     DataManager data = new DataManager();
     try {
       List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol);
@@ -54,7 +59,9 @@ public class CalculationManager {
       singleDayVar = BigDecimal.valueOf(normSinV)
           .multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
-      multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+      if (multiDay) {
+        multiDayVar = singleDayVar.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+      }
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -62,7 +69,12 @@ public class CalculationManager {
 
     System.out.println("Single Day " + (probability * 100) + "% VaR is: " + singleDayVar);
     System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + multiDayVar);
-    return multiDayVar;
+
+    if (multiDay) {
+      return multiDayVar;
+    } else {
+      return singleDayVar;
+    }
   }
 
   /**
@@ -169,8 +181,8 @@ public class CalculationManager {
    *
    * @param positionOneData List of type HistoricalQuote for position one
    * @param positionTwoData List of type HistoricalQuote for position two
-   * @return A double value representing the coefficient in range -1 to 1.
-   * Influence for calculation method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
+   * @return A double value representing the coefficient in range -1 to 1. Influence for calculation
+   * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
   public static double calculateCoefficient(List<HistoricalQuote> positionOneData,
       List<HistoricalQuote> positionTwoData) {
