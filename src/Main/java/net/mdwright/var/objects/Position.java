@@ -1,4 +1,4 @@
-package Objects;
+package net.mdwright.var.objects;
 
 public class Position {
 

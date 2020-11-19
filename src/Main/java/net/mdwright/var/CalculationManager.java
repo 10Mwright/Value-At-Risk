@@ -1,5 +1,7 @@
-import Objects.Normals;
-import Objects.Position;
+package net.mdwright.var;
+
+import net.mdwright.var.objects.Normals;
+import net.mdwright.var.objects.Position;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

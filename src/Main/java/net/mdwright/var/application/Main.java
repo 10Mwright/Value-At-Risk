@@ -1,4 +1,4 @@
-package Application;
+package net.mdwright.var.application;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

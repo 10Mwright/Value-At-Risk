@@ -1,4 +1,4 @@
-package Application;
+package net.mdwright.var.application;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;

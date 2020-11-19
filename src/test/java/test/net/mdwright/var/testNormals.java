@@ -1,6 +1,8 @@
+package test.net.mdwright.var;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import Objects.Normals;
+import net.mdwright.var.objects.Normals;
 import org.junit.jupiter.api.Test;
 
 public class testNormals {

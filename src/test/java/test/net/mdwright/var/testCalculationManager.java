@@ -1,7 +1,10 @@
+package test.net.mdwright.var;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import Objects.Position;
+import net.mdwright.var.CalculationManager;
+import net.mdwright.var.objects.Position;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
