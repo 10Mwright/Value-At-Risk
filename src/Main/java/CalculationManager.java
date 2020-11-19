@@ -70,7 +70,6 @@ public class CalculationManager {
       e.printStackTrace();
     }
 
-
     if (multiDay) {
       return multiDayVar;
     } else {
@@ -182,7 +181,8 @@ public class CalculationManager {
    *
    * @param positionOneData List of type HistoricalQuote for position one
    * @param positionTwoData List of type HistoricalQuote for position two
-   * @return A double value representing the coefficient in range -1 to 1. Influence for calculation
+   * @return A double value representing the coefficient in range -1 to 1
+   * Influence for calculation
    * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
   public static double calculateCoefficient(List<HistoricalQuote> positionOneData,
