@@ -1,18 +1,17 @@
 package test.net.mdwright.var;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import net.mdwright.var.CalculationManager;
+import net.mdwright.var.ModelBuildingVar;
 import net.mdwright.var.objects.Position;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
-public class testCalculationManager {
+public class testModelBuildingVar {
 
   @Test
   public void testSingleAsset() {
-    CalculationManager calculation = new CalculationManager();
+    ModelBuildingVar calculation = new ModelBuildingVar();
     assertNotEquals(new BigDecimal(0.0), calculation.calculateVar("GOOG", 1000000, 10, 0.99));
 
     System.out.println("----------------");
@@ -21,7 +20,7 @@ public class testCalculationManager {
 
   @Test
   public void testTwoAssets() {
-    CalculationManager calculation = new CalculationManager();
+    ModelBuildingVar calculation = new ModelBuildingVar();
 
     //Create each position object
     Position google = new Position("GOOG", 1000000);
