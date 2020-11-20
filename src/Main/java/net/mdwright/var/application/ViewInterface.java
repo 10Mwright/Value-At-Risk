@@ -1,7 +1,6 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
-import java.util.Observer;
 import java.util.function.Consumer;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;

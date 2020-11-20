@@ -1,9 +1,11 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
-import java.util.Observer;
 import java.util.function.Consumer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
@@ -36,7 +38,12 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void addCalcObserver(Observer obs) {
-
+    calculateButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        obs.tell();
+      }
+    });
   }
 
   @Override
@@ -57,10 +64,14 @@ public class ModelBuildingGUI implements ViewInterface {
   private TextField tickerField;
 
   @FXML
-  //fx:id="assetValueField"
+  // fx:id="assetValueField"
   private TextField assetValueField;
 
   @FXML
   // fx:id="resultField"
   private TextField resultField;
+
+  @FXML
+  // fx:id="calculateButton"
+  private Button calculateButton;
 }

@@ -8,6 +8,6 @@ package net.mdwright.var.application;
 @FunctionalInterface
 public interface Observer {
 
-  public void tell();
+  void tell();
 }
 
