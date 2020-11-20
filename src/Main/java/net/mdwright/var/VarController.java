@@ -23,7 +23,6 @@ public class VarController {
   }
 
   public void calculateVar() {
-    //Get data from view
     Position[] portfolio = view.getPortfolio();
     int timeHorizon = view.getTimeHorizon();
     double probability = view.getProbability();
@@ -31,7 +30,6 @@ public class VarController {
     BigDecimal valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
 
     view.setResult(valueAtRisk);
-    //Pass to VarModel's method
   }
 
   public void modelToUse(Model modelToUse) {
