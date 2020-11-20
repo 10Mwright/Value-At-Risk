@@ -14,12 +14,46 @@ import net.mdwright.var.objects.Position;
  */
 public interface ViewInterface {
 
+  /**
+   * Method to retrieve the portfolio as an array of Position objects.
+   *
+   * @return An array of type Position
+   */
   Position[] getPortfolio();
 
+  /**
+   * Method to retrieve the user's preferred time horizon for calculation.
+   *
+   * @return An int value representing the number of days to calculate Var for
+   */
+  int getTimeHorizon();
+
+  /**
+   * Method to retrieve the user's preffered confidence level/probability for calculation.
+   *
+   * @return A double value representing the probability in decimal format (e.g. 0.99)
+   */
+  double getProbability();
+
+  /**
+   * Method to set the result in GUI.
+   *
+   * @param varValue A BigDecimal object representing the value at risk given the user's criteria
+   */
   void setResult(BigDecimal varValue);
 
+  /**
+   * Adds an observer to monitor user commands to calculate Var.
+   *
+   * @param obs Object of type Observer
+   */
   void addCalcObserver(Observer obs);
 
+  /**
+   * Adds an observer to monitor user's change in model selection.
+   *
+   * @param model Object of type Observer
+   */
   void addModelObserver(Consumer<Model> model);
 
 }
