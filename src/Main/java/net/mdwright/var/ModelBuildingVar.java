@@ -27,6 +27,7 @@ public class ModelBuildingVar implements VarCalculator {
     BigDecimal varValue = new BigDecimal(0);
 
     if (portfolio.length == 1) {
+      System.out.println("DEBUG:" + portfolio[0].getTickerSymbol());
       varValue = calculateVar(portfolio[0].getTickerSymbol(), portfolio[0].getPositionValue(),
           timeHorizon, probability);
     } else if (portfolio.length == 2) {

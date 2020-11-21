@@ -14,7 +14,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position[] getPortfolio() {
-    Position pos = new Position(tickerField.getText(), Double.parseDouble(assetValueField.getText()));
+    Position pos = new Position(tickerSymbolField.getText(), Double.parseDouble(assetValueField.getText()));
 
     Position[] positions = {pos};
 
@@ -61,7 +61,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @FXML
   // fx:id="tickerSymbolField"
-  private TextField tickerField;
+  private TextField tickerSymbolField;
 
   @FXML
   // fx:id="assetValueField"

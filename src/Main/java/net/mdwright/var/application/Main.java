@@ -19,10 +19,12 @@ public class Main extends Application {
   static Parent root;
 
   public static void main(String[] args) throws IOException {
+    ViewInterface view;
+
     System.out.println(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
     loader = new FXMLLoader(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
     root = (Parent) loader.load();
-    ViewInterface view = loader.getController();
+    view = loader.getController();
 
     new VarController(view);
 
