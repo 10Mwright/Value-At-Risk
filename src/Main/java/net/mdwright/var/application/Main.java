@@ -1,6 +1,7 @@
 package net.mdwright.var.application;
 
 import java.io.IOException;
+import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,11 @@ public class Main extends Application {
   static FXMLLoader loader;
   static Parent root;
 
+  static URL loadURL = Main.class.getResource("/java/resources/ModelBuildingGUI.fxml");
+
   public static void main(String[] args) throws IOException {
-    loader = new FXMLLoader(Main.class.getResource("ModelBuildingGUI.fxml"));
+    System.out.println(Main.class.getClassLoader().getResource("/fxml/ModelBuildingGUI.fxml"));
+    loader = new FXMLLoader(loadURL);
     root = (Parent) loader.load();
     ViewInterface view = loader.getController();
 
