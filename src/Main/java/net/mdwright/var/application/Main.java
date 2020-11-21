@@ -18,11 +18,9 @@ public class Main extends Application {
   static FXMLLoader loader;
   static Parent root;
 
-  static URL loadURL = Main.class.getResource("/java/resources/ModelBuildingGUI.fxml");
-
   public static void main(String[] args) throws IOException {
-    System.out.println(Main.class.getClassLoader().getResource("/fxml/ModelBuildingGUI.fxml"));
-    loader = new FXMLLoader(loadURL);
+    System.out.println(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
+    loader = new FXMLLoader(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
     root = (Parent) loader.load();
     ViewInterface view = loader.getController();
 
@@ -36,5 +34,11 @@ public class Main extends Application {
     Scene scene = new Scene(root, 600, 572);
     primaryStage.setScene(scene);
     primaryStage.show();
+  }
+
+  public URL getLoadURL() {
+    URL loadURL = getClass().getResource("/fxml/ModelBuildingGUI.fxml");
+
+    return loadURL;
   }
 }

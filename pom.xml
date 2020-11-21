@@ -64,19 +64,14 @@
         </configuration>
       </plugin>
     </plugins>
+
+    <sourceDirectory>src/main/java</sourceDirectory>
+
     <resources>
       <resource>
-        <directory>net.mdwright.var.application/</directory>
+        <directory>src/main/resources</directory>
         <includes>
-          <include>ModelBuildingGUI.fxml</include>
-        </includes>
-      </resource>
-
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**/*.fxml</include>
+          <include>**/*</include>
         </includes>
       </resource>
     </resources>
