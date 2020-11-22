@@ -2,6 +2,10 @@ package net.mdwright.var.objects;
 
 public class Position {
 
+  /*
+  TODO: Implement currency conversion
+   */
+
   private String tickerSymbol = "";
   private double positionValue = 0.0;
 
@@ -19,7 +23,8 @@ public class Position {
     return positionValue;
   }
 
+  @Override
   public String toString() {
-    return this.tickerSymbol + ", " + this.positionValue;
+    return "Ticker Symbol = " + this.tickerSymbol + ", Position Value = £" + this.positionValue;
   }
 }
