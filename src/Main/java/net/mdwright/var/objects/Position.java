@@ -18,4 +18,8 @@ public class Position {
   public double getPositionValue() {
     return positionValue;
   }
+
+  public String toString() {
+    return this.tickerSymbol + ", " + this.positionValue;
+  }
 }
