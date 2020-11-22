@@ -15,9 +15,12 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position[] getPortfolio() {
-    Position pos = new Position(tickerSymbolField.getText(), Double.parseDouble(assetValueField.getText()));
+    int portfolioSize = portfolioList.getItems().size();
+    Position[] positions = new Position[portfolioSize];
 
-    Position[] positions = {pos};
+    for(int i = 0; i < portfolioSize; i++) {
+      positions[i] = portfolioList.getItems().get(i);
+    }
 
     return positions;
   }
