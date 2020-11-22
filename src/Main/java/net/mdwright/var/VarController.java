@@ -20,7 +20,7 @@ public class VarController {
   public VarController(ViewInterface view) {
     this.view = view;
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
-    view.addPortfolioObserver(this::addAsset);
+    view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
   }
 
   public void calculateVar() {
@@ -37,6 +37,7 @@ public class VarController {
     Position newPos = view.getNewPosition();
 
     //Set in view
+    view.addNewPosition(newPos);
   }
 
   public void modelToUse(Model modelToUse) {

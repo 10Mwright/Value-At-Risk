@@ -49,6 +49,13 @@ public interface ViewInterface {
   void setResult(BigDecimal varValue);
 
   /**
+   * Method to add the newly defined position to the portfolio list.
+   *
+   * @param newPos A Position object with the user defined parameters
+   */
+  void addNewPosition(Position newPos);
+
+  /**
    * Adds an observer to monitor user commands to calculate Var.
    *
    * @param obs Object of type Observer
