@@ -22,6 +22,11 @@ public class ModelBuildingGUI implements ViewInterface {
   }
 
   @Override
+  public Position getNewPosition() {
+    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetValueField.getText()));
+  }
+
+  @Override
   public int getTimeHorizon() {
     return Integer.parseInt(timeHorizonField.getText());
   }
@@ -39,6 +44,16 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        obs.tell();
+      }
+    });
+  }
+
+  @Override
+  public void addPortfolioObserver(Observer obs) {
+    addAssetButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
         obs.tell();
@@ -74,4 +89,8 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="calculateButton"
   private Button calculateButton;
+
+  @FXML
+  // fx:id="addAssetButton"
+  private Button addAssetButton;
 }

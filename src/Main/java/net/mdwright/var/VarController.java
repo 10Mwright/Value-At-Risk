@@ -20,6 +20,7 @@ public class VarController {
   public VarController(ViewInterface view) {
     this.view = view;
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
+    view.addPortfolioObserver(this::addAsset);
   }
 
   public void calculateVar() {
@@ -30,6 +31,12 @@ public class VarController {
     BigDecimal valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
 
     view.setResult(valueAtRisk);
+  }
+
+  public void addAsset() {
+    Position newPos = view.getNewPosition();
+
+    //Set in view
   }
 
   public void modelToUse(Model modelToUse) {

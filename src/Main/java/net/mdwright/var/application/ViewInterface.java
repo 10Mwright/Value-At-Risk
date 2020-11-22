@@ -21,6 +21,13 @@ public interface ViewInterface {
   Position[] getPortfolio();
 
   /**
+   * Method to retrieve the position to be added to the portfolio.
+   *
+   * @return An object of type Position containing user defined data
+   */
+  Position getNewPosition();
+
+  /**
    * Method to retrieve the user's preferred time horizon for calculation.
    *
    * @return An int value representing the number of days to calculate Var for
@@ -47,6 +54,13 @@ public interface ViewInterface {
    * @param obs Object of type Observer
    */
   void addCalcObserver(Observer obs);
+
+  /**
+   * Adds an observer to monitor additions to the portfolio
+   *
+   * @param obs Object of type Observer
+   */
+  void addPortfolioObserver(Observer obs);
 
   /**
    * Adds an observer to monitor user's change in model selection.
