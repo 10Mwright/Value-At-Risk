@@ -1,5 +1,7 @@
-import Objects.Normals;
-import Objects.Position;
+package net.mdwright.var;
+
+import net.mdwright.var.objects.Normals;
+import net.mdwright.var.objects.Position;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -7,11 +9,33 @@ import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
 /**
- * Class for performing complex value at risk calculations.
+ * Class for performing complex value at risk calculations using the model-building methodology.
  *
  * @author Matthew Wright
  */
-public class CalculationManager {
+public class ModelBuildingVar implements VarCalculator {
+
+  /**
+   * Method to dispatch requests to relevant method.
+   *
+   * @param portfolio An array of Positions containing ticker symbols and values for each position
+   * in the portfolio
+   * @param timeHorizon number of days as an integer to act as the time horizon
+   * @param probability A double value representing the percentage probability in decimal form
+   */
+  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability) {
+    BigDecimal varValue = new BigDecimal(0);
+
+    if (portfolio.length == 1) {
+      System.out.println("DEBUG:" + portfolio[0].getTickerSymbol());
+      varValue = calculateVar(portfolio[0].getTickerSymbol(), portfolio[0].getPositionValue(),
+          timeHorizon, probability);
+    } else if (portfolio.length == 2) {
+      varValue = calculateVar(portfolio[0], portfolio[1], timeHorizon, probability);
+    }
+
+    return varValue;
+  }
 
   /**
    * Method to calculate VaR for 1 stock.
@@ -181,8 +205,7 @@ public class CalculationManager {
    *
    * @param positionOneData List of type HistoricalQuote for position one
    * @param positionTwoData List of type HistoricalQuote for position two
-   * @return A double value representing the coefficient in range -1 to 1
-   * Influence for calculation
+   * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
    * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
   public static double calculateCoefficient(List<HistoricalQuote> positionOneData,
@@ -255,4 +278,9 @@ public class CalculationManager {
     return meanStockPrice;
   }
 
+  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability,
+      int historicalDataLength) {
+    throw new UnsupportedOperationException(
+        "Invalid operation for model-building VaR (No such thing as Historical Data)");
+  }
 }

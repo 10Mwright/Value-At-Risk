@@ -1,4 +1,4 @@
-package Objects;
+package net.mdwright.var.objects;
 
 /**
  * Object for retrieving NormSinV values

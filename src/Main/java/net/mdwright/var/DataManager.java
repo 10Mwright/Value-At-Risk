@@ -1,3 +1,5 @@
+package net.mdwright.var;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +13,7 @@ public class DataManager {
 
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
+   *
    * @param tickerSymbol the requested stocks ticker symbol
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs
