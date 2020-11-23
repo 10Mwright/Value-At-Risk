@@ -1,5 +1,8 @@
 package net.mdwright.var.objects;
 
+import java.util.ArrayList;
+import yahoofinance.histquotes.HistoricalQuote;
+
 public class Position {
 
   /*
@@ -8,6 +11,7 @@ public class Position {
 
   private String tickerSymbol = "";
   private double positionValue = 0.0;
+  private ArrayList<HistoricalQuote> historicalData;
 
   public Position(String tickerSymbol, double positionValue) {
     this.tickerSymbol = tickerSymbol;
@@ -26,5 +30,14 @@ public class Position {
   @Override
   public String toString() {
     return "Ticker Symbol = " + this.tickerSymbol + ", Position Value = £" + this.positionValue;
+  }
+
+  public ArrayList<HistoricalQuote> getHistoricalData() {
+    return historicalData;
+  }
+
+  public void setHistoricalData(
+      ArrayList<HistoricalQuote> historicalData) {
+    this.historicalData = historicalData;
   }
 }
