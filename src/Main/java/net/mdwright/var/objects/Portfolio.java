@@ -20,4 +20,12 @@ public class Portfolio {
   public Position[] getPositions() {
     return positions;
   }
+
+  public Position getPosition(int positionIndex) {
+    return positions[positionIndex];
+  }
+
+  public int getSize() {
+    return positions.length;
+  }
 }
