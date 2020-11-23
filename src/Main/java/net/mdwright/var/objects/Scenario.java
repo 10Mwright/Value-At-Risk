@@ -5,12 +5,24 @@ import java.util.Calendar;
 
 public class Scenario {
 
-  private Calendar date;
+  private Calendar dateOne, dateTwo;
   private BigDecimal valueUnderScenario;
 
-  public Scenario(Calendar date, BigDecimal valueUnderScenario) {
-    this.date = date;
+  public Scenario(Calendar dateOne, Calendar dateTwo, BigDecimal valueUnderScenario) {
+    this.dateOne = dateOne;
+    this.dateTwo = dateTwo;
     this.valueUnderScenario = valueUnderScenario;
   }
 
+  public BigDecimal getValueUnderScenario() {
+    return valueUnderScenario;
+  }
+
+  public Calendar getDateOne() {
+    return dateOne;
+  }
+
+  public Calendar getDateTwo() {
+    return dateTwo;
+  }
 }

@@ -22,7 +22,7 @@ public class testHistoricalSimVar {
   public void testSingleAsset() {
     Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOGL", 100000)});
 
-    assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 200));
+    assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
   }
 
 

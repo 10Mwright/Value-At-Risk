@@ -10,8 +10,8 @@ public class Position {
   TODO: Implement currency conversion
    */
 
-  private String tickerSymbol = "";
-  private double positionValue = 0.0;
+  private String tickerSymbol;
+  private double positionValue;
   private List<HistoricalQuote> historicalData;
 
   public Position(String tickerSymbol, double positionValue) {
@@ -40,5 +40,9 @@ public class Position {
   public void setHistoricalData(
       List<HistoricalQuote> historicalData) {
     this.historicalData = historicalData;
+  }
+
+  public int getHistoricalDataLength() {
+    return historicalData.size();
   }
 }
