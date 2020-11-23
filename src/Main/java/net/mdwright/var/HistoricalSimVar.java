@@ -14,6 +14,6 @@ public class HistoricalSimVar implements VarCalculator {
   @Override
   public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability) {
     throw new UnsupportedOperationException(
-        "Invalid operation for model-building VaR (No such thing as Historical Data)");
+        "Invalid operation for historical Simulation VaR (Requires historical data length)");
   }
 }

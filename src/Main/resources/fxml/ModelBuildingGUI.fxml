@@ -52,6 +52,11 @@
         <Button fx:id="addAssetButton" layoutX="541.0" layoutY="46.0" mnemonicParsing="false" text="Add" />
       </children>
     </Pane>
-    <TextField fx:id="resultField" layoutX="150.0" layoutY="523.0" prefHeight="25.0" prefWidth="305.0" />
+    <TextField fx:id="resultField" layoutX="232.0" layoutY="523.0" prefHeight="25.0" prefWidth="161.0" />
+      <Label layoutX="130.0" layoutY="522.0" prefHeight="27.0" prefWidth="102.0" text="Value at Risk: £">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
   </children>
 </Pane>

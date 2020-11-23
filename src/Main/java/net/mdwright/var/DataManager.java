@@ -1,6 +1,8 @@
 package net.mdwright.var;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -8,6 +10,7 @@ import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
+import yahoofinance.quotes.fx.FxQuote;
 
 public class DataManager {
 
@@ -25,12 +28,27 @@ public class DataManager {
 
     Stock target = YahooFinance.get(tickerSymbol, startDate, endDate, Interval.DAILY);
 
-    List<HistoricalQuote> historical = new ArrayList<HistoricalQuote>();
+    String currencyFrom = target.getCurrency();
+    String currencyTo = "GBP";
 
-    historical = target.getHistory();
+    BigDecimal exchangeRate = getFXQuote(currencyFrom, currencyTo);
+    System.out.println("EXCHANGE RATE: " + exchangeRate);
+
+    List<HistoricalQuote> historical = target.getHistory();
+
+    for(int i = 0; i < historical.size(); i++) {
+      BigDecimal temp = historical.get(i).getAdjClose().multiply(exchangeRate);
+      historical.get(i).setAdjClose(temp);
+    }
 
     System.out.println(historical);
     return historical;
+  }
+
+  public static BigDecimal getFXQuote(String fromCurrency, String toCurrency) throws IOException {
+    FxQuote exchange = YahooFinance.getFx(fromCurrency + toCurrency + "=X");
+
+    return exchange.getPrice();
   }
 
 }
