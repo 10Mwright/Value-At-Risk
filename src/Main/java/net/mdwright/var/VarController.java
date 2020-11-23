@@ -1,6 +1,7 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
@@ -29,6 +30,9 @@ public class VarController {
     double probability = view.getProbability();
 
     BigDecimal valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
+
+    //Rounding result to 2 decimal places
+    valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
     view.setResult(valueAtRisk);
   }
