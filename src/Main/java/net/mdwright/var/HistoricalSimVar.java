@@ -1,12 +1,13 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 
 public class HistoricalSimVar implements VarCalculator {
 
   @Override
-  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability,
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
     return null;
   }

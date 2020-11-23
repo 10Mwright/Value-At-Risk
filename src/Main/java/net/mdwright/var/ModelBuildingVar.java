@@ -1,6 +1,7 @@
 package net.mdwright.var;
 
 import net.mdwright.var.objects.Normals;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -278,7 +279,7 @@ public class ModelBuildingVar implements VarCalculator {
     return meanStockPrice;
   }
 
-  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability,
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data)");

@@ -1,6 +1,7 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 
 public interface VarCalculator {
@@ -22,7 +23,7 @@ public interface VarCalculator {
    * @param portfolio An array of Positions containing ticker symbols and values for each position
    * in the portfolio
    */
-  BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability,
+  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength);
 
 
