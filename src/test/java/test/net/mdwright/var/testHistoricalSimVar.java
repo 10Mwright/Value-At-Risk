@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotEquals;
 
 import net.mdwright.var.HistoricalSimVar;
 import net.mdwright.var.VarModel;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class testHistoricalSimVar {
 
   @Test
   public void testSingleAsset() {
-    Position[] portfolio = {new Position("GOOGL", 100000)};
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOGL", 100000)});
 
     assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 200));
   }

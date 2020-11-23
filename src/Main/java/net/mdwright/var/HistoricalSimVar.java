@@ -22,8 +22,9 @@ public class HistoricalSimVar implements VarCalculator {
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
         String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
-        portfolio.getPosition(i).setHistoricalData(data.getHistoricalPrices(targetTickerSymbol));
+        portfolio.getPosition(i).setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
       }
+      
 
     } catch (IOException e) {
       e.printStackTrace();

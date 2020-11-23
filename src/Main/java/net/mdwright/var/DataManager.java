@@ -21,10 +21,10 @@ public class DataManager {
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs
    */
-  public static List<HistoricalQuote> getHistoricalPrices(String tickerSymbol) throws IOException {
+  public static List<HistoricalQuote> getHistoricalPrices(String tickerSymbol, int dataLength) throws IOException {
     Calendar startDate = Calendar.getInstance();
     Calendar endDate = Calendar.getInstance();
-    startDate.add(Calendar.YEAR, -1); //We'll initially only consider the previous year of data
+    startDate.add(Calendar.DAY_OF_YEAR, -dataLength); //We'll initially only consider the previous year of data
 
     Stock target = YahooFinance.get(tickerSymbol, startDate, endDate, Interval.DAILY);
 

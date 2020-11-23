@@ -61,7 +61,7 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol);
+      List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol, 365);
 
       for (int i = 0; i < historicalData.size(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
@@ -127,9 +127,9 @@ public class ModelBuildingVar implements VarCalculator {
     DataManager data = new DataManager();
     try {
       List<HistoricalQuote> positionOneData = data
-          .getHistoricalPrices(positionOne.getTickerSymbol());
+          .getHistoricalPrices(positionOne.getTickerSymbol(), 365);
       List<HistoricalQuote> positionTwoData = data
-          .getHistoricalPrices(positionTwo.getTickerSymbol());
+          .getHistoricalPrices(positionTwo.getTickerSymbol(), 365);
 
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
