@@ -27,14 +27,14 @@ public class HistoricalSimVar implements VarCalculator {
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
       }
 
-      Scenario[][] scenarios = new Scenario[portfolioSize][historicalDataLength];
-
       for (int n = 0; n < portfolioSize; n++) {
         System.out.println("Position Scenarios: " + n);
 
         int dataSize = portfolio.getPosition(n).getHistoricalDataLength();
         BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1)
             .getAdjClose(); //Get last day's value to use as current value
+
+        Scenario[] scenarios = new Scenario[dataSize];
 
         //For each pair of dates
         for (int j = 0; j < (dataSize); j++) {
@@ -45,15 +45,23 @@ public class HistoricalSimVar implements VarCalculator {
             BigDecimal temp = dayTwo.getAdjClose()
                 .divide(dayOne.getAdjClose(), 2, BigDecimal.ROUND_UP);
 
-            scenarios[n][j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
+            scenarios[j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
                 currentDayValue.multiply(temp));
 
             System.out.println("Scenario " + j);
-            System.out.println("value under scenario: " + scenarios[n][j].getValueUnderScenario());
+            System.out.println("value under scenario: " + scenarios[j].getValueUnderScenario());
           }
         }
 
+        //Transfer this array to each position object
+        portfolio.getPosition(n).setScenarios(scenarios);
+
         //TODO: implement sorting and finally select appropriate percentile.
+        Scenario[] scenariosD = portfolio.getPosition(0).getScenarios();
+
+        for(int o = 0; o < scenariosD.length; o++) {
+          System.out.println("SCENARIO 0 SORTED: " + scenariosD[o].getValueUnderScenario());
+        }
 
       }
 
