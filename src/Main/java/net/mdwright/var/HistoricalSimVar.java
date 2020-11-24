@@ -2,6 +2,7 @@ package net.mdwright.var;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -27,26 +28,42 @@ public class HistoricalSimVar implements VarCalculator {
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
       }
 
+      BigDecimal[] varValues = new BigDecimal[portfolioSize];
+      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+
       for (int n = 0; n < portfolioSize; n++) {
         System.out.println("Position Scenarios: " + n);
 
-        int dataSize = portfolio.getPosition(n).getHistoricalDataLength();
-        BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1)
-            .getAdjClose(); //Get last day's value to use as current value
+        int dataSize = portfolio.getPosition(n).getHistoricalDataSize();
+        System.out.println("DATASIZE: " + dataSize);
+        //BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1)
+        //    .getAdjClose(); //Get last day's value to use as current value
+
+        BigDecimal currentDayValue = BigDecimal
+            .valueOf(portfolio.getPosition(n).getPositionValue());
 
         Scenario[] scenarios = new Scenario[dataSize];
 
         //For each pair of dates
-        for (int j = 0; j < (dataSize); j++) {
+        for (int j = 0; j < dataSize; j++) {
           if ((j + 1) != dataSize) {
+            System.out.println("COMPARING: " + sdf
+                .format(portfolio.getPosition(n).getHistoricalData().get(j).getDate().getTime()));
+            System.out.println("WITH: " + sdf.format(
+                portfolio.getPosition(n).getHistoricalData().get(j + 1).getDate().getTime()));
+
             HistoricalQuote dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
             HistoricalQuote dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
 
             BigDecimal temp = dayTwo.getAdjClose()
                 .divide(dayOne.getAdjClose(), 2, BigDecimal.ROUND_UP);
 
+            BigDecimal scenarioValue = currentDayValue.multiply(temp);
+
+            scenarioValue = scenarioValue.subtract(currentDayValue);
+
             scenarios[j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
-                currentDayValue.multiply(temp));
+                scenarioValue);
 
             System.out.println("Scenario " + j);
             System.out.println("value under scenario: " + scenarios[j].getValueUnderScenario());
@@ -56,20 +73,44 @@ public class HistoricalSimVar implements VarCalculator {
         //Transfer this array to each position object
         portfolio.getPosition(n).setScenarios(scenarios);
 
-        //TODO: implement sorting and finally select appropriate percentile.
-        Scenario[] scenariosD = portfolio.getPosition(n).sortScenarios();
+        //TODO: Review method of calculation from textbook
+        Scenario[] scenariosSorted = portfolio.getPosition(n).sortScenarios();
 
-        for(int o = 0; o < scenariosD.length; o++) {
-          System.out.println("SCENARIO 0 SORTED: " + scenariosD[o].getValueUnderScenario());
+        for (int o = 0; o < scenariosSorted.length; o++) {
+          if (scenariosSorted[o] != null) {
+            System.out.println("SCENARIO 0 SORTED: " + scenariosSorted[o].getValueUnderScenario());
+            System.out.println(
+                "DATES: " + sdf.format(scenariosSorted[o].getDateOne().getTime()) + " : " + sdf
+                    .format(scenariosSorted[o].getDateTwo().getTime()));
+          }
         }
 
+        varValues[n] = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
+            .getValueUnderScenario(); //
+
       }
+
+      System.out.println("VAR: " + varValues[0]);
 
     } catch (IOException e) {
       e.printStackTrace();
     }
 
     return null;
+  }
+
+  /**
+   * Method for finding the index of the desired percentile value.
+   *
+   * @param scenarios Array of type Scenario containing all scenarios for the position
+   * @param desiredPercentile Double value representing the percentile in decimal format
+   * @return int value representing the index of this percentile influence taken from
+   * https://stackoverflow.com/questions/41413544/calculate-percentile-from-a-long-array
+   */
+  public int getPercentileIndex(Scenario[] scenarios, double desiredPercentile) {
+    int indexOfPercentile = (int) Math.ceil(desiredPercentile / 100.0 * scenarios.length);
+
+    return indexOfPercentile;
   }
 
   @Override

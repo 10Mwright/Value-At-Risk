@@ -44,7 +44,7 @@ public class Position {
     this.historicalData = historicalData;
   }
 
-  public int getHistoricalDataLength() {
+  public int getHistoricalDataSize() {
     return historicalData.size();
   }
 
