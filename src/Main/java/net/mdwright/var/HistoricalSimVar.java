@@ -57,7 +57,7 @@ public class HistoricalSimVar implements VarCalculator {
         portfolio.getPosition(n).setScenarios(scenarios);
 
         //TODO: implement sorting and finally select appropriate percentile.
-        Scenario[] scenariosD = portfolio.getPosition(0).getScenarios();
+        Scenario[] scenariosD = portfolio.getPosition(n).sortScenarios();
 
         for(int o = 0; o < scenariosD.length; o++) {
           System.out.println("SCENARIO 0 SORTED: " + scenariosD[o].getValueUnderScenario());
