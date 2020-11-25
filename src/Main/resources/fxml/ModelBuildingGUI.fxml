@@ -5,33 +5,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.mdwright.var.application.ModelBuildingGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.mdwright.var.application.ModelBuildingGUI">
   <children>
-    <ScrollPane layoutY="209.0" prefHeight="295.0" prefWidth="600.0">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="293.0" prefWidth="593.0">
-          <children>
-            <Pane fx:id="assetPane1" prefHeight="63.0" prefWidth="593.0" />
-                  <ListView fx:id="portfolioList" prefHeight="295.0" prefWidth="593.0" />
-          </children>
-        </AnchorPane>
-      </content>
-    </ScrollPane>
-    <Button fx:id="calculateButton" layoutX="498.0" layoutY="178.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Calculate" />
-    <Pane layoutX="4.0" layoutY="-2.0" prefHeight="172.0" prefWidth="593.0">
+    <Pane layoutX="4.0" layoutY="-2.0" prefHeight="286.0" prefWidth="593.0">
          <children>
-          <TextField fx:id="timeHorizonField" layoutX="129.0" layoutY="132.0" />
-          <Label layoutX="34.0" layoutY="131.0" prefHeight="27.0" prefWidth="92.0" text="Time Horizon:">
+          <TextField fx:id="timeHorizonField" layoutX="129.0" layoutY="150.0" />
+          <Label layoutX="34.0" layoutY="149.0" prefHeight="27.0" prefWidth="92.0" text="Time Horizon:">
             <font>
               <Font size="15.0" />
             </font>
           </Label>
-          <Label layoutX="333.0" layoutY="131.0" prefHeight="27.0" prefWidth="80.0" text="Probability:">
+          <Label layoutX="333.0" layoutY="149.0" prefHeight="27.0" prefWidth="80.0" text="Probability:">
             <font>
               <Font size="15.0" />
             </font>
           </Label>
-          <TextField fx:id="probabilityField" layoutX="410.0" layoutY="132.0" />
+          <TextField fx:id="probabilityField" layoutX="410.0" layoutY="150.0" />
         <Label layoutX="34.0" layoutY="31.0" prefHeight="27.0" prefWidth="115.0" text="Add New Stock" underline="true">
           <font>
             <Font size="15.0" />
@@ -50,13 +39,37 @@
         <TextField fx:id="tickerSymbolField" layoutX="136.0" layoutY="68.0" prefHeight="25.0" prefWidth="122.0" />
         <TextField fx:id="assetValueField" layoutX="362.0" layoutY="68.0" prefHeight="25.0" prefWidth="122.0" />
         <Button fx:id="addAssetButton" layoutX="498.0" layoutY="68.0" mnemonicParsing="false" text="Add" />
+          <Button fx:id="calculateButton" layoutX="490.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Calculate" />
+            <Label layoutX="34.0" layoutY="116.0" prefHeight="27.0" prefWidth="131.0" text="Additional Values:" underline="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="32.0" layoutY="186.0" prefHeight="27.0" prefWidth="66.0" text="Methodology:" underline="true">
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Label>
+            <Label layoutX="188.0" layoutY="241.0" prefHeight="27.0" prefWidth="92.0" text="Data Length:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="dataLengthField" layoutX="283.0" layoutY="242.0" />
+            <RadioButton fx:id="modelBuildingSelection" layoutX="32.0" layoutY="213.0" mnemonicParsing="false" selected="true" text="Model-Building">
+               <toggleGroup>
+                  <ToggleGroup fx:id="modelSelection" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="historicalSimSelection" layoutX="32.0" layoutY="246.0" mnemonicParsing="false" text="Historical Simulation" toggleGroup="$modelSelection" />
          </children>
     </Pane>
-    <TextField fx:id="resultField" layoutX="232.0" layoutY="523.0" prefHeight="25.0" prefWidth="161.0" />
-      <Label layoutX="130.0" layoutY="522.0" prefHeight="27.0" prefWidth="102.0" text="Value at Risk: £">
+    <TextField fx:id="resultField" layoutX="271.0" layoutY="647.0" prefHeight="25.0" prefWidth="161.0" />
+      <Label layoutX="169.0" layoutY="646.0" prefHeight="27.0" prefWidth="102.0" text="Value at Risk: £">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
+      <ListView fx:id="portfolioList" layoutX="4.0" layoutY="305.0" prefHeight="333.0" prefWidth="593.0" />
   </children>
 </Pane>

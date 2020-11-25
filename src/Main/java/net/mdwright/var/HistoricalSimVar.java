@@ -16,6 +16,8 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class HistoricalSimVar implements VarCalculator {
 
+  //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
+
   /**
    * Method for calculating value at risk using the historical simulation method.
    *
