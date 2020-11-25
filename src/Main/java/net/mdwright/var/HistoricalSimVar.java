@@ -77,9 +77,11 @@ public class HistoricalSimVar implements VarCalculator {
             scenarioValueTemp = scenarioValueTemp
                 .subtract(portfolioValue); //Get loss or gain compared to current value
 
-            scenarioValueTemp = scenarioValueTemp.subtract(scenarioValueTemp.multiply(new BigDecimal(2))); //Swap signs, gains are recored as negative losses
+            scenarioValueTemp = scenarioValueTemp.subtract(scenarioValueTemp
+                .multiply(new BigDecimal(2))); //Swap signs, gains are recored as negative losses
 
-            scenarioValue = scenarioValue.add(scenarioValueTemp); //Add all scenario values of each position up for total scenario value
+            scenarioValue = scenarioValue.add(
+                scenarioValueTemp); //Add all scenario values of each position up for total scenario value
 
           }
 
@@ -92,13 +94,11 @@ public class HistoricalSimVar implements VarCalculator {
         }
       }
 
-
-      //Transfer this array to each position object
+      //Transfer this array to the portfolio object
       portfolio.setScenarios(scenarios);
 
       //TODO: Review method of calculation from textbook
       Scenario[] scenariosSorted = portfolio.sortScenarios();
-
 
       for (int o = 0; o < scenariosSorted.length; o++) {
         if (scenariosSorted[o] != null) {
@@ -109,7 +109,8 @@ public class HistoricalSimVar implements VarCalculator {
         }
       }
 
-      portfolio.setValueAtRisk(scenariosSorted[getPercentileIndex(scenariosSorted, probability)].getValueUnderScenario());
+      portfolio.setValueAtRisk(scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
+          .getValueUnderScenario());
 
       System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
 
@@ -117,7 +118,7 @@ public class HistoricalSimVar implements VarCalculator {
       e.printStackTrace();
     }
 
-    return null;
+    return portfolio.getValueAtRisk();
   }
 
   /**
