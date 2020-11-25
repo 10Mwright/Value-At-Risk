@@ -3,6 +3,7 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import javax.sound.sampled.Port;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
@@ -40,6 +41,8 @@ public class HistoricalSimVar implements VarCalculator {
     if (timeHorizon > 1) {
       multiDay = true;
     }
+
+    System.out.println("TIMEHORZION: " + timeHorizon);
 
     try {
 
@@ -119,7 +122,6 @@ public class HistoricalSimVar implements VarCalculator {
       //Transfer this array to the portfolio object
       portfolio.setScenarios(scenarios);
 
-      //TODO: Review method of calculation from textbook
       Scenario[] scenariosSorted = portfolio.sortScenarios();
 
       for (int o = 0; o < scenariosSorted.length; o++) {
@@ -135,13 +137,11 @@ public class HistoricalSimVar implements VarCalculator {
           .getValueUnderScenario();
 
       if (multiDay) { //Multiply by sqrt of timeHorizon to calculate multiday var if required
-        varValue.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+        System.out.println("TRIGGER: " + varValue);
+        varValue = varValue.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
       }
 
       portfolio.setValueAtRisk(varValue);
-
-      portfolio.setValueAtRisk(scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
-          .getValueUnderScenario());
 
       System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
 
@@ -167,7 +167,7 @@ public class HistoricalSimVar implements VarCalculator {
   }
 
   @Override
-  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     throw new UnsupportedOperationException(
         "Invalid operation for historical Simulation VaR (Requires historical data length)");
   }

@@ -24,15 +24,15 @@ public class ModelBuildingVar implements VarCalculator {
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
    */
-  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     BigDecimal varValue = new BigDecimal(0);
 
-    if (portfolio.length == 1) {
-      System.out.println("DEBUG:" + portfolio[0].getTickerSymbol());
-      varValue = calculateVar(portfolio[0].getTickerSymbol(), portfolio[0].getPositionValue(),
+    if (portfolio.getSize() == 1) {
+      varValue = calculateVar(portfolio.getPosition(0),
           timeHorizon, probability);
-    } else if (portfolio.length == 2) {
-      varValue = calculateVar(portfolio[0], portfolio[1], timeHorizon, probability);
+    } else if (portfolio.getSize() == 2) {
+      varValue = calculateVar(portfolio.getPosition(0), portfolio.getPosition(1), timeHorizon,
+          probability);
     }
 
     return varValue;
@@ -41,13 +41,12 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method to calculate VaR for 1 stock.
    *
-   * @param tickerSymbol String representation of the stock's ticker symbol
-   * @param assetValue Double value representing total value in tickerSymbol
+   * @param position Position object containing position information.
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
-  public static BigDecimal calculateVar(String tickerSymbol, double assetValue, int timeHorizon,
+  public static BigDecimal calculateVar(Position position, int timeHorizon,
       double probability) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -61,7 +60,8 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> historicalData = data.getHistoricalPrices(tickerSymbol, 365);
+      List<HistoricalQuote> historicalData = data
+          .getHistoricalPrices(position.getTickerSymbol(), 365);
 
       for (int i = 0; i < historicalData.size(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
@@ -77,7 +77,7 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
-      double dailyStandardDeviation = assetValue * (dailyVolatility);
+      double dailyStandardDeviation = position.getPositionValue() * (dailyVolatility);
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
@@ -105,8 +105,8 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method to calculate VaR for 2 stocks.
    *
-   * @param positionOne Position object for the first stock position
-   * @param positionTwo Position object for the second stock position
+   * @param positionOne Position object containing data on first position
+   * @param positionTwo Position object containing data on second position
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the two stock portfolio

@@ -21,6 +21,10 @@ public class Portfolio {
     this.positions = positions;
   }
 
+  public Portfolio(Position position) {
+    this.positions = new Position[]{position};
+  }
+
   public Position[] getPositions() {
     return positions;
   }

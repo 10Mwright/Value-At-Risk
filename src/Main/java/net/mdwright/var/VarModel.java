@@ -9,12 +9,12 @@ public class VarModel {
   private VarCalculator modelBuilding = new ModelBuildingVar();
   private VarCalculator historicalSim = new HistoricalSimVar();
 
-  public BigDecimal calculateVar(Position[] portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     return modelBuilding.calculateVar(portfolio, timeHorizon, probability);
   }
 
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, int historicalDataLength) {
-    return modelBuilding.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
+    return historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
   }
 
 }
