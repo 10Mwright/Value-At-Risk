@@ -35,12 +35,6 @@ public class HistoricalSimVar implements VarCalculator {
         System.out.println("Position Scenarios: " + n);
 
         int dataSize = portfolio.getPosition(n).getHistoricalDataSize();
-        System.out.println("DATASIZE: " + dataSize);
-        //BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1)
-        //    .getAdjClose(); //Get last day's value to use as current value
-
-        BigDecimal currentDayValue = BigDecimal
-            .valueOf(portfolio.getPosition(n).getPositionValue());
 
         Scenario[] scenarios = new Scenario[dataSize];
 
@@ -55,12 +49,32 @@ public class HistoricalSimVar implements VarCalculator {
             HistoricalQuote dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
             HistoricalQuote dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
 
-            BigDecimal temp = dayTwo.getAdjClose()
-                .divide(dayOne.getAdjClose(), 2, BigDecimal.ROUND_UP);
+            BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1).getAdjClose();
 
-            BigDecimal scenarioValue = currentDayValue.multiply(temp);
+            BigDecimal tempScenario = dayTwo.getAdjClose().divide(dayOne.getAdjClose(), 10, BigDecimal.ROUND_UP);
 
-            scenarioValue = scenarioValue.subtract(currentDayValue);
+            tempScenario = tempScenario.multiply(currentDayValue);
+
+            System.out.println("Scenario value (INITIAL):" + tempScenario);
+
+            BigDecimal tempCurrentScenario = tempScenario.divide(currentDayValue, 10, BigDecimal.ROUND_UP);
+
+            System.out.println("TEMP CURRENT SCENARIO: " + tempCurrentScenario);
+
+            System.out.println("CURRENT DAY VALUE: " + currentDayValue);
+
+            BigDecimal portfolioValue = new BigDecimal(portfolio.getPosition(n).getPositionValue());
+
+            System.out.println("PORTFOLIO VALUE: " + portfolioValue);
+
+            BigDecimal scenarioValue = portfolioValue.multiply(tempCurrentScenario);
+
+            System.out.println("SCENARIOVALUE: " + scenarioValue);
+
+            scenarioValue = scenarioValue.subtract(portfolioValue); //Get loss or gain compared to current value
+
+            //Swapping the sign, gains are recorded as negative losses
+            scenarioValue = scenarioValue.subtract(scenarioValue.multiply(new BigDecimal(2)));
 
             scenarios[j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
                 scenarioValue);

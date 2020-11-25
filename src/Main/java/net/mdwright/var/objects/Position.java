@@ -69,7 +69,7 @@ public class Position {
       for (int j = i + 1; j < this.scenarios.length; j++) {
         if (this.scenarios[i] != null && this.scenarios[j] != null) {
           if (this.scenarios[i].getValueUnderScenario()
-              .compareTo(this.scenarios[j].getValueUnderScenario()) > 0) {
+              .compareTo(this.scenarios[j].getValueUnderScenario()) < 0) {
             temp = this.scenarios[i];
             this.scenarios[i] = this.scenarios[j];
             this.scenarios[j] = temp;
