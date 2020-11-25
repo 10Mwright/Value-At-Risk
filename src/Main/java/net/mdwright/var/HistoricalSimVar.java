@@ -3,21 +3,41 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
 import yahoofinance.histquotes.HistoricalQuote;
 
+/**
+ * Class for performing complex value at risk calculations using the historical simulation
+ * methodology.
+ *
+ * @author Matthew Wright
+ */
 public class HistoricalSimVar implements VarCalculator {
 
+  /**
+   * Method for calculating value at risk using the historical simulation method.
+   *
+   * @param portfolio An array of Positions containing ticker symbols and values for each position
+   * @param timeHorizon An int value representing the number of days to calculate var over
+   * @param probability A double value representing the decimal representation of confidence
+   * percentage
+   * @param historicalDataLength An int value representing the number of days of market variable
+   * data to fetch
+   * @return A BigDecimal representation of the single or multi day value at risk
+   */
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
 
     int portfolioSize = portfolio.getSize();
-
     DataManager data = new DataManager();
+
+    Boolean multiDay = false; //Default to false for multi day calculation
+    if (timeHorizon > 1) {
+      multiDay = true;
+    }
 
     try {
 
@@ -108,6 +128,15 @@ public class HistoricalSimVar implements VarCalculator {
                   .format(scenariosSorted[o].getDateTwo().getTime()));
         }
       }
+
+      BigDecimal varValue = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
+          .getValueUnderScenario();
+
+      if (multiDay) { //Multiply by sqrt of timeHorizon to calculate multiday var if required
+        varValue.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+      }
+
+      portfolio.setValueAtRisk(varValue);
 
       portfolio.setValueAtRisk(scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
           .getValueUnderScenario());
