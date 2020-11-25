@@ -28,83 +28,90 @@ public class HistoricalSimVar implements VarCalculator {
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
       }
 
-      BigDecimal[] varValues = new BigDecimal[portfolioSize];
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+      int dataSize = portfolio.getPosition(0).getHistoricalDataSize();
+      Scenario[] scenarios = new Scenario[dataSize];
 
-      for (int n = 0; n < portfolioSize; n++) {
-        System.out.println("Position Scenarios: " + n);
+      //For each pair of dates
+      for (int j = 0; j < dataSize; j++) {
+        if ((j + 1) != dataSize) {
+          BigDecimal scenarioValue = new BigDecimal(0), scenarioValueTemp = new BigDecimal(0);
+          HistoricalQuote dayOne = null, dayTwo = null;
 
-        int dataSize = portfolio.getPosition(n).getHistoricalDataSize();
-
-        Scenario[] scenarios = new Scenario[dataSize];
-
-        //For each pair of dates
-        for (int j = 0; j < dataSize; j++) {
-          if ((j + 1) != dataSize) {
+          // For each position in the portfolio
+          for (int n = 0; n < portfolioSize; n++) {
             System.out.println("COMPARING: " + sdf
                 .format(portfolio.getPosition(n).getHistoricalData().get(j).getDate().getTime()));
             System.out.println("WITH: " + sdf.format(
                 portfolio.getPosition(n).getHistoricalData().get(j + 1).getDate().getTime()));
 
-            HistoricalQuote dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
-            HistoricalQuote dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
+            dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
+            dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
 
-            BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData().get(dataSize - 1).getAdjClose();
+            BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData()
+                .get(dataSize - 1).getAdjClose();
 
-            BigDecimal tempScenario = dayTwo.getAdjClose().divide(dayOne.getAdjClose(), 10, BigDecimal.ROUND_UP);
+            BigDecimal tempScenario = dayTwo.getAdjClose()
+                .divide(dayOne.getAdjClose(), 10, BigDecimal.ROUND_UP);
 
             tempScenario = tempScenario.multiply(currentDayValue);
 
             System.out.println("Scenario value (INITIAL):" + tempScenario);
 
-            BigDecimal tempCurrentScenario = tempScenario.divide(currentDayValue, 10, BigDecimal.ROUND_UP);
+            BigDecimal tempCurrentScenario = tempScenario
+                .divide(currentDayValue, 10, BigDecimal.ROUND_UP);
 
             System.out.println("TEMP CURRENT SCENARIO: " + tempCurrentScenario);
 
             System.out.println("CURRENT DAY VALUE: " + currentDayValue);
 
-            BigDecimal portfolioValue = new BigDecimal(portfolio.getPosition(n).getPositionValue());
+            BigDecimal portfolioValue = new BigDecimal(
+                portfolio.getPosition(n).getPositionValue());
 
             System.out.println("PORTFOLIO VALUE: " + portfolioValue);
 
-            BigDecimal scenarioValue = portfolioValue.multiply(tempCurrentScenario);
+            scenarioValueTemp = portfolioValue.multiply(tempCurrentScenario);
 
-            System.out.println("SCENARIOVALUE: " + scenarioValue);
+            System.out.println("SCENARIOVALUE: " + scenarioValueTemp);
 
-            scenarioValue = scenarioValue.subtract(portfolioValue); //Get loss or gain compared to current value
+            scenarioValueTemp = scenarioValueTemp
+                .subtract(portfolioValue); //Get loss or gain compared to current value
 
-            //Swapping the sign, gains are recorded as negative losses
-            scenarioValue = scenarioValue.subtract(scenarioValue.multiply(new BigDecimal(2)));
+            scenarioValueTemp = scenarioValueTemp.subtract(scenarioValueTemp.multiply(new BigDecimal(2))); //Swap signs, gains are recored as negative losses
 
-            scenarios[j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
-                scenarioValue);
+            scenarioValue = scenarioValue.add(scenarioValueTemp); //Add all scenario values of each position up for total scenario value
 
-            System.out.println("Scenario " + j);
-            System.out.println("value under scenario: " + scenarios[j].getValueUnderScenario());
           }
+
+          scenarios[j] = new Scenario(dayOne.getDate(), dayTwo.getDate(),
+              scenarioValue);
+
+          System.out.println("Scenario " + j);
+          System.out.println("value under scenario: " + scenarios[j].getValueUnderScenario());
+          System.out.println("------------------------------------------------------------");
         }
-
-        //Transfer this array to each position object
-        portfolio.getPosition(n).setScenarios(scenarios);
-
-        //TODO: Review method of calculation from textbook
-        Scenario[] scenariosSorted = portfolio.getPosition(n).sortScenarios();
-
-        for (int o = 0; o < scenariosSorted.length; o++) {
-          if (scenariosSorted[o] != null) {
-            System.out.println("SCENARIO 0 SORTED: " + scenariosSorted[o].getValueUnderScenario());
-            System.out.println(
-                "DATES: " + sdf.format(scenariosSorted[o].getDateOne().getTime()) + " : " + sdf
-                    .format(scenariosSorted[o].getDateTwo().getTime()));
-          }
-        }
-
-        varValues[n] = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
-            .getValueUnderScenario(); //
-
       }
 
-      System.out.println("VAR: " + varValues[0]);
+
+      //Transfer this array to each position object
+      portfolio.setScenarios(scenarios);
+
+      //TODO: Review method of calculation from textbook
+      Scenario[] scenariosSorted = portfolio.sortScenarios();
+
+
+      for (int o = 0; o < scenariosSorted.length; o++) {
+        if (scenariosSorted[o] != null) {
+          System.out.println("SCENARIO 0 SORTED: " + scenariosSorted[o].getValueUnderScenario());
+          System.out.println(
+              "DATES: " + sdf.format(scenariosSorted[o].getDateOne().getTime()) + " : " + sdf
+                  .format(scenariosSorted[o].getDateTwo().getTime()));
+        }
+      }
+
+      portfolio.setValueAtRisk(scenariosSorted[getPercentileIndex(scenariosSorted, probability)].getValueUnderScenario());
+
+      System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
 
     } catch (IOException e) {
       e.printStackTrace();

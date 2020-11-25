@@ -25,5 +25,12 @@ public class testHistoricalSimVar {
     assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
   }
 
+  @Test
+  public void testMultiAsset() {
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOGL", 100000), new Position("TSLA", 10000)});
+
+    assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
+  }
+
 
 }
