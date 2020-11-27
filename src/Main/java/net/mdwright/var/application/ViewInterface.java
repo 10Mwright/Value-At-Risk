@@ -42,6 +42,13 @@ public interface ViewInterface {
   double getProbability();
 
   /**
+   * Method to retrieve the user's preferred data length for historical sim.
+   *
+   * @return An int value representing the number of days to gather data for
+   */
+  int getDataLength();
+
+  /**
    * Method to set the result in GUI.
    *
    * @param varValue A BigDecimal object representing the value at risk given the user's criteria

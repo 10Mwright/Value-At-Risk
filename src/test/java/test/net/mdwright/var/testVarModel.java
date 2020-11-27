@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.math.BigDecimal;
 import net.mdwright.var.VarModel;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,14 +21,14 @@ public class testVarModel {
 
   @Test
   public void testSingleModelBuilding() {
-    Position[] portfolio = {new Position("GOOG", 1000000)};
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 1000000)});
 
     assertNotEquals(new BigDecimal(0.0), var.calculateVar(portfolio, 10, 0.99));
   }
 
   @Test
   public void testTwoModelBuilding() {
-    Position[] portfolio = {new Position("GOOG", 100000), new Position("TSLA", 1000000)};
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 100000), new Position("TSLA", 1000000)});
 
     assertNotEquals(new BigDecimal(0), var.calculateVar(portfolio, 10, 0.99));
   }

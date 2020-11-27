@@ -1,8 +1,10 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 
 /**
@@ -13,7 +15,7 @@ import net.mdwright.var.objects.Position;
  */
 public class VarController {
 
-  private boolean isModelBuilding;
+  private boolean isModelBuilding = true;
   private VarModel model = new VarModel();
   private ViewInterface view = null;
 
@@ -21,14 +23,28 @@ public class VarController {
     this.view = view;
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
+    view.addModelObserver(this::modelToUse);
   }
 
   public void calculateVar() {
-    Position[] portfolio = view.getPortfolio();
+    Portfolio portfolio = new Portfolio(view.getPortfolio());
     int timeHorizon = view.getTimeHorizon();
     double probability = view.getProbability();
 
-    BigDecimal valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
+    BigDecimal valueAtRisk = new BigDecimal(0);
+
+    if (!isModelBuilding) {
+      int dataLength = view.getDataLength();
+
+      System.out.println("DEBUGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+
+      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, dataLength);
+    } else {
+      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
+    }
+
+    //Rounding result to 2 decimal places
+    valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
     view.setResult(valueAtRisk);
   }

@@ -2,12 +2,17 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
@@ -18,7 +23,7 @@ public class ModelBuildingGUI implements ViewInterface {
     int portfolioSize = portfolioList.getItems().size();
     Position[] positions = new Position[portfolioSize];
 
-    for(int i = 0; i < portfolioSize; i++) {
+    for (int i = 0; i < portfolioSize; i++) {
       positions[i] = portfolioList.getItems().get(i);
     }
 
@@ -38,6 +43,10 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public double getProbability() {
     return Double.parseDouble(probabilityField.getText());
+  }
+
+  public int getDataLength() {
+    return Integer.parseInt(dataLengthField.getText());
   }
 
   @Override
@@ -72,7 +81,16 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void addModelObserver(Consumer<Model> model) {
-
+    modelSelection.selectedToggleProperty().addListener(
+        new ChangeListener<Toggle>() {
+          @Override
+          public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue,
+              Toggle newValue) {
+            model.accept(
+                newValue == modelBuildingSelection ? Model.ModelBuilding : Model.HistoricalSim);
+          }
+        }
+    );
   }
 
   @FXML
@@ -90,6 +108,22 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="assetValueField"
   private TextField assetValueField;
+
+  @FXML
+  // fx:id="dataLengthField"
+  private TextField dataLengthField;
+
+  @FXML
+  // fx:id="modelBuildingSelection"
+  private RadioButton modelBuildingSelection;
+
+  @FXML
+  // fx:id="historicalSimSelection"
+  private RadioButton historicalSimSelection;
+
+  @FXML
+  // fx:id="modelSelection"
+  private ToggleGroup modelSelection;
 
   @FXML
   // fx:id="resultField"
