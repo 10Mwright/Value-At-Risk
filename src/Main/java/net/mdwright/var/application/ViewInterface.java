@@ -6,8 +6,7 @@ import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
 /**
- * Interface class for GUI Views. Influence taken from 2nd Year Software Engineering Calculator
- * Coursework.
+ * Interface class for GUI Views.
  *
  * @author Matthew Wright
  */

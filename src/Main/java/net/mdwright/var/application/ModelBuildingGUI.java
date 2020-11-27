@@ -16,6 +16,10 @@ import javafx.scene.control.ToggleGroup;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
+/**
+ * Class for managing GUI for user interactions.
+ * @author Matthew Wright
+ */
 public class ModelBuildingGUI implements ViewInterface {
 
   @Override
