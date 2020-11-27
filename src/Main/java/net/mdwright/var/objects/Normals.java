@@ -2,12 +2,12 @@ package net.mdwright.var.objects;
 
 /**
  * Object for retrieving NormSinV values.
- * Written with influence from:
- * https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.5525&rep=rep1&type=pdf
  *
  * @author Matthew Wright
  */
 public class Normals {
+
+  //Written with influence from: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.5525&rep=rep1&type=pdf
 
   public static double[] normSinV = {-2.326347874, -2.053748911, -1.880793608, -1.750686071,
       -1.644853627, -1.554773595, -1.475791028, -1.40507156,

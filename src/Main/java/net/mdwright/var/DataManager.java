@@ -23,6 +23,7 @@ public class DataManager {
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
    * @param tickerSymbol the requested stocks ticker symbol
+   * @param dataLength An int value representing the number of days to go back for historical data
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs or the response is invalid
    */

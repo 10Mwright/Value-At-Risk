@@ -68,6 +68,8 @@ public class VarController {
 
   /**
    * Observing method to switch between calculation models.
+   *
+   * @param modelToUse Model object containing the enum value to use
    */
   public void modelToUse(Model modelToUse) {
     if (modelToUse == Model.ModelBuilding) {
