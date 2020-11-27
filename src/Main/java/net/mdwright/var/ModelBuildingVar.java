@@ -17,13 +17,9 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class ModelBuildingVar implements VarCalculator {
 
   /**
-   * Method to dispatch requests to relevant method.
-   *
-   * @param portfolio An array of Positions containing ticker symbols and values for each position
-   * in the portfolio
-   * @param timeHorizon number of days as an integer to act as the time horizon
-   * @param probability A double value representing the percentage probability in decimal form
+   * {@inheritDoc}
    */
+  @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     BigDecimal varValue = new BigDecimal(0);
 

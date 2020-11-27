@@ -8,8 +8,9 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 
 /**
- * Controller class for Var Calculations. Note: influence from Calculator code 2nd Year software
- * Engineering Coursework
+ * Controller class for Var Calculations.
+ *
+ * Note: influence from Calculator code 2nd Year software Engineering Coursework
  *
  * @author Matthew Wright
  */
@@ -17,26 +18,32 @@ public class VarController {
 
   private boolean isModelBuilding = true;
   private VarModel model = new VarModel();
-  private ViewInterface view = null;
+  private ViewInterface view;
 
+  /**
+   * Constructor method to assign a view to this controller and setup observing methods.
+   *
+   * @param view ViewInterface object representing the current user interface to be controlled
+   */
   public VarController(ViewInterface view) {
     this.view = view;
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
-    view.addModelObserver(this::modelToUse);
+    view.addModelObserver(this::modelToUse); //Set observer for model selection to modelToUse method
   }
 
+  /**
+   * Observing method to call appropriate calculation method depending on user selected model.
+   */
   public void calculateVar() {
     Portfolio portfolio = new Portfolio(view.getPortfolio());
     int timeHorizon = view.getTimeHorizon();
     double probability = view.getProbability();
 
-    BigDecimal valueAtRisk = new BigDecimal(0);
+    BigDecimal valueAtRisk;
 
     if (!isModelBuilding) {
       int dataLength = view.getDataLength();
-
-      System.out.println("DEBUGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
 
       valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, dataLength);
     } else {
@@ -46,9 +53,12 @@ public class VarController {
     //Rounding result to 2 decimal places
     valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
-    view.setResult(valueAtRisk);
+    view.setResult(valueAtRisk); //Set result in GUI
   }
 
+  /**
+   * Observing method to add a new position to the list view on the GUI.
+   */
   public void addAsset() {
     Position newPos = view.getNewPosition();
 
@@ -56,6 +66,9 @@ public class VarController {
     view.addNewPosition(newPos);
   }
 
+  /**
+   * Observing method to switch between calculation models.
+   */
   public void modelToUse(Model modelToUse) {
     if (modelToUse == Model.ModelBuilding) {
       isModelBuilding = true;

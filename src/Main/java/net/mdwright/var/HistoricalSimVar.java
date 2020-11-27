@@ -20,15 +20,7 @@ public class HistoricalSimVar implements VarCalculator {
   //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
 
   /**
-   * Method for calculating value at risk using the historical simulation method.
-   *
-   * @param portfolio An array of Positions containing ticker symbols and values for each position
-   * @param timeHorizon An int value representing the number of days to calculate var over
-   * @param probability A double value representing the decimal representation of confidence
-   * percentage
-   * @param historicalDataLength An int value representing the number of days of market variable
-   * data to fetch
-   * @return A BigDecimal representation of the single or multi day value at risk
+   * {@inheritDoc}
    */
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
@@ -70,12 +62,15 @@ public class HistoricalSimVar implements VarCalculator {
             System.out.println("WITH: " + sdf.format(
                 portfolio.getPosition(n).getHistoricalData().get(j + 1).getDate().getTime()));
 
+            //Gather historical data for these dates
             dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
             dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
 
+            //Current day value becomes the most recent historical adjusted close price
             BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData()
                 .get(dataSize - 1).getAdjClose();
 
+            // Dividing our 2nd day's value by our first day's value then multiplying by most recent value
             BigDecimal tempScenario = dayTwo.getAdjClose()
                 .divide(dayOne.getAdjClose(), 10, BigDecimal.ROUND_UP);
 
@@ -83,6 +78,7 @@ public class HistoricalSimVar implements VarCalculator {
 
             System.out.println("Scenario value (INITIAL):" + tempScenario);
 
+            // Dividing our initial scenario value by the current day value
             BigDecimal tempCurrentScenario = tempScenario
                 .divide(currentDayValue, 10, BigDecimal.ROUND_UP);
 
@@ -90,20 +86,23 @@ public class HistoricalSimVar implements VarCalculator {
 
             System.out.println("CURRENT DAY VALUE: " + currentDayValue);
 
+            // Retrieving the value of this position in our portfolio as defined by user
             BigDecimal portfolioValue = new BigDecimal(
                 portfolio.getPosition(n).getPositionValue());
 
             System.out.println("PORTFOLIO VALUE: " + portfolioValue);
 
+            // Multiplying our position's value with our initial scenario value
             scenarioValueTemp = portfolioValue.multiply(tempCurrentScenario);
 
             System.out.println("SCENARIOVALUE: " + scenarioValueTemp);
 
+            // Subtracting our position's value to get gain or loss
             scenarioValueTemp = scenarioValueTemp
                 .subtract(portfolioValue); //Get loss or gain compared to current value
 
             scenarioValueTemp = scenarioValueTemp.subtract(scenarioValueTemp
-                .multiply(new BigDecimal(2))); //Swap signs, gains are recored as negative losses
+                .multiply(new BigDecimal(2))); //Swap signs, gains are recorded as negative losses
 
             scenarioValue = scenarioValue.add(
                 scenarioValueTemp); //Add all scenario values of each position up for total scenario value
@@ -133,6 +132,7 @@ public class HistoricalSimVar implements VarCalculator {
         }
       }
 
+      // Retrieving our percentile value in our sorted array
       BigDecimal varValue = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
           .getValueUnderScenario();
 
@@ -166,6 +166,9 @@ public class HistoricalSimVar implements VarCalculator {
     return indexOfPercentile;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     throw new UnsupportedOperationException(
