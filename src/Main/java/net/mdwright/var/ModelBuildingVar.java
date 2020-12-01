@@ -26,7 +26,7 @@ public class ModelBuildingVar implements VarCalculator {
     if (portfolio.getSize() == 1) {
       varValue = calculateVar(portfolio.getPosition(0),
           timeHorizon, probability);
-    } else if (portfolio.getSize() == 2) {
+    } else if (portfolio.getSize() >= 2) {
       varValue = calculateVar(portfolio.getPosition(0), portfolio.getPosition(1), timeHorizon,
           probability);
     }
