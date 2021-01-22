@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="1209.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.mdwright.var.application.HistoricalSimGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="1209.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.mdwright.var.application.HistoricalSimGUI">
   <children>
     <Pane fx:id="graphPane" layoutX="515.0" layoutY="12.0" prefHeight="535.0" prefWidth="675.0" style="-fx-border-color: black;" />
     <TextField fx:id="resultField" layoutX="120.0" layoutY="690.0" prefHeight="25.0" prefWidth="161.0" />
@@ -104,4 +105,7 @@
     <Button fx:id="calculateButton" layoutX="345.0" layoutY="690.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Calculate" />
       <Pane fx:id="underGraphPane" layoutX="515.0" layoutY="562.0" prefHeight="153.0" prefWidth="675.0" style="-fx-border-color: black;" />
   </children>
+   <padding>
+      <Insets bottom="50.0" />
+   </padding>
 </Pane>

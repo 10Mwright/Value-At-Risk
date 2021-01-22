@@ -63,7 +63,9 @@ public class Main extends Application {
 
     new VarController(view);
 
-    Scene newScene = new Scene(root, 1209, 730);
+    Scene newScene = new Scene(root);
     primaryStage.setScene(newScene);
+    primaryStage.setWidth(root.getScene().getWidth());
+    primaryStage.setHeight(root.getScene().getHeight());
   }
 }
