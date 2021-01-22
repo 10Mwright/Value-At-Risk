@@ -46,7 +46,7 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public double getProbability() {
-    return Double.parseDouble(probabilityField.getText());
+    return (Double.parseDouble(probabilityField.getText()) / 100);
   }
 
   public int getDataLength() {
@@ -85,16 +85,6 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void addModelObserver(Consumer<Model> model) {
-    modelSelection.selectedToggleProperty().addListener(
-        new ChangeListener<Toggle>() {
-          @Override
-          public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue,
-              Toggle newValue) {
-            model.accept(
-                newValue == modelBuildingSelection ? Model.ModelBuilding : Model.HistoricalSim);
-          }
-        }
-    );
   }
 
   @FXML
@@ -116,18 +106,6 @@ public class HistoricalSimGUI implements ViewInterface {
   @FXML
   // fx:id="dataLengthField"
   private TextField dataLengthField;
-
-  @FXML
-  // fx:id="modelBuildingSelection"
-  private RadioButton modelBuildingSelection;
-
-  @FXML
-  // fx:id="historicalSimSelection"
-  private RadioButton historicalSimSelection;
-
-  @FXML
-  // fx:id="modelSelection"
-  private ToggleGroup modelSelection;
 
   @FXML
   // fx:id="resultField"

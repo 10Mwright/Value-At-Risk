@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import net.mdwright.var.VarController;
+import net.mdwright.var.ViewController;
 
 /**
  * Main entry class, sets up views.
@@ -20,20 +21,21 @@ public class Main extends Application {
   static FXMLLoader loader;
   static Parent root;
 
+  private static Stage primaryStage;
+
   /**
    * Main (Driver) class for setting up and running application components.
    * @param args Command line arguments
    * @throws IOException In the event of an Application error
    */
   public static void main(String[] args) throws IOException {
-    ViewInterface view;
 
-    System.out.println(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
-    loader = new FXMLLoader(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
+    System.out.println(Main.class.getResource("/fxml/EntranceGUI.fxml"));
+    loader = new FXMLLoader(Main.class.getResource("/fxml/EntranceGUI.fxml"));
     root = (Parent) loader.load();
-    view = loader.getController();
+    EntranceGUI view = loader.getController();
 
-    new VarController(view);
+    new ViewController(view);
 
     Application.launch(args);
   }
@@ -44,8 +46,24 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    this.primaryStage = primaryStage;
+
     Scene scene = new Scene(root, 600, 572);
     primaryStage.setScene(scene);
     primaryStage.show();
+  }
+
+  public static void changeScene(String scenePath) throws IOException {
+    ViewInterface view;
+
+    System.out.println(Main.class.getResource(scenePath));
+    loader = new FXMLLoader(Main.class.getResource(scenePath));
+    root = (Parent) loader.load();
+    view = loader.getController();
+
+    new VarController(view);
+
+    Scene newScene = new Scene(root, 1209, 730);
+    primaryStage.setScene(newScene);
   }
 }
