@@ -80,6 +80,7 @@ public interface ViewInterface {
    *
    * @param model Object of type Observer
    */
+  @Deprecated //Method has been deprecated as the GUIs have now been separated on a per model basis.
   void addModelObserver(Consumer<Model> model);
 
 }
