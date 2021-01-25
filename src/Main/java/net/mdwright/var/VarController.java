@@ -42,6 +42,10 @@ public class VarController {
 
     BigDecimal valueAtRisk;
 
+    if(view.getDataLength() != 0) { //Datalength has been set
+      isModelBuilding = false;
+    }
+
     if (!isModelBuilding) {
       int dataLength = view.getDataLength();
 

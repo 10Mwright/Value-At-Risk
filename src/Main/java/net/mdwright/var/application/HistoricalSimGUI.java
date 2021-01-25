@@ -49,6 +49,7 @@ public class HistoricalSimGUI implements ViewInterface {
     return (Double.parseDouble(probabilityField.getText()) / 100);
   }
 
+  @Override
   public int getDataLength() {
     return Integer.parseInt(dataLengthField.getText());
   }

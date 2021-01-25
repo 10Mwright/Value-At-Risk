@@ -50,10 +50,17 @@ public class Main extends Application {
 
     Scene scene = new Scene(root, 600, 572);
     primaryStage.setScene(scene);
+    primaryStage.setTitle("Value at Risk (Main Menu)");
     primaryStage.show();
   }
 
-  public static void changeScene(String scenePath) throws IOException {
+  /**
+   * 
+   * @param scenePath
+   * @param sceneName
+   * @throws IOException
+   */
+  public static void changeScene(String scenePath, String sceneName) throws IOException {
     ViewInterface view;
 
     System.out.println(Main.class.getResource(scenePath));
@@ -67,5 +74,6 @@ public class Main extends Application {
     primaryStage.setScene(newScene);
     primaryStage.setWidth(root.getScene().getWidth());
     primaryStage.setHeight(root.getScene().getHeight());
+    primaryStage.setTitle(sceneName);
   }
 }

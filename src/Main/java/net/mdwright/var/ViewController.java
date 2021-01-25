@@ -17,7 +17,7 @@ public class ViewController {
 
   public void changeToModelBuilding() {
     try {
-      Main.changeScene("/fxml/ModelBuildingGUI.fxml");
+      Main.changeScene("/fxml/ModelBuildingGUI.fxml", "Value at Risk (Model-Building Methodology)");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -25,7 +25,7 @@ public class ViewController {
 
   public void changeToHistoricalSim() {
     try {
-      Main.changeScene("/fxml/HistoricalSimGUI.fxml");
+      Main.changeScene("/fxml/HistoricalSimGUI.fxml", "Value at Risk (Historical Simulation Methodology)");
     } catch (IOException e) {
       e.printStackTrace();
     }
