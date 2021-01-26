@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.mdwright.var.VarController;
 import net.mdwright.var.ViewController;
@@ -48,9 +50,10 @@ public class Main extends Application {
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
 
-    Scene scene = new Scene(root, 600, 572);
+    Scene scene = new Scene(root);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Value at Risk (Main Menu)");
+    primaryStage.centerOnScreen();
     primaryStage.show();
   }
 
@@ -74,6 +77,8 @@ public class Main extends Application {
     primaryStage.setScene(newScene);
     primaryStage.setWidth(root.getScene().getWidth());
     primaryStage.setHeight(root.getScene().getHeight());
+    primaryStage.centerOnScreen(); //Centers the window on the users screen
     primaryStage.setTitle(sceneName);
+
   }
 }
