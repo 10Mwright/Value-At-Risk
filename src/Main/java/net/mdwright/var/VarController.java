@@ -2,10 +2,20 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale.Category;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Controller class for Var Calculations.
@@ -58,6 +68,34 @@ public class VarController {
     valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
     view.setResult(valueAtRisk); //Set result in GUI
+    drawChart(); //Calls code to create a price chart
+  }
+
+  public void drawChart() {
+    List<HistoricalQuote>[] portfolioData = model.getPortfolioData();
+    List<HistoricalQuote>[] portfolioPrice;
+
+    System.out.println(portfolioData);
+
+    final CategoryAxis xAxis = new CategoryAxis();
+    final NumberAxis yAxis = new NumberAxis();
+    xAxis.setLabel("Date");
+    yAxis.setLabel("Portfolio Value");
+
+    final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+
+    XYChart.Series series = new Series();
+    series.setName("Portfolio");
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+
+    for(int i = 0; i < portfolioData[0].size(); i++) {
+      series.getData().add(new XYChart.Data(sdf.format(portfolioData[0].get(i).getDate().getTime()), portfolioData[0].get(i).getAdjClose()));
+    }
+
+    lineChart.getData().add(series);
+
+    view.setChart(lineChart);
   }
 
   /**

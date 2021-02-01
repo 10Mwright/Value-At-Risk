@@ -1,7 +1,9 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import java.util.List;
 import net.mdwright.var.objects.Portfolio;
+import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Interface for different models of VaR calculations.
@@ -36,4 +38,5 @@ public interface VarCalculator {
       int historicalDataLength);
 
 
+  List<HistoricalQuote>[] getData();
 }

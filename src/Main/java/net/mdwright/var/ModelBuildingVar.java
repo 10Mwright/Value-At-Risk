@@ -16,6 +16,8 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class ModelBuildingVar implements VarCalculator {
 
+  private static List<HistoricalQuote> [] portfolioData;
+
   /**
    * {@inheritDoc}
    */
@@ -58,6 +60,8 @@ public class ModelBuildingVar implements VarCalculator {
     try {
       List<HistoricalQuote> historicalData = data
           .getHistoricalPrices(position.getTickerSymbol(), 365);
+
+      portfolioData = new List[]{historicalData};
 
       for (int i = 0; i < historicalData.size(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
@@ -126,6 +130,8 @@ public class ModelBuildingVar implements VarCalculator {
           .getHistoricalPrices(positionOne.getTickerSymbol(), 365);
       List<HistoricalQuote> positionTwoData = data
           .getHistoricalPrices(positionTwo.getTickerSymbol(), 365);
+
+      portfolioData = new List[]{positionOneData, positionTwoData};
 
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
@@ -279,5 +285,10 @@ public class ModelBuildingVar implements VarCalculator {
       int historicalDataLength) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data)");
+  }
+
+  @Override
+  public List<HistoricalQuote>[] getData() {
+    return portfolioData;
   }
 }

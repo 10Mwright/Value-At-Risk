@@ -3,6 +3,7 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.sound.sampled.Port;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -150,6 +151,11 @@ public class HistoricalSimVar implements VarCalculator {
     }
 
     return portfolio.getValueAtRisk();
+  }
+
+  @Override
+  public List<HistoricalQuote>[] getData() {
+    return new List[0];
   }
 
   /**
