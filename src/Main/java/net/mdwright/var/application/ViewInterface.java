@@ -2,6 +2,7 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
+import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
@@ -53,6 +54,8 @@ public interface ViewInterface {
    * @param varValue A BigDecimal object representing the value at risk given the user's criteria
    */
   void setResult(BigDecimal varValue);
+
+  void setChart(LineChart chart);
 
   /**
    * Method to add the newly defined position to the portfolio list.

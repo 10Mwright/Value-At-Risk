@@ -2,12 +2,16 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
@@ -53,6 +57,14 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public void setResult(BigDecimal varValue) {
     resultField.setText(String.valueOf(varValue));
+  }
+
+  @Override
+  public void setChart(LineChart chart) {
+    chart.setLegendVisible(false);
+    chart.setPrefSize(670, 530);
+
+    graphPane.getChildren().add(chart);
   }
 
   @Override
@@ -119,4 +131,9 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="portfolioList"
   private ListView<Position> portfolioList;
+
+  @FXML
+  // fx:id="graphPane"
+  private Pane graphPane;
+
 }

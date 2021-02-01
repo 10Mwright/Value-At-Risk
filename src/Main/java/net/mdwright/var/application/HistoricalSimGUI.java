@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -57,6 +58,11 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public void setResult(BigDecimal varValue) {
     resultField.setText(String.valueOf(varValue));
+  }
+
+  @Override
+  public void setChart(LineChart chart) {
+
   }
 
   @Override
