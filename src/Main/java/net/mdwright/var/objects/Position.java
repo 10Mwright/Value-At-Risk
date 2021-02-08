@@ -12,6 +12,7 @@ public class Position {
 
   private String tickerSymbol;
   private double positionValue;
+  private int holdings;
   private List<HistoricalQuote> historicalData;
 
   /**
@@ -20,9 +21,21 @@ public class Position {
    * @param tickerSymbol String value representing the abbreviated stock symbol (e.g. GOOGL)
    * @param positionValue Double value representing the total value in £ of the position
    */
+  @Deprecated
   public Position(String tickerSymbol, double positionValue) {
     this.tickerSymbol = tickerSymbol;
     this.positionValue = positionValue;
+  }
+
+  /**
+   * Constructor method for creating a new Position object.
+   *
+   * @param tickerSymbol String value representing the abbreviated stock symbol (e.g. GOOGL)
+   * @param holdings Int value representing the total number of holdings (e.g. number of stocks held)
+   */
+  public Position(String tickerSymbol, int holdings) {
+    this.tickerSymbol = tickerSymbol;
+    this.holdings = holdings;
   }
 
   /**
