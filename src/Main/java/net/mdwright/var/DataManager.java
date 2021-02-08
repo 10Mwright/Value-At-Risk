@@ -72,6 +72,11 @@ public class DataManager {
     return exchange.getPrice();
   }
 
+  /**
+   * Method for retrieving the current price of a position in GBP.
+   * @param position The target position object
+   * @return BigDecimal value representing the current GBP price
+   */
   public static BigDecimal getCurrentQuote(Position position) {
     try {
       Stock stock = YahooFinance.get(position.getTickerSymbol());
@@ -86,6 +91,17 @@ public class DataManager {
     }
 
     return new BigDecimal(0);
+  }
+
+  /**
+   * Method for retrieving the total price of the position.
+   * @param position The target position object
+   * @return BigDecimal value representing the current GBP price of the holdings
+   */
+  public static BigDecimal getCurrentValue(Position position) {
+    BigDecimal currentPrice = getCurrentQuote(position); //Retrieves converted current price
+
+    return currentPrice.multiply(new BigDecimal(position.getPositionValue()));
   }
 
 }
