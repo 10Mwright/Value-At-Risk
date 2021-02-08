@@ -22,6 +22,7 @@ import net.mdwright.var.objects.Position;
  */
 public class ModelBuildingGUI implements ViewInterface {
 
+  //TODO: swap use of Position array to Portfolio instead
   @Override
   public Position[] getPortfolio() {
     int portfolioSize = portfolioList.getItems().size();
