@@ -91,16 +91,17 @@ public class VarController {
 
     for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Runs through the portfolio's positions ready for plotting
       BigDecimal totalForDay = new BigDecimal(0);
+      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData().get(j).getDate().getTime()); //Find date, will be used to ensure totals are done using the same dates
 
       for (int i = 0; i < portfolioData.getSize(); i++) { //Plots every 5th data point on graph,
         Position position = portfolioData.getPosition(i);
 
-        totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
+        if(date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) { //Ensure it's only totalled when the data is from the same date
+          totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
+        }
       }
 
-      Position firstPosition = portfolioData.getPosition(0); //First position in the portfolio, used to gather dates for each day
-
-      series.getData().add(new XYChart.Data(sdf.format(firstPosition.getHistoricalData().get(j).getDate().getTime()), totalForDay));
+      series.getData().add(new XYChart.Data(date, totalForDay));
     }
 
     lineChart.getData().add(series);
