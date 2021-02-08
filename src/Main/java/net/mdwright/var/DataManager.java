@@ -73,6 +73,18 @@ public class DataManager {
   }
 
   public static BigDecimal getCurrentQuote(Position position) {
+    try {
+      Stock stock = YahooFinance.get(position.getTickerSymbol());
+
+      BigDecimal currentPrice = stock.getQuote().getPrice();
+
+      currentPrice = currentPrice.multiply(getFXQuote(stock.getCurrency(), "GBP"));
+
+      return currentPrice;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     return new BigDecimal(0);
   }
 
