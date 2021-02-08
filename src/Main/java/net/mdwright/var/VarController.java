@@ -72,7 +72,7 @@ public class VarController {
   }
 
   public void drawChart() {
-    List<HistoricalQuote>[] portfolioData = model.getPortfolioData();
+    Portfolio portfolioData = model.getPortfolioData();
     List<HistoricalQuote>[] portfolioPrice;
 
     System.out.println(portfolioData);
@@ -89,8 +89,18 @@ public class VarController {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
-    for(int i = 0; i < portfolioData[0].size(); i = i+5) { //Plots every 5th data point on graph,
-      series.getData().add(new XYChart.Data(sdf.format(portfolioData[0].get(i).getDate().getTime()), portfolioData[0].get(i).getAdjClose()));
+    for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Runs through the portfolio's positions ready for plotting
+      BigDecimal totalForDay = new BigDecimal(0);
+
+      for (int i = 0; i < portfolioData.getSize(); i++) { //Plots every 5th data point on graph,
+        Position position = portfolioData.getPosition(i);
+
+        totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
+      }
+
+      Position firstPosition = portfolioData.getPosition(0); //First position in the portfolio, used to gather dates for each day
+
+      series.getData().add(new XYChart.Data(sdf.format(firstPosition.getHistoricalData().get(j).getDate().getTime()), totalForDay));
     }
 
     lineChart.getData().add(series);

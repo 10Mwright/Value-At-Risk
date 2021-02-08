@@ -15,7 +15,7 @@ public class VarModel {
   private VarCalculator modelBuilding = new ModelBuildingVar();
   private VarCalculator historicalSim = new HistoricalSimVar();
 
-  private List<HistoricalQuote> [] portfolioData;
+  private Portfolio portfolioData;
 
   /**
    * Method to calculate VaR for a portfolio using the model-building model.
@@ -50,7 +50,7 @@ public class VarModel {
     return historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
   }
 
-  public List<HistoricalQuote>[] getPortfolioData() {
+  public Portfolio getPortfolioData() {
     return portfolioData;
   }
 
