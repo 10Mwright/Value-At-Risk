@@ -80,7 +80,7 @@ public class VarController {
     final CategoryAxis xAxis = new CategoryAxis();
     final NumberAxis yAxis = new NumberAxis();
     xAxis.setLabel("Date");
-    yAxis.setLabel("Portfolio Value");
+    yAxis.setLabel("Portfolio Value (£)");
 
     final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
 
@@ -89,7 +89,7 @@ public class VarController {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
-    for(int i = 0; i < portfolioData[0].size(); i++) {
+    for(int i = 0; i < portfolioData[0].size(); i = i+5) { //Plots every 5th data point on graph,
       series.getData().add(new XYChart.Data(sdf.format(portfolioData[0].get(i).getDate().getTime()), portfolioData[0].get(i).getAdjClose()));
     }
 
