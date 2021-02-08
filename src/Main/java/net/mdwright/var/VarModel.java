@@ -47,7 +47,11 @@ public class VarModel {
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
-    return historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
+    BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
+
+    portfolioData = historicalSim.getData();
+
+    return var;
   }
 
   public Portfolio getPortfolioData() {
