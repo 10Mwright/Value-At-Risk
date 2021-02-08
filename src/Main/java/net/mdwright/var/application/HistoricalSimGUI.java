@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
@@ -62,7 +63,10 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void setChart(LineChart chart) {
+    chart.setLegendVisible(false);
+    chart.setPrefSize(670, 530);
 
+    graphPane.getChildren().add(chart);
   }
 
   @Override
@@ -129,4 +133,8 @@ public class HistoricalSimGUI implements ViewInterface {
   @FXML
   // fx:id="portfolioList"
   private ListView<Position> portfolioList;
+
+  @FXML
+  // fx:id="graphPane"
+  private Pane graphPane;
 }
