@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import net.mdwright.var.objects.Position;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -69,6 +70,10 @@ public class DataManager {
     FxQuote exchange = YahooFinance.getFx(fromCurrency + toCurrency + "=X");
 
     return exchange.getPrice();
+  }
+
+  public static BigDecimal getCurrentQuote(Position position) {
+    return new BigDecimal(0);
   }
 
 }

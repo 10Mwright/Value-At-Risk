@@ -71,6 +71,9 @@ public class VarController {
     drawChart(); //Calls code to create a price chart
   }
 
+  /**
+   * Method for drawing a linechart using historical data from the calculation classes.
+   */
   public void drawChart() {
     Portfolio portfolioData = model.getPortfolioData();
     List<HistoricalQuote>[] portfolioPrice;
@@ -89,11 +92,16 @@ public class VarController {
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
-    for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Runs through the portfolio's positions ready for plotting
-      BigDecimal totalForDay = new BigDecimal(0);
-      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData().get(j).getDate().getTime()); //Find date, will be used to ensure totals are done using the same dates
+    /*
+      the first position is used as a benchmark, the number of data points on the graph
+      is decided by the historical data gathered for the first position
+     */
 
-      for (int i = 0; i < portfolioData.getSize(); i++) { //Plots every 5th data point on graph,
+    for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Plots every 5th data point on the graph of the first position
+      BigDecimal totalForDay = new BigDecimal(0);
+      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData().get(j).getDate().getTime()); //Finds date, will be used to ensure totals are done using the same dates
+
+      for (int i = 0; i < portfolioData.getSize(); i++) { //Runs through each position in the portfolio to get a daily total value
         Position position = portfolioData.getPosition(i);
 
         if(date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) { //Ensure it's only totalled when the data is from the same date
@@ -101,10 +109,10 @@ public class VarController {
         }
       }
 
-      series.getData().add(new XYChart.Data(date, totalForDay));
+      series.getData().add(new XYChart.Data(date, totalForDay)); //Add data point to data series
     }
 
-    lineChart.getData().add(series);
+    lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
 
     view.setChart(lineChart);
   }
