@@ -16,7 +16,7 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class ModelBuildingVar implements VarCalculator {
 
-  private static List<HistoricalQuote> [] portfolioData;
+  private static Portfolio portfolioData;
 
   /**
    * {@inheritDoc}
@@ -58,22 +58,16 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> historicalData = data
-          .getHistoricalPrices(position.getTickerSymbol(), 365);
+      position.setHistoricalData((data.getHistoricalPrices(position.getTickerSymbol(), 365)));
 
-      portfolioData = new List[]{historicalData};
+      portfolioData = new Portfolio(position);
 
-      for (int i = 0; i < historicalData.size(); i++) {
+      for (int i = 0; i < position.getHistoricalDataSize(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
-        System.out.println(i + ", " + historicalData.get(i).getAdjClose());
+        System.out.println(i + ", " + position.getHistoricalData().get(i).getAdjClose());
       }
 
-      double dailyVolatility = calculateVolatility(historicalData);
-
-      // Must convert this volatility to a percentage
-      // Note: any better method to calculate as a percentage other than avg?
-      // e.g. TESLA has a massive daily volatility over a 1 year period (60.4%)
-      dailyVolatility = dailyVolatility;
+      double dailyVolatility = calculateVolatility(position.getHistoricalData());
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -131,7 +125,10 @@ public class ModelBuildingVar implements VarCalculator {
       List<HistoricalQuote> positionTwoData = data
           .getHistoricalPrices(positionTwo.getTickerSymbol(), 365);
 
-      portfolioData = new List[]{positionOneData, positionTwoData};
+      positionOne.setHistoricalData(positionOneData);
+      positionTwo.setHistoricalData(positionTwoData);
+
+      portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
 
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
@@ -288,7 +285,7 @@ public class ModelBuildingVar implements VarCalculator {
   }
 
   @Override
-  public List<HistoricalQuote>[] getData() {
+  public Portfolio getData() {
     return portfolioData;
   }
 }

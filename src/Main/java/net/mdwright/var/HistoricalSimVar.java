@@ -3,10 +3,7 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import javax.sound.sampled.Port;
 import net.mdwright.var.objects.Portfolio;
-import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
 import yahoofinance.histquotes.HistoricalQuote;
 
@@ -20,13 +17,14 @@ public class HistoricalSimVar implements VarCalculator {
 
   //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
 
+  Portfolio portfolio;
+
   /**
    * {@inheritDoc}
    */
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
-
     int portfolioSize = portfolio.getSize();
     DataManager data = new DataManager();
 
@@ -150,12 +148,14 @@ public class HistoricalSimVar implements VarCalculator {
       e.printStackTrace();
     }
 
+    this.portfolio = portfolio; //Update portfolio object for graphing usage
+
     return portfolio.getValueAtRisk();
   }
 
   @Override
-  public List<HistoricalQuote>[] getData() {
-    return new List[0];
+  public Portfolio getData() {
+    return portfolio;
   }
 
   /**
