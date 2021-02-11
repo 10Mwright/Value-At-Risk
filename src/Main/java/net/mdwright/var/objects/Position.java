@@ -51,7 +51,7 @@ public class Position {
    */
   @Override
   public String toString() {
-    return "Ticker Symbol = " + this.tickerSymbol + ", Position Value = £" + this.positionValue;
+    return "Ticker Symbol = " + this.tickerSymbol + ", Holdings = " + this.getHoldings();
   }
 
   /**
@@ -80,5 +80,9 @@ public class Position {
    */
   public int getHistoricalDataSize() {
     return historicalData.size();
+  }
+
+  public double getHoldings() {
+    return holdings;
   }
 }

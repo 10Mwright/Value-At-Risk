@@ -106,6 +106,7 @@ public class VarController {
 
         if(date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) { //Ensure it's only totalled when the data is from the same date
           totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
+          totalForDay = totalForDay.multiply(new BigDecimal(position.getHoldings()));
         }
       }
 

@@ -71,7 +71,7 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
-      double dailyStandardDeviation = position.getPositionValue() * (dailyVolatility);
+      double dailyStandardDeviation = data.getCurrentValue(position).doubleValue() * (dailyVolatility);
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
@@ -137,8 +137,8 @@ public class ModelBuildingVar implements VarCalculator {
       double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);
 
       // Calculate each standard deviation
-      double positionOneSDeviation = positionOne.getPositionValue() * positionOneVolatility;
-      double positionTwoSDeviation = positionTwo.getPositionValue() * positionTwoVolatility;
+      double positionOneSDeviation = data.getCurrentValue(positionOne).doubleValue() * positionOneVolatility;
+      double positionTwoSDeviation = data.getCurrentValue(positionTwo).doubleValue() * positionTwoVolatility;
 
       double standardDeviation = Math.sqrt(
           Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2

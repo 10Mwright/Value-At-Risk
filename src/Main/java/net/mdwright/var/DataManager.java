@@ -101,7 +101,9 @@ public class DataManager {
   public static BigDecimal getCurrentValue(Position position) {
     BigDecimal currentPrice = getCurrentQuote(position); //Retrieves converted current price
 
-    return currentPrice.multiply(new BigDecimal(position.getPositionValue()));
+    System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
+
+    return currentPrice.multiply(new BigDecimal(position.getHoldings()));
   }
 
 }

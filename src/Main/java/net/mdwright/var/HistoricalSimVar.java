@@ -86,8 +86,7 @@ public class HistoricalSimVar implements VarCalculator {
             System.out.println("CURRENT DAY VALUE: " + currentDayValue);
 
             // Retrieving the value of this position in our portfolio as defined by user
-            BigDecimal portfolioValue = new BigDecimal(
-                portfolio.getPosition(n).getPositionValue());
+            BigDecimal portfolioValue = data.getCurrentValue(portfolio.getPosition(n));
 
             System.out.println("PORTFOLIO VALUE: " + portfolioValue);
 
