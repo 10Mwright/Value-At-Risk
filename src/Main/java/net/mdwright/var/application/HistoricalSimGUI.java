@@ -39,7 +39,7 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetValueField.getText()));
+    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
   }
 
   @Override
@@ -112,8 +112,8 @@ public class HistoricalSimGUI implements ViewInterface {
   private TextField tickerSymbolField;
 
   @FXML
-  // fx:id="assetValueField"
-  private TextField assetValueField;
+  // fx:id="assetHoldingsField"
+  private TextField assetHoldingsField;
 
   @FXML
   // fx:id="dataLengthField"

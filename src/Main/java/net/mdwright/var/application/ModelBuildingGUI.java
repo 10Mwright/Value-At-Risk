@@ -37,7 +37,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetValueField.getText()));
+    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
   }
 
   @Override
@@ -110,12 +110,8 @@ public class ModelBuildingGUI implements ViewInterface {
   private TextField tickerSymbolField;
 
   @FXML
-  // fx:id="assetValueField"
-  private TextField assetValueField;
-
-  @FXML
-  // fx:id="dataLengthField"
-  private TextField dataLengthField;
+  // fx:id="assetHoldingsField"
+  private TextField assetHoldingsField;
 
   @FXML
   // fx:id="resultField"
