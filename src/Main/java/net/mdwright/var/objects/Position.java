@@ -1,5 +1,6 @@
 package net.mdwright.var.objects;
 
+import java.math.BigDecimal;
 import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
@@ -11,7 +12,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private double positionValue;
+  private BigDecimal positionValue;
   private double holdings;
   private List<HistoricalQuote> historicalData;
 
@@ -40,7 +41,7 @@ public class Position {
    *
    * @return Double value representing the total value of the position
    */
-  public double getPositionValue() {
+  public BigDecimal getPositionValue() {
     return positionValue;
   }
 
@@ -85,4 +86,6 @@ public class Position {
   public double getHoldings() {
     return holdings;
   }
+
+  public void setPositionValue(BigDecimal positionValue) { this.positionValue = positionValue; }
 }

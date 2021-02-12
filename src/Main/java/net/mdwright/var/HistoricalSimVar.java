@@ -42,6 +42,7 @@ public class HistoricalSimVar implements VarCalculator {
         String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
         portfolio.getPosition(i)
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
+        portfolio.getPosition(i).setPositionValue(data.getCurrentValue(portfolio.getPosition(i))); //Calculate current position value
       }
 
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
@@ -85,10 +86,7 @@ public class HistoricalSimVar implements VarCalculator {
 
             System.out.println("CURRENT DAY VALUE: " + currentDayValue);
 
-            //TODO: rework where position value is calculated, this current usage is highly inefficient
-
-            // Retrieving the value of this position in our portfolio as defined by user
-            BigDecimal portfolioValue = data.getCurrentValue(portfolio.getPosition(n));
+            BigDecimal portfolioValue = portfolio.getPosition(n).getPositionValue();
 
             System.out.println("PORTFOLIO VALUE: " + portfolioValue);
 
