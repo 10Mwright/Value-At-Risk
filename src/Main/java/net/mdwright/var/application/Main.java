@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.mdwright.var.VarController;
+import net.mdwright.var.ViewController;
 
 /**
  * Main entry class, sets up views.
@@ -20,20 +23,21 @@ public class Main extends Application {
   static FXMLLoader loader;
   static Parent root;
 
+  private static Stage primaryStage;
+
   /**
    * Main (Driver) class for setting up and running application components.
    * @param args Command line arguments
    * @throws IOException In the event of an Application error
    */
   public static void main(String[] args) throws IOException {
-    ViewInterface view;
 
-    System.out.println(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
-    loader = new FXMLLoader(Main.class.getResource("/fxml/ModelBuildingGUI.fxml"));
+    System.out.println(Main.class.getResource("/fxml/EntranceGUI.fxml"));
+    loader = new FXMLLoader(Main.class.getResource("/fxml/EntranceGUI.fxml"));
     root = (Parent) loader.load();
-    view = loader.getController();
+    EntranceGUI view = loader.getController();
 
-    new VarController(view);
+    new ViewController(view);
 
     Application.launch(args);
   }
@@ -44,8 +48,37 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
-    Scene scene = new Scene(root, 600, 572);
+    this.primaryStage = primaryStage;
+
+    Scene scene = new Scene(root);
     primaryStage.setScene(scene);
+    primaryStage.setTitle("Value at Risk (Main Menu)");
+    primaryStage.centerOnScreen();
     primaryStage.show();
+  }
+
+  /**
+   * 
+   * @param scenePath
+   * @param sceneName
+   * @throws IOException
+   */
+  public static void changeScene(String scenePath, String sceneName) throws IOException {
+    ViewInterface view;
+
+    System.out.println(Main.class.getResource(scenePath));
+    loader = new FXMLLoader(Main.class.getResource(scenePath));
+    root = (Parent) loader.load();
+    view = loader.getController();
+
+    new VarController(view);
+
+    Scene newScene = new Scene(root);
+    primaryStage.setScene(newScene);
+    primaryStage.setWidth(root.getScene().getWidth());
+    primaryStage.setHeight(root.getScene().getHeight());
+    primaryStage.centerOnScreen(); //Centers the window on the users screen
+    primaryStage.setTitle(sceneName);
+
   }
 }

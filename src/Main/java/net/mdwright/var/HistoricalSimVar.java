@@ -3,9 +3,7 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import javax.sound.sampled.Port;
 import net.mdwright.var.objects.Portfolio;
-import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
 import yahoofinance.histquotes.HistoricalQuote;
 
@@ -19,13 +17,14 @@ public class HistoricalSimVar implements VarCalculator {
 
   //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
 
+  Portfolio portfolio;
+
   /**
    * {@inheritDoc}
    */
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
-
     int portfolioSize = portfolio.getSize();
     DataManager data = new DataManager();
 
@@ -43,6 +42,7 @@ public class HistoricalSimVar implements VarCalculator {
         String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
         portfolio.getPosition(i)
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
+        portfolio.getPosition(i).setPositionValue(data.getCurrentValue(portfolio.getPosition(i))); //Calculate current position value
       }
 
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
@@ -86,9 +86,7 @@ public class HistoricalSimVar implements VarCalculator {
 
             System.out.println("CURRENT DAY VALUE: " + currentDayValue);
 
-            // Retrieving the value of this position in our portfolio as defined by user
-            BigDecimal portfolioValue = new BigDecimal(
-                portfolio.getPosition(n).getPositionValue());
+            BigDecimal portfolioValue = portfolio.getPosition(n).getPositionValue();
 
             System.out.println("PORTFOLIO VALUE: " + portfolioValue);
 
@@ -149,7 +147,14 @@ public class HistoricalSimVar implements VarCalculator {
       e.printStackTrace();
     }
 
+    this.portfolio = portfolio; //Update portfolio object for graphing usage
+
     return portfolio.getValueAtRisk();
+  }
+
+  @Override
+  public Portfolio getData() {
+    return portfolio;
   }
 
   /**

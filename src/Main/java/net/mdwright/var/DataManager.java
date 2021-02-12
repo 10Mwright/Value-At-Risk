@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import net.mdwright.var.objects.Position;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -69,6 +70,40 @@ public class DataManager {
     FxQuote exchange = YahooFinance.getFx(fromCurrency + toCurrency + "=X");
 
     return exchange.getPrice();
+  }
+
+  /**
+   * Method for retrieving the current price of a position in GBP.
+   * @param position The target position object
+   * @return BigDecimal value representing the current GBP price
+   */
+  public static BigDecimal getCurrentQuote(Position position) {
+    try {
+      Stock stock = YahooFinance.get(position.getTickerSymbol());
+
+      BigDecimal currentPrice = stock.getQuote().getPrice();
+
+      currentPrice = currentPrice.multiply(getFXQuote(stock.getCurrency(), "GBP"));
+
+      return currentPrice;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return new BigDecimal(0);
+  }
+
+  /**
+   * Method for retrieving the total price of the position.
+   * @param position The target position object
+   * @return BigDecimal value representing the current GBP price of the holdings
+   */
+  public static BigDecimal getCurrentValue(Position position) {
+    BigDecimal currentPrice = getCurrentQuote(position); //Retrieves converted current price
+
+    System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
+
+    return currentPrice.multiply(new BigDecimal(position.getHoldings()));
   }
 
 }

@@ -2,10 +2,20 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale.Category;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Controller class for Var Calculations.
@@ -42,6 +52,10 @@ public class VarController {
 
     BigDecimal valueAtRisk;
 
+    if(view.getDataLength() != 0) { //Datalength has been set
+      isModelBuilding = false;
+    }
+
     if (!isModelBuilding) {
       int dataLength = view.getDataLength();
 
@@ -54,6 +68,54 @@ public class VarController {
     valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
     view.setResult(valueAtRisk); //Set result in GUI
+    drawChart(); //Calls code to create a price chart
+  }
+
+  /**
+   * Method for drawing a linechart using historical data from the calculation classes.
+   */
+  public void drawChart() {
+    Portfolio portfolioData = model.getPortfolioData();
+    List<HistoricalQuote>[] portfolioPrice;
+
+    System.out.println(portfolioData);
+
+    final CategoryAxis xAxis = new CategoryAxis();
+    final NumberAxis yAxis = new NumberAxis();
+    xAxis.setLabel("Date");
+    yAxis.setLabel("Portfolio Value (£)");
+
+    final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+
+    XYChart.Series series = new Series();
+    series.setName("Portfolio");
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+
+    /*
+      the first position is used as a benchmark, the number of data points on the graph
+      is decided by the historical data gathered for the first position
+     */
+
+    for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Plots every 5th data point on the graph of the first position
+      BigDecimal totalForDay = new BigDecimal(0);
+      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData().get(j).getDate().getTime()); //Finds date, will be used to ensure totals are done using the same dates
+
+      for (int i = 0; i < portfolioData.getSize(); i++) { //Runs through each position in the portfolio to get a daily total value
+        Position position = portfolioData.getPosition(i);
+
+        if(date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) { //Ensure it's only totalled when the data is from the same date
+          totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
+          totalForDay = totalForDay.multiply(new BigDecimal(position.getHoldings()));
+        }
+      }
+
+      series.getData().add(new XYChart.Data(date, totalForDay)); //Add data point to data series
+    }
+
+    lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
+
+    view.setChart(lineChart);
   }
 
   /**

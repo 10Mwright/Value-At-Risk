@@ -36,4 +36,5 @@ public interface VarCalculator {
       int historicalDataLength);
 
 
+  Portfolio getData();
 }

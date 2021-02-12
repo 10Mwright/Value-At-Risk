@@ -1,7 +1,9 @@
 package net.mdwright.var;
 
 import java.math.BigDecimal;
+import java.util.List;
 import net.mdwright.var.objects.Portfolio;
+import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Class to send calculation requests to appropriate calculating classes.
@@ -13,6 +15,8 @@ public class VarModel {
   private VarCalculator modelBuilding = new ModelBuildingVar();
   private VarCalculator historicalSim = new HistoricalSimVar();
 
+  private Portfolio portfolioData;
+
   /**
    * Method to calculate VaR for a portfolio using the model-building model.
    *
@@ -23,7 +27,11 @@ public class VarModel {
    * @return BigDecimal value representing the VaR of the portfolio
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
-    return modelBuilding.calculateVar(portfolio, timeHorizon, probability);
+    BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability);
+
+    portfolioData = modelBuilding.getData();
+
+    return var;
   }
 
   /**
@@ -39,7 +47,15 @@ public class VarModel {
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
-    return historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
+    BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability, historicalDataLength);
+
+    portfolioData = historicalSim.getData();
+
+    return var;
+  }
+
+  public Portfolio getPortfolioData() {
+    return portfolioData;
   }
 
 }

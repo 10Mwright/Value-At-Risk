@@ -2,25 +2,27 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
 /**
  * Class for managing GUI for user interactions for historical simulations.
- *
  * @author Matthew Wright
  */
-public class ModelBuildingGUI implements ViewInterface {
+public class HistoricalSimGUI implements ViewInterface {
 
   //TODO: swap use of Position array to Portfolio instead
   @Override
@@ -52,7 +54,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public int getDataLength() {
-    return 0; //Returns 0 always to trigger usage of Model-Building.
+    return Integer.parseInt(dataLengthField.getText());
   }
 
   @Override
@@ -114,6 +116,10 @@ public class ModelBuildingGUI implements ViewInterface {
   private TextField assetHoldingsField;
 
   @FXML
+  // fx:id="dataLengthField"
+  private TextField dataLengthField;
+
+  @FXML
   // fx:id="resultField"
   private TextField resultField;
 
@@ -132,5 +138,4 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="graphPane"
   private Pane graphPane;
-
 }

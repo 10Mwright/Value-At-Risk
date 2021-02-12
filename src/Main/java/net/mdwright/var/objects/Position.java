@@ -1,5 +1,6 @@
 package net.mdwright.var.objects;
 
+import java.math.BigDecimal;
 import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
@@ -11,18 +12,19 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private double positionValue;
+  private BigDecimal positionValue;
+  private double holdings;
   private List<HistoricalQuote> historicalData;
 
   /**
    * Constructor method for creating a new Position object.
    *
    * @param tickerSymbol String value representing the abbreviated stock symbol (e.g. GOOGL)
-   * @param positionValue Double value representing the total value in £ of the position
+   * @param holdings Int value representing the total number of holdings (e.g. number of stocks held)
    */
-  public Position(String tickerSymbol, double positionValue) {
+  public Position(String tickerSymbol, double holdings) {
     this.tickerSymbol = tickerSymbol;
-    this.positionValue = positionValue;
+    this.holdings = holdings;
   }
 
   /**
@@ -39,7 +41,7 @@ public class Position {
    *
    * @return Double value representing the total value of the position
    */
-  public double getPositionValue() {
+  public BigDecimal getPositionValue() {
     return positionValue;
   }
 
@@ -50,7 +52,7 @@ public class Position {
    */
   @Override
   public String toString() {
-    return "Ticker Symbol = " + this.tickerSymbol + ", Position Value = £" + this.positionValue;
+    return "Ticker Symbol = " + this.tickerSymbol + ", Holdings = " + this.getHoldings();
   }
 
   /**
@@ -80,4 +82,10 @@ public class Position {
   public int getHistoricalDataSize() {
     return historicalData.size();
   }
+
+  public double getHoldings() {
+    return holdings;
+  }
+
+  public void setPositionValue(BigDecimal positionValue) { this.positionValue = positionValue; }
 }

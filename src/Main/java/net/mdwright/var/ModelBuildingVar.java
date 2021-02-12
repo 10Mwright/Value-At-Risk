@@ -16,6 +16,8 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class ModelBuildingVar implements VarCalculator {
 
+  private static Portfolio portfolioData;
+
   /**
    * {@inheritDoc}
    */
@@ -56,24 +58,20 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> historicalData = data
-          .getHistoricalPrices(position.getTickerSymbol(), 365);
+      position.setHistoricalData((data.getHistoricalPrices(position.getTickerSymbol(), 365)));
 
-      for (int i = 0; i < historicalData.size(); i++) {
+      portfolioData = new Portfolio(position);
+
+      for (int i = 0; i < position.getHistoricalDataSize(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
-        System.out.println(i + ", " + historicalData.get(i).getAdjClose());
+        System.out.println(i + ", " + position.getHistoricalData().get(i).getAdjClose());
       }
 
-      double dailyVolatility = calculateVolatility(historicalData);
-
-      // Must convert this volatility to a percentage
-      // Note: any better method to calculate as a percentage other than avg?
-      // e.g. TESLA has a massive daily volatility over a 1 year period (60.4%)
-      dailyVolatility = dailyVolatility;
+      double dailyVolatility = calculateVolatility(position.getHistoricalData());
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
-      double dailyStandardDeviation = position.getPositionValue() * (dailyVolatility);
+      double dailyStandardDeviation = data.getCurrentValue(position).doubleValue() * (dailyVolatility);
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
@@ -127,6 +125,11 @@ public class ModelBuildingVar implements VarCalculator {
       List<HistoricalQuote> positionTwoData = data
           .getHistoricalPrices(positionTwo.getTickerSymbol(), 365);
 
+      positionOne.setHistoricalData(positionOneData);
+      positionTwo.setHistoricalData(positionTwoData);
+
+      portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
+
       double positionOneVolatility = calculateVolatility(positionOneData);
       double positionTwoVolatility = calculateVolatility(positionTwoData);
 
@@ -134,8 +137,8 @@ public class ModelBuildingVar implements VarCalculator {
       double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);
 
       // Calculate each standard deviation
-      double positionOneSDeviation = positionOne.getPositionValue() * positionOneVolatility;
-      double positionTwoSDeviation = positionTwo.getPositionValue() * positionTwoVolatility;
+      double positionOneSDeviation = data.getCurrentValue(positionOne).doubleValue() * positionOneVolatility;
+      double positionTwoSDeviation = data.getCurrentValue(positionTwo).doubleValue() * positionTwoVolatility;
 
       double standardDeviation = Math.sqrt(
           Math.pow(positionOneSDeviation, 2) + Math.pow(positionTwoSDeviation, 2) + (2
@@ -279,5 +282,10 @@ public class ModelBuildingVar implements VarCalculator {
       int historicalDataLength) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data)");
+  }
+
+  @Override
+  public Portfolio getData() {
+    return portfolioData;
   }
 }

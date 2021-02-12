@@ -2,6 +2,7 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.util.function.Consumer;
+import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Position;
 
@@ -54,6 +55,8 @@ public interface ViewInterface {
    */
   void setResult(BigDecimal varValue);
 
+  void setChart(LineChart chart);
+
   /**
    * Method to add the newly defined position to the portfolio list.
    *
@@ -80,6 +83,7 @@ public interface ViewInterface {
    *
    * @param model Object of type Observer
    */
+  @Deprecated //Method has been deprecated as the GUIs have now been separated on a per model basis.
   void addModelObserver(Consumer<Model> model);
 
 }
