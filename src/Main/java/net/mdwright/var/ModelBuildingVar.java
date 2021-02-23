@@ -68,6 +68,7 @@ public class ModelBuildingVar implements VarCalculator {
       }
 
       double dailyVolatility = calculateVolatility(position.getHistoricalData());
+      calculateVolatility(0, 0.94);
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -197,6 +198,34 @@ public class ModelBuildingVar implements VarCalculator {
 
     dailyVolatility = dailyVolatility / (meanStockPrice.doubleValue());
 
+    return dailyVolatility;
+  }
+
+  public static double calculateVolatility(int index, double lambda) {
+    List<HistoricalQuote> historicalData = portfolioData.getPosition(index).getHistoricalData();
+
+    double[][] returns = new double[3][historicalData.size()];
+    double currentWeight = (1 - lambda); //Initial weight
+    System.out.println("INITIAL WEIGHT: " + currentWeight);
+
+    double dailyVolatility = 0;
+
+    for (int i = (historicalData.size() - 2); i >= 0; i--) { //Increment through historical data day by day
+      double currentDay = historicalData.get(i).getAdjClose().doubleValue();
+      double yesterday = historicalData.get(i+1).getAdjClose().doubleValue();
+
+      double returnCurrentDay = currentDay / yesterday;
+      returns[0][i] = Math.log(returnCurrentDay); //The natural log of the return in day i
+      returns[1][i] = Math.pow(returns[0][i], 2); //Daily variance (unweighted)
+
+      returns[2][i] = returns[1][i] * currentWeight; //Weighted variance
+
+      dailyVolatility += returns[2][i]; //Sum all weighted values to get a final volatility
+      currentWeight = currentWeight * (lambda);
+      System.out.println("CURRENT WEIGHT: " + currentWeight);
+    }
+
+    System.out.println("Daily Volatility (EWMA): " + dailyVolatility);
     return dailyVolatility;
   }
 

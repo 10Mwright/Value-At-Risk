@@ -40,5 +40,4 @@ public class testModelBuildingVar {
 
     assertNotEquals(new BigDecimal(0), calculation.calculateVar(google, microsoft, 10, 0.99));
   }
-
 }
