@@ -67,8 +67,8 @@ public class ModelBuildingVar implements VarCalculator {
         System.out.println(i + ", " + position.getHistoricalData().get(i).getAdjClose());
       }
 
-      double dailyVolatility = calculateVolatility(position.getHistoricalData());
-      calculateVolatility(0, 0.94);
+      //double dailyVolatility = calculateVolatility(position.getHistoricalData());
+      double dailyVolatility = Math.sqrt(calculateVolatility(0, 0.94));
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
