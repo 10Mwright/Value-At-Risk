@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -34,6 +35,7 @@ public class VarController {
    */
   public VarController(ViewInterface view) {
     this.view = view;
+    view.setupVolatilityChoice();
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
   }

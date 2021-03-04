@@ -23,6 +23,10 @@ public class HistoricalSimGUI implements ViewInterface {
   private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
 
   @Override
+  public void setupVolatilityChoice() {
+  }
+
+  @Override
   public Portfolio getPortfolio() {
     int portfolioSize = portfolioList.getItems().size();
     Position[] positions = new Position[portfolioSize];

@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -22,6 +23,13 @@ import net.mdwright.var.objects.Position;
 public class ModelBuildingGUI implements ViewInterface {
 
   private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+
+  @Override
+  public void setupVolatilityChoice() {
+    volatilityMethod.getItems().removeAll();
+    volatilityMethod.getItems().addAll("Simple Volatility", "EWMA", "GARCH(1,1)");
+    volatilityMethod.getSelectionModel().select(0);
+  }
 
   @Override
   public Portfolio getPortfolio() {
@@ -163,5 +171,9 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="varPercentage"
   private Label varPercentage;
+
+  @FXML
+  // fx:id="volatilityMethod"
+  private ChoiceBox<String> volatilityMethod;
 
 }

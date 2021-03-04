@@ -99,4 +99,6 @@ public interface ViewInterface {
    */
   void setVarPercentage(double percentage);
 
+  void setupVolatilityChoice();
+
 }

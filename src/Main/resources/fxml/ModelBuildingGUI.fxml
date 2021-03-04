@@ -55,7 +55,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Additional Values">
+          <Tab text="Additional Settings">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -84,6 +84,12 @@
                         <Label layoutX="283.0" layoutY="92.0" prefHeight="27.0" prefWidth="122.0" text="(as a percentage out of 100)">
                            <font>
                               <Font size="9.0" />
+                           </font>
+                        </Label>
+                        <ChoiceBox fx:id="volatilityMethod" layoutX="128.0" layoutY="132.0" prefWidth="150.0" />
+                        <Label layoutX="6.0" layoutY="131.0" prefHeight="27.0" prefWidth="118.0" text="Volatility Method:">
+                           <font>
+                              <Font size="15.0" />
                            </font>
                         </Label>
                      </children>
