@@ -16,7 +16,8 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class ModelBuildingVar implements VarCalculator {
 
-  private static Portfolio portfolioData;
+  private DataManager data = new DataManager();
+  private Portfolio portfolioData;
 
   /**
    * {@inheritDoc}
@@ -44,7 +45,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
-  public static BigDecimal calculateVar(Position position, int timeHorizon,
+  public BigDecimal calculateVar(Position position, int timeHorizon,
       double probability) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -56,7 +57,6 @@ public class ModelBuildingVar implements VarCalculator {
       multiDay = true;
     }
 
-    DataManager data = new DataManager();
     try {
       position.setHistoricalData((data.getHistoricalPrices(position.getTickerSymbol(), 365)));
 
@@ -106,7 +106,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the two stock portfolio
    */
-  public static BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon,
+  public BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon,
       double probability) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -201,7 +201,7 @@ public class ModelBuildingVar implements VarCalculator {
     return dailyVolatility;
   }
 
-  public static double calculateVolatility(int index, double lambda) {
+  public double calculateVolatility(int index, double lambda) {
     List<HistoricalQuote> historicalData = portfolioData.getPosition(index).getHistoricalData();
 
     double[][] returns = new double[3][historicalData.size()];
@@ -315,6 +315,8 @@ public class ModelBuildingVar implements VarCalculator {
 
   @Override
   public Portfolio getData() {
+    data.getCurrentPortfolioValue(portfolioData);
+
     return portfolioData;
   }
 }

@@ -12,7 +12,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private BigDecimal positionValue;
+  private BigDecimal positionValue, perUnitPrice;
   private double holdings;
   private List<HistoricalQuote> historicalData;
 
@@ -88,4 +88,12 @@ public class Position {
   }
 
   public void setPositionValue(BigDecimal positionValue) { this.positionValue = positionValue; }
+
+  public BigDecimal getPerUnitPrice() {
+    return perUnitPrice;
+  }
+
+  public void setPerUnitPrice(BigDecimal perUnitPrice) {
+    this.perUnitPrice = perUnitPrice;
+  }
 }

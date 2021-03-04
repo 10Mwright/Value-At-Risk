@@ -17,7 +17,8 @@ public class HistoricalSimVar implements VarCalculator {
 
   //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
 
-  Portfolio portfolio;
+  private DataManager data = new DataManager();
+  private Portfolio portfolio;
 
   /**
    * {@inheritDoc}
@@ -26,7 +27,6 @@ public class HistoricalSimVar implements VarCalculator {
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
     int portfolioSize = portfolio.getSize();
-    DataManager data = new DataManager();
 
     Boolean multiDay = false; //Default to false for multi day calculation
     if (timeHorizon > 1) {
@@ -154,6 +154,8 @@ public class HistoricalSimVar implements VarCalculator {
 
   @Override
   public Portfolio getData() {
+    data.getCurrentPortfolioValue(portfolio);
+
     return portfolio;
   }
 

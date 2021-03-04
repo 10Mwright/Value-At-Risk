@@ -104,8 +104,12 @@ public class DataManager {
 
     System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
 
+    position.setPerUnitPrice(currentPrice);
+
+    currentPrice = currentPrice.multiply(new BigDecimal(position.getHoldings()));
+
     position.setPositionValue(currentPrice);
-    return currentPrice.multiply(new BigDecimal(position.getHoldings()));
+    return currentPrice;
   }
 
   /**
