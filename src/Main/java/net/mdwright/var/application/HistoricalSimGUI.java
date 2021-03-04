@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -95,10 +96,6 @@ public class HistoricalSimGUI implements ViewInterface {
     });
   }
 
-  @Override
-  public void addModelObserver(Consumer<Model> model) {
-  }
-
   @FXML
   // fx:id="timeHorizonField"
   private TextField timeHorizonField;
@@ -138,4 +135,8 @@ public class HistoricalSimGUI implements ViewInterface {
   @FXML
   // fx:id="graphPane"
   private Pane graphPane;
+
+  @FXML
+  // fx:id="portfolioValue
+  private Label portfolioValue;
 }

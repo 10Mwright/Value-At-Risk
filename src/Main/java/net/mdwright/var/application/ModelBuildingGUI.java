@@ -93,10 +93,6 @@ public class ModelBuildingGUI implements ViewInterface {
     });
   }
 
-  @Override
-  public void addModelObserver(Consumer<Model> model) {
-  }
-
   @FXML
   // fx:id="timeHorizonField"
   private TextField timeHorizonField;

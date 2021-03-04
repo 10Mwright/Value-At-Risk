@@ -78,12 +78,4 @@ public interface ViewInterface {
    */
   void addPortfolioObserver(Observer obs);
 
-  /**
-   * Adds an observer to monitor user's change in model selection.
-   *
-   * @param model Object of type Observer
-   */
-  @Deprecated //Method has been deprecated as the GUIs have now been separated on a per model basis.
-  void addModelObserver(Consumer<Model> model);
-
 }
