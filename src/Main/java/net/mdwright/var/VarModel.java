@@ -3,6 +3,7 @@ package net.mdwright.var;
 import java.math.BigDecimal;
 import java.util.List;
 import net.mdwright.var.objects.Portfolio;
+import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
 
 /**
@@ -26,8 +27,8 @@ public class VarModel {
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the portfolio
    */
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
-    BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability);
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
+    BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability, volatilityChoice);
 
     portfolioData = modelBuilding.getData();
 

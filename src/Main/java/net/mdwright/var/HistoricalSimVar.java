@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Scenario;
+import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
 
 /**
@@ -177,7 +178,7 @@ public class HistoricalSimVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
     throw new UnsupportedOperationException(
         "Invalid operation for historical Simulation VaR (Requires historical data length)");
   }

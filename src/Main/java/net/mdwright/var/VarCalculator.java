@@ -2,6 +2,7 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import net.mdwright.var.objects.Portfolio;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Interface for different models of VaR calculations.
@@ -19,7 +20,7 @@ public interface VarCalculator {
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the portfolio
    */
-  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability);
+  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice);
 
   /**
    * Method to calculate VaR for a portfolio using the historical sim model.

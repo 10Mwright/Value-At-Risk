@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
 
 /**
@@ -23,15 +24,15 @@ public class ModelBuildingVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
     BigDecimal varValue = new BigDecimal(0);
 
     if (portfolio.getSize() == 1) {
       varValue = calculateVar(portfolio.getPosition(0),
-          timeHorizon, probability);
+          timeHorizon, probability, volatilityChoice);
     } else if (portfolio.getSize() >= 2) {
       varValue = calculateVar(portfolio.getPosition(0), portfolio.getPosition(1), timeHorizon,
-          probability);
+          probability, volatilityChoice);
     }
 
     return varValue;
@@ -46,7 +47,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
   public BigDecimal calculateVar(Position position, int timeHorizon,
-      double probability) {
+      double probability, VolatilityMethod volatilityChoice) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal singleDayVar = new BigDecimal(0.0);
@@ -67,8 +68,15 @@ public class ModelBuildingVar implements VarCalculator {
         System.out.println(i + ", " + position.getHistoricalData().get(i).getAdjClose());
       }
 
-      //double dailyVolatility = calculateVolatility(position.getHistoricalData());
-      double dailyVolatility = calculateVolatility(0, 0.94);
+      double dailyVolatility = 0;
+
+      if(volatilityChoice == VolatilityMethod.SIMPLE) {
+        dailyVolatility = calculateVolatility(position.getHistoricalData());
+      } else if(volatilityChoice == VolatilityMethod.EWMA) {
+        dailyVolatility = calculateVolatility(0, 0.94);
+      } else if(volatilityChoice == VolatilityMethod.GARCH) {
+        //TODO: IMPLEMENT GARCH METHOD
+      }
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -109,7 +117,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @return BigDecimal value representing the VaR of the two stock portfolio
    */
   public BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon,
-      double probability) {
+      double probability, VolatilityMethod volatilityChoice) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
 
@@ -133,8 +141,18 @@ public class ModelBuildingVar implements VarCalculator {
 
       portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
 
-      double positionOneVolatility = calculateVolatility(0, 0.94);
-      double positionTwoVolatility = calculateVolatility(1,0.94);
+      double positionOneVolatility = 0;
+      double positionTwoVolatility = 0;
+
+      if(volatilityChoice == VolatilityMethod.SIMPLE) {
+        positionOneVolatility = calculateVolatility(positionOne.getHistoricalData());
+        positionTwoVolatility = calculateVolatility(positionTwo.getHistoricalData());
+      } else if(volatilityChoice == VolatilityMethod.EWMA) {
+        positionOneVolatility = calculateVolatility(0, 0.94);
+        positionTwoVolatility = calculateVolatility(1,0.94);
+      } else if(volatilityChoice == VolatilityMethod.GARCH) {
+        //TODO: IMPLEMENT GARCH METHOD
+      }
 
       // Calculate the coefficient of correlation between each position
       double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);

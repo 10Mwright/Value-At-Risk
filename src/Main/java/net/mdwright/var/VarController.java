@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -40,6 +39,7 @@ public class VarController {
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
   }
 
+  //TODO: Pass through volatility method to calculate methods
   /**
    * Observing method to call appropriate calculation method depending on user selected model.
    */
@@ -59,7 +59,7 @@ public class VarController {
 
       valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, dataLength);
     } else {
-      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability);
+      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
     }
 
     //Rounding result to 2 decimal places
