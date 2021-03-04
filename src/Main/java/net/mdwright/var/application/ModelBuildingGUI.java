@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Class for managing GUI for user interactions for historical simulations.
@@ -27,8 +28,13 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public void setupVolatilityChoice() {
     volatilityMethod.getItems().removeAll();
-    volatilityMethod.getItems().addAll("Simple Volatility", "EWMA", "GARCH(1,1)");
+    volatilityMethod.getItems().addAll(VolatilityMethod.stringValues); //Fill in choices from available volatility method enums
     volatilityMethod.getSelectionModel().select(0);
+  }
+
+  @Override
+  public VolatilityMethod getVolatilityChoice() {
+    return VolatilityMethod.fromString(volatilityMethod.getSelectionModel().getSelectedItem());
   }
 
   @Override

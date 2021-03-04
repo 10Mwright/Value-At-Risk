@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Interface class for GUI Views.
@@ -100,5 +101,7 @@ public interface ViewInterface {
   void setVarPercentage(double percentage);
 
   void setupVolatilityChoice();
+
+  VolatilityMethod getVolatilityChoice();
 
 }

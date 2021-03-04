@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Class for managing GUI for user interactions for historical simulations.
@@ -24,6 +25,11 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void setupVolatilityChoice() {
+  }
+
+  @Override
+  public VolatilityMethod getVolatilityChoice() {
+    return null;
   }
 
   @Override
