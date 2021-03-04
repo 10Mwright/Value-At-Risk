@@ -115,6 +115,9 @@ public class VarController {
     lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
 
     view.setChart(lineChart);
+
+    //Fill in values below graph pane
+    view.setPortfolioValue(portfolioData.getCurrentValue());
   }
 
   /**

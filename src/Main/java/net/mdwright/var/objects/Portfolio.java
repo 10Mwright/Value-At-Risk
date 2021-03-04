@@ -12,6 +12,7 @@ public class Portfolio {
   private Position[] positions;
   private Scenario[] scenarios;
   private BigDecimal valueAtRisk;
+  private BigDecimal currentValue;
 
   /**
    * Constructor method for creating a portfolio with multiple Positions.
@@ -98,5 +99,13 @@ public class Portfolio {
    */
   public void setValueAtRisk(BigDecimal valueAtRisk) {
     this.valueAtRisk = valueAtRisk;
+  }
+
+  public BigDecimal getCurrentValue() {
+    return currentValue;
+  }
+
+  public void setCurrentValue(BigDecimal currentValue) {
+    this.currentValue = currentValue;
   }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
@@ -104,6 +105,12 @@ public class DataManager {
     System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
 
     return currentPrice.multiply(new BigDecimal(position.getHoldings()));
+  }
+
+  public static BigDecimal getCurrentPortfolioValue(Portfolio portfolio) {
+    for (int i = 0; i < portfolio.getSize(); i++) {
+
+    }
   }
 
 }
