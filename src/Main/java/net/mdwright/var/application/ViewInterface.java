@@ -78,4 +78,10 @@ public interface ViewInterface {
    */
   void addPortfolioObserver(Observer obs);
 
+  /**
+   * Method to set the portfolio value field in GUI.
+   * @param PortfolioValue BigDecimal value representing the total value of the user's portfolio
+   */
+  void setPortfolioValue(BigDecimal PortfolioValue);
+
 }

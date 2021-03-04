@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -74,6 +75,11 @@ public class ModelBuildingGUI implements ViewInterface {
   }
 
   @Override
+  public void setPortfolioValue(BigDecimal portfolioValue) {
+    this.portfolioValue.setText(portfolioValue.toString());
+  }
+
+  @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override
@@ -128,5 +134,9 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="graphPane"
   private Pane graphPane;
+
+  @FXML
+  // fx:id="portfolioValue"
+  private Label portfolioValue;
 
 }

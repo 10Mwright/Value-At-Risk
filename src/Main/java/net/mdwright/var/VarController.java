@@ -39,7 +39,6 @@ public class VarController {
     this.view = view;
     view.addCalcObserver(this::calculateVar); //Set observer to calculateVar method
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
-    view.addModelObserver(this::modelToUse); //Set observer for model selection to modelToUse method
   }
 
   /**
@@ -126,19 +125,6 @@ public class VarController {
 
     //Set in view
     view.addNewPosition(newPos);
-  }
-
-  /**
-   * Observing method to switch between calculation models.
-   *
-   * @param modelToUse Model object containing the enum value to use
-   */
-  public void modelToUse(Model modelToUse) {
-    if (modelToUse == Model.ModelBuilding) {
-      isModelBuilding = true;
-    } else {
-      isModelBuilding = false;
-    }
   }
 
 }

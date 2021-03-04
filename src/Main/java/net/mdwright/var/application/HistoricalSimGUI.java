@@ -77,6 +77,11 @@ public class HistoricalSimGUI implements ViewInterface {
   }
 
   @Override
+  public void setPortfolioValue(BigDecimal portfolioValue) {
+    this.portfolioValue.setText(portfolioValue.toString());
+  }
+
+  @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override
