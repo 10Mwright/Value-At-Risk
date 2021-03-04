@@ -1,6 +1,7 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.function.Consumer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,6 +25,8 @@ import net.mdwright.var.objects.Position;
  * @author Matthew Wright
  */
 public class HistoricalSimGUI implements ViewInterface {
+
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
 
   //TODO: swap use of Position array to Portfolio instead
   @Override
@@ -60,7 +63,7 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void setResult(BigDecimal varValue) {
-    resultField.setText(String.valueOf(varValue));
+    resultField.setText(numberFormat.format(varValue));
   }
 
   @Override
@@ -78,7 +81,7 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void setPortfolioValue(BigDecimal portfolioValue) {
-    this.portfolioValue.setText(portfolioValue.toString());
+    this.portfolioValue.setText("£" + numberFormat.format(portfolioValue));
   }
 
   @Override

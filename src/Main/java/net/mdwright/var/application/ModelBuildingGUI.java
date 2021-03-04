@@ -1,6 +1,7 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.function.Consumer;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +23,8 @@ import net.mdwright.var.objects.Position;
  * @author Matthew Wright
  */
 public class ModelBuildingGUI implements ViewInterface {
+
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
 
   //TODO: swap use of Position array to Portfolio instead
   @Override
@@ -58,7 +61,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void setResult(BigDecimal varValue) {
-    resultField.setText(String.valueOf(varValue));
+    resultField.setText(numberFormat.format(varValue));
   }
 
   @Override
@@ -76,7 +79,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void setPortfolioValue(BigDecimal portfolioValue) {
-    this.portfolioValue.setText(portfolioValue.toString());
+    this.portfolioValue.setText(numberFormat.format(portfolioValue));
   }
 
   @Override
