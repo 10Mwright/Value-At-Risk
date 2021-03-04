@@ -36,6 +36,11 @@ public class testDataManager {
   public void testCurrentPortfolioValue() {
     Position positionOne = new Position("GOOGL", 100);
     Position positionTwo = new Position("TLSA", 1000);
+
+    //Must call current value method to fill in values
+    data.getCurrentValue(positionOne);
+    data.getCurrentValue(positionTwo);
+
     Portfolio portfolio = new Portfolio(new Position[] {positionOne, positionTwo});
 
     assertNotEquals(new BigDecimal(0), data.getCurrentPortfolioValue(portfolio));

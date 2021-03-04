@@ -42,7 +42,7 @@ public class HistoricalSimVar implements VarCalculator {
         String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
         portfolio.getPosition(i)
             .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
-        portfolio.getPosition(i).setPositionValue(data.getCurrentValue(portfolio.getPosition(i))); //Calculate current position value
+        data.getCurrentValue(portfolio.getPosition(i)); //Calculate current position value
       }
 
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");

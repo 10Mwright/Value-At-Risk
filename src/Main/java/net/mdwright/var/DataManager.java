@@ -104,13 +104,24 @@ public class DataManager {
 
     System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
 
+    position.setPositionValue(currentPrice);
     return currentPrice.multiply(new BigDecimal(position.getHoldings()));
   }
 
+  /**
+   * Method for retrieving the current total value of the portfolio using previously retrieved current values.
+   * @param portfolio The target portfolio object
+   * @return BigDecimal value representing the current GBP price of all holdings in the portfolio
+   */
   public static BigDecimal getCurrentPortfolioValue(Portfolio portfolio) {
-    for (int i = 0; i < portfolio.getSize(); i++) {
+    BigDecimal currentValue = new BigDecimal(0);
 
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      currentValue = currentValue.add(portfolio.getPosition(i).getPositionValue());
     }
+
+    portfolio.setCurrentValue(currentValue);
+    return currentValue;
   }
 
 }
