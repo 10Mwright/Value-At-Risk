@@ -54,6 +54,10 @@ public interface ViewInterface {
    */
   void setResult(BigDecimal varValue);
 
+  /**
+   * Method to set draw the price history chart in the GUI.
+   * @param chart A LineChart object representing the completed chart
+   */
   void setChart(LineChart chart);
 
   /**
@@ -82,5 +86,17 @@ public interface ViewInterface {
    * @param PortfolioValue BigDecimal value representing the total value of the user's portfolio
    */
   void setPortfolioValue(BigDecimal PortfolioValue);
+
+  /**
+   * Method to set the value after var field in GUI.
+   * @param valueAfterVar BigDecimal value representing the value after var is taken
+   */
+  void setValueAfterVar(BigDecimal valueAfterVar);
+
+  /**
+   * Method to set the var as a percentage field in GUI.
+   * @param percentage double value representing the percentage out of 100
+   */
+  void setVarPercentage(double percentage);
 
 }

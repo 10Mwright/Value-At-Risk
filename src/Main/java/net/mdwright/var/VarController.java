@@ -118,6 +118,13 @@ public class VarController {
 
     //Fill in values below graph pane
     view.setPortfolioValue(portfolioData.getCurrentValue());
+    view.setValueAfterVar(portfolioData.getCurrentValue().subtract(portfolioData.getValueAtRisk())); //current value - value at risk
+
+    BigDecimal percentage = portfolioData.getValueAtRisk().divide(portfolioData.getCurrentValue(), RoundingMode.UP);
+    percentage = percentage.multiply(new BigDecimal(100));
+
+    view.setVarPercentage(percentage.doubleValue());
+
   }
 
   /**

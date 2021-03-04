@@ -115,22 +115,22 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label fx:id="valueAfterVar" layoutX="526.0" layoutY="14.0" text="&lt;Value&gt;">
+            <Label fx:id="valueAfterVar" layoutX="182.0" layoutY="47.0" text="&lt;Value&gt;">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label layoutX="393.0" layoutY="14.0" text="Value after VaR:">
+            <Label layoutX="103.0" layoutY="47.0" text="After VaR:">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label layoutX="332.0" layoutY="48.0" text="VaR as % of current Price">
+            <Label layoutX="121.0" layoutY="77.0" text="As a %:">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label fx:id="varPercentage" layoutX="526.0" layoutY="47.0" text="&lt;Value&gt;">
+            <Label fx:id="varPercentage" layoutX="182.0" layoutY="77.0" text="&lt;Value&gt;">
                <font>
                   <Font size="15.0" />
                </font>

@@ -79,6 +79,16 @@ public class ModelBuildingGUI implements ViewInterface {
   }
 
   @Override
+  public void setValueAfterVar(BigDecimal valueAfterVar) {
+    this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
+  }
+
+  @Override
+  public void setVarPercentage(double percentage) {
+    this.varPercentage.setText(percentage + "%");
+  }
+
+  @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
       @Override
@@ -137,5 +147,13 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="portfolioValue"
   private Label portfolioValue;
+
+  @FXML
+  // fx:id="valueAfterVar
+  private Label valueAfterVar;
+
+  @FXML
+  // fx:id="varPercentage"
+  private Label varPercentage;
 
 }

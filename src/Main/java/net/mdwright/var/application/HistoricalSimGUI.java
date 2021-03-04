@@ -36,7 +36,13 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+    Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+
+    //Clear fields
+    tickerSymbolField.setText("");
+    assetHoldingsField.setText("");
+
+    return newPositon;
   }
 
   @Override
@@ -61,6 +67,8 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public void setChart(LineChart chart) {
+    graphPane.getChildren().clear();
+
     chart.setLegendVisible(false);
     chart.setPrefSize(670, 530);
 
@@ -75,6 +83,16 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public void setPortfolioValue(BigDecimal portfolioValue) {
     this.portfolioValue.setText("£" + numberFormat.format(portfolioValue));
+  }
+
+  @Override
+  public void setValueAfterVar(BigDecimal valueAfterVar) {
+    this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
+  }
+
+  @Override
+  public void setVarPercentage(double percentage) {
+    this.varPercentage.setText(numberFormat.format(percentage) + "%");
   }
 
   @Override
@@ -140,4 +158,12 @@ public class HistoricalSimGUI implements ViewInterface {
   @FXML
   // fx:id="portfolioValue
   private Label portfolioValue;
+
+  @FXML
+  // fx:id="valueAfterVar"
+  private Label valueAfterVar;
+
+  @FXML
+  // fx:id="varPercentage"
+  private Label varPercentage;
 }
