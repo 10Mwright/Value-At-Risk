@@ -27,7 +27,6 @@ public class Portfolio {
    * @param position A Position object representing the desired position
    */
   public Portfolio(Position position) {
-    //TODO: validation to ensure portfolio has a single position
     this.positions = new Position[]{position};
   }
 
@@ -36,9 +35,12 @@ public class Portfolio {
    * @param positionIndex An int value representing the index of the desired position within the array
    * @return The Position object representing the desired position
    */
-  public Position getPosition(int positionIndex) {
-    //TODO: validation to ensure portfolio contains a valid array
-    return positions[positionIndex];
+  public Position getPosition(int positionIndex) throws NullPointerException {
+    if(positions.length != 0) { //Portfolio object isn't empty
+      return positions[positionIndex];
+    } else {
+      throw new NullPointerException("Positions Array in Portfolio Object is Empty!");
+    }
   }
 
   /**

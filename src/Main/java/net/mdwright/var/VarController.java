@@ -3,16 +3,13 @@ package net.mdwright.var;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale.Category;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import net.mdwright.var.application.ViewInterface;
-import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -51,7 +48,7 @@ public class VarController {
 
     BigDecimal valueAtRisk;
 
-    if(view.getDataLength() != 0) { //Datalength has been set
+    if(view.getDataLength() != 0) { //Datalength hasn't been set
       isModelBuilding = false;
     }
 
