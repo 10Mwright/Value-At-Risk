@@ -45,7 +45,7 @@ public class VarController {
    * Observing method to call appropriate calculation method depending on user selected model.
    */
   public void calculateVar() {
-    Portfolio portfolio = new Portfolio(view.getPortfolio());
+    Portfolio portfolio = view.getPortfolio();
     int timeHorizon = view.getTimeHorizon();
     double probability = view.getProbability();
 

@@ -2,9 +2,6 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.function.Consumer;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,12 +9,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import net.mdwright.var.objects.Model;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 
 /**
@@ -28,9 +22,8 @@ public class HistoricalSimGUI implements ViewInterface {
 
   private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
 
-  //TODO: swap use of Position array to Portfolio instead
   @Override
-  public Position[] getPortfolio() {
+  public Portfolio getPortfolio() {
     int portfolioSize = portfolioList.getItems().size();
     Position[] positions = new Position[portfolioSize];
 
@@ -38,7 +31,7 @@ public class HistoricalSimGUI implements ViewInterface {
       positions[i] = portfolioList.getItems().get(i);
     }
 
-    return positions;
+    return new Portfolio(positions);
   }
 
   @Override
