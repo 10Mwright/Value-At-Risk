@@ -68,7 +68,7 @@ public class ModelBuildingVar implements VarCalculator {
       }
 
       //double dailyVolatility = calculateVolatility(position.getHistoricalData());
-      double dailyVolatility = Math.sqrt(calculateVolatility(0, 0.94));
+      double dailyVolatility = calculateVolatility(0, 0.94);
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -91,8 +91,10 @@ public class ModelBuildingVar implements VarCalculator {
     }
 
     if (multiDay) {
+      portfolioData.setValueAtRisk(multiDayVar);
       return multiDayVar;
     } else {
+      portfolioData.setValueAtRisk(singleDayVar);
       return singleDayVar;
     }
   }
@@ -131,8 +133,8 @@ public class ModelBuildingVar implements VarCalculator {
 
       portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
 
-      double positionOneVolatility = calculateVolatility(positionOneData);
-      double positionTwoVolatility = calculateVolatility(positionTwoData);
+      double positionOneVolatility = calculateVolatility(0, 0.94);
+      double positionTwoVolatility = calculateVolatility(1,0.94);
 
       // Calculate the coefficient of correlation between each position
       double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);
@@ -159,8 +161,10 @@ public class ModelBuildingVar implements VarCalculator {
     }
 
     if (multiDay) {
+      portfolioData.setValueAtRisk(multiDayVar);
       return multiDayVar;
     } else {
+      portfolioData.setValueAtRisk(singleDayVar);
       return singleDayVar;
     }
   }
@@ -226,7 +230,7 @@ public class ModelBuildingVar implements VarCalculator {
     }
 
     System.out.println("Daily Volatility (EWMA): " + dailyVolatility);
-    return dailyVolatility;
+    return Math.sqrt(dailyVolatility); //Final volatility value by sqrt
   }
 
   /**

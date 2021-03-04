@@ -37,7 +37,13 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    return new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+    Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+
+    //Clear fields
+    tickerSymbolField.setText("");
+    assetHoldingsField.setText("");
+
+    return newPositon;
   }
 
   @Override
@@ -62,6 +68,8 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void setChart(LineChart chart) {
+    graphPane.getChildren().clear();
+
     chart.setLegendVisible(false);
     chart.setPrefSize(670, 530);
 
@@ -85,7 +93,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public void setVarPercentage(double percentage) {
-    this.varPercentage.setText(percentage + "%");
+    this.varPercentage.setText(numberFormat.format(percentage) + "%");
   }
 
   @Override
