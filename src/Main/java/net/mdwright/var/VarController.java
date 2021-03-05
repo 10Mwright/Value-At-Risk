@@ -79,7 +79,7 @@ public class VarController {
           == Model.HISTORICAL_SIMULATION) { //If the request originates from the historical sim GUI
         if (view.getDataLength() == 0) {
           sendAlert("Invalid Integer in Data Length Field",
-              "Please enter a valid Integer in the data lenth field!", AlertType.ERROR);
+              "Please enter a valid Integer in the data length field!", AlertType.ERROR);
         } else {
           valueAtRisk = model
               .calculateVar(portfolio, timeHorizon, probability, view.getDataLength());

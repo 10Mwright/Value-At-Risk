@@ -58,12 +58,20 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public int getTimeHorizon() {
-    return Integer.parseInt(timeHorizonField.getText());
+    if(!timeHorizonField.getText().equals("")) {
+      return Integer.parseInt(timeHorizonField.getText());
+    } else {
+      return 0;
+    }
   }
 
   @Override
   public int getProbability() {
-    return (Integer.parseInt(probabilityField.getText()) / 100);
+    if(!probabilityField.getText().equals("")) {
+      return (Integer.parseInt(probabilityField.getText()));
+    } else {
+      return 0;
+    }
   }
 
   @Override

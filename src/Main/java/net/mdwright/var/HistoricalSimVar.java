@@ -169,7 +169,7 @@ public class HistoricalSimVar implements VarCalculator {
    * https://stackoverflow.com/questions/41413544/calculate-percentile-from-a-long-array
    */
   public int getPercentileIndex(Scenario[] scenarios, double desiredPercentile) {
-    int indexOfPercentile = (int) Math.ceil(desiredPercentile / 100.0 * scenarios.length);
+    int indexOfPercentile = (int) Math.ceil(desiredPercentile / 10000 * scenarios.length);
 
     return indexOfPercentile;
   }
