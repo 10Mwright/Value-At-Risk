@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
@@ -61,13 +62,17 @@ public class HistoricalSimGUI implements ViewInterface {
   }
 
   @Override
-  public double getProbability() {
-    return (Double.parseDouble(probabilityField.getText()) / 100);
+  public int getProbability() {
+    return (Integer.parseInt(probabilityField.getText()) / 100);
   }
 
   @Override
   public int getDataLength() {
-    return Integer.parseInt(dataLengthField.getText());
+    if(!dataLengthField.getText().equals("")) {
+      return Integer.parseInt(dataLengthField.getText());
+    } else {
+      return 0;
+    }
   }
 
   @Override
@@ -123,6 +128,11 @@ public class HistoricalSimGUI implements ViewInterface {
         obs.tell();
       }
     });
+  }
+
+  @Override
+  public Model getModelToUse() {
+    return Model.HISTORICAL_SIMULATION;
   }
 
   @FXML

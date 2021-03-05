@@ -40,7 +40,6 @@ public class Normals {
     //Must format value to array index
     // e.g. value = 0.99, array index must equal 98
 
-    value *= 100;
     value -= 1;
 
     return normSinV[(int) value];

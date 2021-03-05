@@ -9,7 +9,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import net.mdwright.var.application.ViewInterface;
+import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -23,7 +26,7 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class VarController {
 
-  private boolean isModelBuilding = true;
+  private boolean isFailure = false;
   private VarModel model = new VarModel();
   private ViewInterface view;
 
@@ -44,29 +47,58 @@ public class VarController {
    * Observing method to call appropriate calculation method depending on user selected model.
    */
   public void calculateVar() {
-    Portfolio portfolio = view.getPortfolio();
-    int timeHorizon = view.getTimeHorizon();
-    double probability = view.getProbability();
+    Portfolio portfolio = null;
+    int timeHorizon = 0;
+    double probability = 0;
 
-    BigDecimal valueAtRisk;
-
-    if(view.getDataLength() != 0) { //Datalength hasn't been set
-      isModelBuilding = false;
-    }
-
-    if (!isModelBuilding) {
-      int dataLength = view.getDataLength();
-
-      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, dataLength);
+    if(view.getPortfolio().getSize() != 0) {
+      portfolio = view.getPortfolio();
     } else {
-      valueAtRisk = model.calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
+      isFailure = true;
+      sendAlert("Invalid Portfolio", "Please enter some valid positions in the portfolio", AlertType.ERROR);
     }
 
-    //Rounding result to 2 decimal places
-    valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
+    if(view.getTimeHorizon() != 0) {
+      timeHorizon = view.getTimeHorizon();
+    } else {
+      isFailure = true;
+      sendAlert("Invalid Time Horizon", "Please enter a valid Integer in the time horizon field!", AlertType.ERROR);
+    }
 
-    view.setResult(valueAtRisk); //Set result in GUI
-    drawChart(); //Calls code to create a price chart
+    if(view.getProbability() != 0) {
+      probability = view.getProbability(); //Convert to double percentage
+    } else {
+      isFailure = true;
+      sendAlert("Invalid Probability", "Please enter a valid Integer value for the probability!", AlertType.ERROR);
+    }
+
+    BigDecimal valueAtRisk = new BigDecimal(0); //Defaults to a value of 0
+
+    if(!isFailure) {
+      if (view.getModelToUse()
+          == Model.HISTORICAL_SIMULATION) { //If the request originates from the historical sim GUI
+        if (view.getDataLength() == 0) {
+          sendAlert("Invalid Integer in Data Length Field",
+              "Please enter a valid Integer in the data lenth field!", AlertType.ERROR);
+        } else {
+          valueAtRisk = model
+              .calculateVar(portfolio, timeHorizon, probability, view.getDataLength());
+        }
+      } else {
+        valueAtRisk = model
+            .calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
+      }
+
+      if (!isFailure) { //Prevent extra code running if the calculation wasn't successful
+        //Rounding result to 2 decimal places
+        valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
+
+        view.setResult(valueAtRisk); //Set result in GUI
+        drawChart(); //Calls code to create a price chart
+      }
+    }
+
+    isFailure = false; //Reset failure boolean
   }
 
   /**
@@ -134,6 +166,24 @@ public class VarController {
 
     //Set in view
     view.addNewPosition(newPos);
+  }
+
+  /**
+   * Method for sending the user an alert when something goes wrong.
+   * @param alertTitle String representing the desired alert title
+   * @param alertContent String representing the desired alert content text
+   * @param alertType alertType enum representing the desired alert type
+   * Code taken from https://code.makery.ch/blog/javafx-dialogs-official/
+   */
+  public void sendAlert(String alertTitle, String alertContent, AlertType alertType) {
+    Alert alert = new Alert(alertType);
+    alert.setTitle(alertTitle);
+    alert.setHeaderText(null);
+    alert.setContentText(alertContent);
+
+    isFailure = true;
+
+    alert.showAndWait();
   }
 
 }

@@ -185,7 +185,7 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method for calculating the daily volatility of a stock based on it's historical data.
    *
-   * @param historicalData List of type HistoricalQuote
+   * @param position Position object of the position to calculate volatility for
    * @return A double value representing the daily volatility of the stock influence from website:
    * https://www.wallstreetmojo.com/volatility-formula/
    */
@@ -250,8 +250,8 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method for calculating the coefficient of correlation between two positions.
    *
-   * @param positionOneData List of type HistoricalQuote for position one
-   * @param positionTwoData List of type HistoricalQuote for position two
+   * @param positionOne Position object of the first position to calculate with
+   * @param positionTwo Position object of the second position to calculate with
    * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
    * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
@@ -308,7 +308,7 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method for calculating the mean close price across a historical data set.
    *
-   * @param historicalData List of type HistoricalQuote holding previous stock data
+   * @param position Position object of the position to calculate the mean across
    * @return BigDecimal value representing the mean across the entire data set
    */
   public static BigDecimal calculateMean(Position position) {

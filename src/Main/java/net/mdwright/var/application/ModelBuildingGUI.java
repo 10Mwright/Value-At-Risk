@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
@@ -62,12 +63,20 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public int getTimeHorizon() {
-    return Integer.parseInt(timeHorizonField.getText());
+    if(!timeHorizonField.getText().equals("")) {
+      return Integer.parseInt(timeHorizonField.getText());
+    } else {
+      return 0;
+    }
   }
 
   @Override
-  public double getProbability() {
-    return (Double.parseDouble(probabilityField.getText()) / 100);
+  public int getProbability() {
+    if(!probabilityField.getText().equals("")) {
+      return (Integer.parseInt(probabilityField.getText()));
+    } else {
+      return 0;
+    }
   }
 
   @Override
@@ -128,6 +137,11 @@ public class ModelBuildingGUI implements ViewInterface {
         obs.tell();
       }
     });
+  }
+
+  @Override
+  public Model getModelToUse() {
+    return Model.MODEL_BUILDING;
   }
 
   @FXML

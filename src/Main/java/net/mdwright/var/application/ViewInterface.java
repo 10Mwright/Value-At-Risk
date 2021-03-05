@@ -2,6 +2,7 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import javafx.scene.chart.LineChart;
+import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
@@ -39,7 +40,7 @@ public interface ViewInterface {
    *
    * @return A double value representing the probability in decimal format (e.g. 0.99)
    */
-  double getProbability();
+  int getProbability();
 
   /**
    * Method to retrieve the user's preferred data length for historical sim.
@@ -100,8 +101,21 @@ public interface ViewInterface {
    */
   void setVarPercentage(double percentage);
 
+  /**
+   * Method to setup the volatility choice on the model-building GUI.
+   */
   void setupVolatilityChoice();
 
+  /**
+   * Method to retrieve the volatility choice on the model-building GUI.
+   * @return VolatilityMethod Enum object
+   */
   VolatilityMethod getVolatilityChoice();
+
+  /**
+   * Method to retrieve the current GUI's Model.
+   * @return Model Enum object representing the GUI's respective model
+   */
+  Model getModelToUse();
 
 }
