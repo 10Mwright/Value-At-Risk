@@ -47,13 +47,17 @@ public class HistoricalSimGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+    if(tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
+      return null;
+    } else {
+      Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
 
-    //Clear fields
-    tickerSymbolField.setText("");
-    assetHoldingsField.setText("");
+      //Clear fields
+      tickerSymbolField.setText("");
+      assetHoldingsField.setText("");
 
-    return newPositon;
+      return newPositon;
+    }
   }
 
   @Override

@@ -163,9 +163,17 @@ public class VarController {
    */
   public void addAsset() {
     Position newPos = view.getNewPosition();
+    if(newPos == null) {
+      sendAlert("Invalid Position Fields", "Please enter a valid ticker symbol & holdings amount for a new position!", AlertType.ERROR);
+      isFailure = true;
+    }
 
-    //Set in view
-    view.addNewPosition(newPos);
+    if(!isFailure) {
+      //Set in view
+      view.addNewPosition(newPos);
+    }
+
+    isFailure = false; //Reset failure boolean
   }
 
   /**
