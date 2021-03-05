@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import net.mdwright.var.objects.Portfolio;
+import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
 import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -40,9 +41,8 @@ public class HistoricalSimVar implements VarCalculator {
 
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
-        String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
-        portfolio.getPosition(i)
-            .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
+        Position targetPosition = portfolio.getPosition(i);
+        data.getHistoricalPrices(targetPosition, historicalDataLength);
         data.getCurrentValue(portfolio.getPosition(i)); //Calculate current position value
       }
 

@@ -24,26 +24,25 @@ public class DataManager {
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
-   * @param tickerSymbol the requested stocks ticker symbol
+   * @param position the requested stocks position object
    * @param dataLength An int value representing the number of days to go back for historical data
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs or the response is invalid
    */
-  public static List<HistoricalQuote> getHistoricalPrices(String tickerSymbol, int dataLength)
+  public static List<HistoricalQuote> getHistoricalPrices(Position position, int dataLength)
       throws IOException {
     Calendar startDate = Calendar.getInstance();
     Calendar endDate = Calendar.getInstance();
-    startDate.add(Calendar.DAY_OF_YEAR,
-        -dataLength); //We'll initially only consider the previous year of data
+    startDate.add(Calendar.DAY_OF_YEAR, -dataLength);
 
-    Stock target = YahooFinance.get(tickerSymbol, startDate, endDate, Interval.DAILY);
+    Stock target = YahooFinance.get(position.getTickerSymbol(), startDate, endDate, Interval.DAILY);
 
     String currencyFrom = target.getCurrency(); //Find the currency of the historical data
     String currencyTo = "GBP";
 
     BigDecimal exchangeRate = getFXQuote(currencyFrom,
         currencyTo); //Retrieve the exchange rate for above currencies
-    System.out.println("EXCHANGE RATE: " + exchangeRate);
+    System.out.println("EXCHANGE RATE: 1:" + exchangeRate);
 
     List<HistoricalQuote> historical = target.getHistory();
 
@@ -54,6 +53,7 @@ public class DataManager {
     }
 
     System.out.println(historical);
+    position.setHistoricalData(historical);
     return historical;
   }
 

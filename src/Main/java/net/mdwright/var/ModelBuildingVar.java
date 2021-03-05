@@ -59,7 +59,7 @@ public class ModelBuildingVar implements VarCalculator {
     }
 
     try {
-      position.setHistoricalData((data.getHistoricalPrices(position.getTickerSymbol(), 365)));
+      data.getHistoricalPrices(position, 365);
 
       portfolioData = new Portfolio(position);
 
@@ -71,7 +71,7 @@ public class ModelBuildingVar implements VarCalculator {
       double dailyVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        dailyVolatility = calculateVolatility(position.getHistoricalData());
+        dailyVolatility = calculateVolatility(position);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
         dailyVolatility = calculateVolatility(0, 0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
@@ -131,13 +131,8 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
-      List<HistoricalQuote> positionOneData = data
-          .getHistoricalPrices(positionOne.getTickerSymbol(), 365);
-      List<HistoricalQuote> positionTwoData = data
-          .getHistoricalPrices(positionTwo.getTickerSymbol(), 365);
-
-      positionOne.setHistoricalData(positionOneData);
-      positionTwo.setHistoricalData(positionTwoData);
+      data.getHistoricalPrices(positionOne, 365);
+      data.getHistoricalPrices(positionTwo, 365);
 
       portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
 
@@ -145,8 +140,8 @@ public class ModelBuildingVar implements VarCalculator {
       double positionTwoVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        positionOneVolatility = calculateVolatility(positionOne.getHistoricalData());
-        positionTwoVolatility = calculateVolatility(positionTwo.getHistoricalData());
+        positionOneVolatility = calculateVolatility(positionOne);
+        positionTwoVolatility = calculateVolatility(positionTwo);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
         positionOneVolatility = calculateVolatility(0, 0.94);
         positionTwoVolatility = calculateVolatility(1,0.94);
@@ -155,7 +150,7 @@ public class ModelBuildingVar implements VarCalculator {
       }
 
       // Calculate the coefficient of correlation between each position
-      double coefficientOfCorrelation = calculateCoefficient(positionOneData, positionTwoData);
+      double coefficientOfCorrelation = calculateCoefficient(positionOne, positionTwo);
 
       // Calculate each standard deviation
       double positionOneSDeviation = data.getCurrentValue(positionOne).doubleValue() * positionOneVolatility;
@@ -194,9 +189,10 @@ public class ModelBuildingVar implements VarCalculator {
    * @return A double value representing the daily volatility of the stock influence from website:
    * https://www.wallstreetmojo.com/volatility-formula/
    */
-  public static double calculateVolatility(List<HistoricalQuote> historicalData) {
+  public static double calculateVolatility(Position position) {
+    List<HistoricalQuote> historicalData = position.getHistoricalData();
 
-    BigDecimal meanStockPrice = calculateMean(historicalData);
+    BigDecimal meanStockPrice = calculateMean(position);
 
     BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
     BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
@@ -259,24 +255,24 @@ public class ModelBuildingVar implements VarCalculator {
    * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
    * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
-  public static double calculateCoefficient(List<HistoricalQuote> positionOneData,
-      List<HistoricalQuote> positionTwoData) {
+  public static double calculateCoefficient(Position positionOne,
+      Position positionTwo) {
 
     int dataSize = 0;
 
     // Match length of each dataset if required
-    if (positionOneData.size() != positionTwoData.size()) {
-      if (positionOneData.size() < positionTwoData.size()) {
-        dataSize = positionOneData.size();
+    if (positionOne.getHistoricalDataSize() != positionTwo.getHistoricalDataSize()) {
+      if (positionOne.getHistoricalDataSize() < positionTwo.getHistoricalDataSize()) {
+        dataSize = positionOne.getHistoricalDataSize();
       } else {
-        dataSize = positionTwoData.size();
+        dataSize = positionTwo.getHistoricalDataSize();
       }
     } else {
-      dataSize = positionOneData.size();
+      dataSize = positionOne.getHistoricalDataSize();
     }
 
-    BigDecimal positionOneMean = calculateMean(positionOneData);
-    BigDecimal positionTwoMean = calculateMean(positionTwoData);
+    BigDecimal positionOneMean = calculateMean(positionOne);
+    BigDecimal positionTwoMean = calculateMean(positionTwo);
 
     // Column 1: positionOneMean - positionOnePrice
     // Column 2: positionTwoMean - positionTwoPrice
@@ -290,8 +286,8 @@ public class ModelBuildingVar implements VarCalculator {
     BigDecimal sumProduct = new BigDecimal(0.0);
 
     for (int i = 0; i < dataSize; i++) {
-      deviations[i][0] = positionOneMean.subtract(positionOneData.get(i).getAdjClose());
-      deviations[i][1] = positionTwoMean.subtract(positionTwoData.get(i).getAdjClose());
+      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData().get(i).getAdjClose());
+      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData().get(i).getAdjClose());
       deviations[i][2] = deviations[i][0].multiply(deviations[i][0]);
       deviations[i][3] = deviations[i][1].multiply(deviations[i][1]);
       deviations[i][4] = deviations[i][0].multiply(deviations[i][1]);
@@ -315,16 +311,16 @@ public class ModelBuildingVar implements VarCalculator {
    * @param historicalData List of type HistoricalQuote holding previous stock data
    * @return BigDecimal value representing the mean across the entire data set
    */
-  public static BigDecimal calculateMean(List<HistoricalQuote> historicalData) {
+  public static BigDecimal calculateMean(Position position) {
     BigDecimal meanStockPrice = new BigDecimal("0.0");
 
     // Increment through the data and sum them all up
-    for (int i = 0; i < historicalData.size(); i++) {
-      meanStockPrice = meanStockPrice.add(historicalData.get(i).getAdjClose());
+    for (int i = 0; i < position.getHistoricalDataSize(); i++) {
+      meanStockPrice = meanStockPrice.add(position.getHistoricalData().get(i).getAdjClose());
     }
 
     meanStockPrice = meanStockPrice
-        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
+        .divide(new BigDecimal(position.getHistoricalDataSize()), 2, RoundingMode.UP);
 
     return meanStockPrice;
   }
