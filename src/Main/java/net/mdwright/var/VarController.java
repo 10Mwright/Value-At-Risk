@@ -42,7 +42,6 @@ public class VarController {
     view.addPortfolioObserver(this::addAsset); //Set observer for add button to addAsset method
   }
 
-  //TODO: Pass through volatility method to calculate methods
   /**
    * Observing method to call appropriate calculation method depending on user selected model.
    */
@@ -163,9 +162,17 @@ public class VarController {
    */
   public void addAsset() {
     Position newPos = view.getNewPosition();
+    if(newPos == null) {
+      sendAlert("Invalid Position Fields", "Please enter a valid ticker symbol & holdings amount for a new position!", AlertType.ERROR);
+      isFailure = true;
+    }
 
-    //Set in view
-    view.addNewPosition(newPos);
+    if(!isFailure) {
+      //Set in view
+      view.addNewPosition(newPos);
+    }
+
+    isFailure = false; //Reset failure boolean
   }
 
   /**
