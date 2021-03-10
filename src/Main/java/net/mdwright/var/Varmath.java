@@ -114,7 +114,61 @@ public class Varmath {
     return meanStockPrice;
   }
 
-  public static double calculateCoefficient(Position positionOne, Position positionTwo) {
+  /**
+   * Method for calculating the coefficient of correlation between two positions.
+   *
+   * @param positionOne Position object of the first position to calculate with
+   * @param positionTwo Position object of the second position to calculate with
+   * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
+   * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
+   */
+  public static double calculateCoefficient(Position positionOne,
+      Position positionTwo) {
 
+    int dataSize = 0;
+
+    // Match length of each dataset if required
+    if (positionOne.getHistoricalDataSize() != positionTwo.getHistoricalDataSize()) {
+      if (positionOne.getHistoricalDataSize() < positionTwo.getHistoricalDataSize()) {
+        dataSize = positionOne.getHistoricalDataSize();
+      } else {
+        dataSize = positionTwo.getHistoricalDataSize();
+      }
+    } else {
+      dataSize = positionOne.getHistoricalDataSize();
+    }
+
+    BigDecimal positionOneMean = Varmath.calculateMean(positionOne);
+    BigDecimal positionTwoMean = Varmath.calculateMean(positionTwo);
+
+    // Column 1: positionOneMean - positionOnePrice
+    // Column 2: positionTwoMean - positionTwoPrice
+    // Column 3: square(Column 1)
+    // Column 4: square(Column 2)
+    // Column 5: product (multiplied) column 1 and 2
+    BigDecimal[][] deviations = new BigDecimal[dataSize][5];
+
+    BigDecimal sumSquaredOne = new BigDecimal(0.0);
+    BigDecimal sumSquaredTwo = new BigDecimal(0.0);
+    BigDecimal sumProduct = new BigDecimal(0.0);
+
+    for (int i = 0; i < dataSize; i++) {
+      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData().get(i).getAdjClose());
+      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData().get(i).getAdjClose());
+      deviations[i][2] = deviations[i][0].multiply(deviations[i][0]);
+      deviations[i][3] = deviations[i][1].multiply(deviations[i][1]);
+      deviations[i][4] = deviations[i][0].multiply(deviations[i][1]);
+
+      sumSquaredOne = sumSquaredOne.add(deviations[i][2]);
+      sumSquaredTwo = sumSquaredTwo.add(deviations[i][3]);
+      sumProduct = sumProduct.add(deviations[i][4]);
+    }
+
+    double coefficient = sumProduct.doubleValue() / (Math
+        .sqrt(sumSquaredOne.doubleValue() * sumSquaredTwo.doubleValue()));
+
+    System.out.println("Coefficient of Correlation: " + coefficient);
+
+    return coefficient;
   }
 }
