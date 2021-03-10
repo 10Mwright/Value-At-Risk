@@ -13,7 +13,7 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class Varmath {
 
-  private static final int divisionScale = 2;
+  private static final int divisionScale = 2; //Scale to be used when dividing using big decimals
 
   /**
    * Simple Method for calculating volatility over a position's time period.
@@ -108,8 +108,13 @@ public class Varmath {
     }
 
     meanStockPrice = meanStockPrice
-        .divide(new BigDecimal(position.getHistoricalDataSize()), 2, RoundingMode.UP);
+        .divide(new BigDecimal(position.getHistoricalDataSize()), divisionScale, RoundingMode.UP);
 
+    position.setMeanPrice(meanStockPrice);
     return meanStockPrice;
+  }
+
+  public static double calculateCoefficient(Position positionOne, Position positionTwo) {
+
   }
 }

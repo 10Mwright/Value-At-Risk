@@ -67,6 +67,25 @@ public class testVarmath {
       BigDecimal mean = volCalculator.calculateMean(testPosition);
 
       assertNotEquals(0, mean);
+      assertNotNull(testPosition.getMeanPrice());
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testCoefficient() {
+    Position testPosition = new Position("GOOGL", 10);
+    Position testPositionTwo = new Position("TSLA", 100);
+
+    try {
+      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 252);
+
+      double coefficientCorr = volCalculator.calculateCoefficient(testPosition, testPositionTwo);
+
+      assertNotEquals(0, coefficientCorr);
     } catch (IOException e) {
       e.printStackTrace();
       fail();

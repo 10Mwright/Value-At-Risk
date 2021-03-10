@@ -237,12 +237,19 @@ public class ModelBuildingVar implements VarCalculator {
     return coefficient;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data)");
   }
 
+  /**
+   * Pass through method to retrieve portfolio values after var calculation.
+   * @return Portfolio object containing all up to date values calculated during modelling
+   */
   @Override
   public Portfolio getData() {
     data.getCurrentPortfolioValue(portfolioData);

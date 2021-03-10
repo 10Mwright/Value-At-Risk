@@ -12,7 +12,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private BigDecimal positionValue, perUnitPrice;
+  private BigDecimal positionValue, perUnitPrice, meanPrice;
   private double holdings, volatility;
   private List<HistoricalQuote> historicalData;
 
@@ -103,5 +103,13 @@ public class Position {
 
   public void setVolatility(double volatility) {
     this.volatility = volatility;
+  }
+
+  public BigDecimal getMeanPrice() {
+    return meanPrice;
+  }
+
+  public void setMeanPrice(BigDecimal meanPrice) {
+    this.meanPrice = meanPrice;
   }
 }
