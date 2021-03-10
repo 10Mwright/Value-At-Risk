@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.Volatility;
 import net.mdwright.var.objects.Position;
@@ -31,6 +33,24 @@ public class testVolatility {
 
       assertNotEquals(0, volatility);
       assertNotNull(testPosition.getVolatility());
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+
+
+  @Test
+  public void testMean() {
+    Position testPosition = new Position("TSLA", 1000);
+
+    try {
+      DataManager.getHistoricalPrices(testPosition, 252);
+
+      BigDecimal mean = volCalculator.calculateMean(testPosition);
+
+      assertNotEquals(0, mean);
     } catch (IOException e) {
       e.printStackTrace();
       fail();
