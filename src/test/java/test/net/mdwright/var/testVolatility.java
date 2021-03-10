@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.Volatility;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +40,23 @@ public class testVolatility {
     }
   }
 
+  @Test
+  public void testEWMAVolatility() {
+    Position testPosition = new Position("GME", 10);
+    Portfolio portfolio = new Portfolio(new Position[] {testPosition});
 
+    try {
+      DataManager.getHistoricalPrices(testPosition, 252);
+
+      double volatility = volCalculator.calculateVolatility(portfolio, 0, 0.94);
+
+      assertNotEquals(0, volatility);
+      assertNotNull(testPosition.getVolatility());
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
 
   @Test
   public void testMean() {
