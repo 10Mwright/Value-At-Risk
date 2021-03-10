@@ -7,19 +7,19 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.math.BigDecimal;
 import net.mdwright.var.DataManager;
-import net.mdwright.var.Varmath;
+import net.mdwright.var.VarMath;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Before;
 import org.junit.Test;
 
-public class testVarmath {
+public class testVarMath {
 
-  Varmath volCalculator;
+  VarMath volCalculator;
 
   @Before
   public void setup() {
-    volCalculator = new Varmath();
+    volCalculator = new VarMath();
   }
 
   @Test

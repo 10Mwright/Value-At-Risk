@@ -11,7 +11,7 @@ import yahoofinance.histquotes.HistoricalQuote;
  * Class for supporting calculations used in value at risk models.
  * @author Matthew Wright
  */
-public class Varmath {
+public class VarMath {
 
   private static final int divisionScale = 2; //Scale to be used when dividing using big decimals
 
@@ -138,8 +138,8 @@ public class Varmath {
       dataSize = positionOne.getHistoricalDataSize();
     }
 
-    BigDecimal positionOneMean = Varmath.calculateMean(positionOne);
-    BigDecimal positionTwoMean = Varmath.calculateMean(positionTwo);
+    BigDecimal positionOneMean = VarMath.calculateMean(positionOne);
+    BigDecimal positionTwoMean = VarMath.calculateMean(positionTwo);
 
     // Column 1: positionOneMean - positionOnePrice
     // Column 2: positionTwoMean - positionTwoPrice

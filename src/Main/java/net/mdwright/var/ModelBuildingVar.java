@@ -68,9 +68,9 @@ public class ModelBuildingVar implements VarCalculator {
       double dailyVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        dailyVolatility = Varmath.calculateVolatility(position);
+        dailyVolatility = VarMath.calculateVolatility(position);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        dailyVolatility = Varmath.calculateVolatility(portfolioData, 0, 0.94);
+        dailyVolatility = VarMath.calculateVolatility(portfolioData, 0, 0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
@@ -137,17 +137,17 @@ public class ModelBuildingVar implements VarCalculator {
       double positionTwoVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        positionOneVolatility = Varmath.calculateVolatility(positionOne);
-        positionTwoVolatility = Varmath.calculateVolatility(positionTwo);
+        positionOneVolatility = VarMath.calculateVolatility(positionOne);
+        positionTwoVolatility = VarMath.calculateVolatility(positionTwo);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        positionOneVolatility = Varmath.calculateVolatility(portfolioData, 0, 0.94);
-        positionTwoVolatility = Varmath.calculateVolatility(portfolioData, 1,0.94);
+        positionOneVolatility = VarMath.calculateVolatility(portfolioData, 0, 0.94);
+        positionTwoVolatility = VarMath.calculateVolatility(portfolioData, 1,0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
 
       // Calculate the coefficient of correlation between each position
-      double coefficientOfCorrelation = Varmath.calculateCoefficient(positionOne, positionTwo);
+      double coefficientOfCorrelation = VarMath.calculateCoefficient(positionOne, positionTwo);
 
       // Calculate each standard deviation
       double positionOneSDeviation = data.getCurrentValue(positionOne).doubleValue() * positionOneVolatility;
