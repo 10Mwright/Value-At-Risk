@@ -71,9 +71,9 @@ public class ModelBuildingVar implements VarCalculator {
       double dailyVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        dailyVolatility = calculateVolatility(position);
+        dailyVolatility = Volatility.calculateVolatility(position);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        dailyVolatility = calculateVolatility(0, 0.94);
+        dailyVolatility = Volatility.calculateVolatility(portfolioData, 0, 0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
@@ -140,11 +140,11 @@ public class ModelBuildingVar implements VarCalculator {
       double positionTwoVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        positionOneVolatility = calculateVolatility(positionOne);
-        positionTwoVolatility = calculateVolatility(positionTwo);
+        positionOneVolatility = Volatility.calculateVolatility(positionOne);
+        positionTwoVolatility = Volatility.calculateVolatility(positionTwo);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        positionOneVolatility = calculateVolatility(0, 0.94);
-        positionTwoVolatility = calculateVolatility(1,0.94);
+        positionOneVolatility = Volatility.calculateVolatility(portfolioData, 0, 0.94);
+        positionTwoVolatility = Volatility.calculateVolatility(portfolioData, 1,0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
@@ -183,71 +183,6 @@ public class ModelBuildingVar implements VarCalculator {
   }
 
   /**
-   * Method for calculating the daily volatility of a stock based on it's historical data.
-   *
-   * @param position Position object of the position to calculate volatility for
-   * @return A double value representing the daily volatility of the stock influence from website:
-   * https://www.wallstreetmojo.com/volatility-formula/
-   */
-  public static double calculateVolatility(Position position) {
-    List<HistoricalQuote> historicalData = position.getHistoricalData();
-
-    BigDecimal meanStockPrice = calculateMean(position);
-
-    BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
-    BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
-
-    for (int j = 0; j < historicalData.size(); j++) {
-      deviations[0][j] = meanStockPrice.subtract(historicalData.get(j).getAdjClose());
-      deviations[1][j] = deviations[0][j].multiply(deviations[0][j]);
-
-      sumOfSquaredDeviations = sumOfSquaredDeviations.add(deviations[1][j]);
-    }
-
-    BigDecimal stockPriceVariance = sumOfSquaredDeviations
-        .divide(new BigDecimal(historicalData.size()), 2, RoundingMode.UP);
-
-    double dailyVolatility = Math.sqrt(stockPriceVariance.doubleValue());
-
-    System.out.println("Mean: " + meanStockPrice);
-    System.out.println("Sum of Squared Deviations: " + sumOfSquaredDeviations);
-    System.out.println("Stock price Variance: " + stockPriceVariance);
-    System.out.println("Daily Volatility (RAW VALUE): " + dailyVolatility);
-
-    dailyVolatility = dailyVolatility / (meanStockPrice.doubleValue());
-
-    return dailyVolatility;
-  }
-
-  public double calculateVolatility(int index, double lambda) {
-    List<HistoricalQuote> historicalData = portfolioData.getPosition(index).getHistoricalData();
-
-    double[][] returns = new double[3][historicalData.size()];
-    double currentWeight = (1 - lambda); //Initial weight
-    System.out.println("INITIAL WEIGHT: " + currentWeight);
-
-    double dailyVolatility = 0;
-
-    for (int i = (historicalData.size() - 2); i >= 0; i--) { //Increment through historical data day by day
-      double currentDay = historicalData.get(i).getAdjClose().doubleValue();
-      double yesterday = historicalData.get(i+1).getAdjClose().doubleValue();
-
-      double returnCurrentDay = currentDay / yesterday;
-      returns[0][i] = Math.log(returnCurrentDay); //The natural log of the return in day i
-      returns[1][i] = Math.pow(returns[0][i], 2); //Daily variance (unweighted)
-
-      returns[2][i] = returns[1][i] * currentWeight; //Weighted variance
-
-      dailyVolatility += returns[2][i]; //Sum all weighted values to get a final volatility
-      currentWeight = currentWeight * (lambda);
-      System.out.println("CURRENT WEIGHT: " + currentWeight);
-    }
-
-    System.out.println("Daily Volatility (EWMA): " + dailyVolatility);
-    return Math.sqrt(dailyVolatility); //Final volatility value by sqrt
-  }
-
-  /**
    * Method for calculating the coefficient of correlation between two positions.
    *
    * @param positionOne Position object of the first position to calculate with
@@ -271,8 +206,8 @@ public class ModelBuildingVar implements VarCalculator {
       dataSize = positionOne.getHistoricalDataSize();
     }
 
-    BigDecimal positionOneMean = calculateMean(positionOne);
-    BigDecimal positionTwoMean = calculateMean(positionTwo);
+    BigDecimal positionOneMean = Volatility.calculateMean(positionOne);
+    BigDecimal positionTwoMean = Volatility.calculateMean(positionTwo);
 
     // Column 1: positionOneMean - positionOnePrice
     // Column 2: positionTwoMean - positionTwoPrice
@@ -303,26 +238,6 @@ public class ModelBuildingVar implements VarCalculator {
     System.out.println("Coefficient of Correlation: " + coefficient);
 
     return coefficient;
-  }
-
-  /**
-   * Method for calculating the mean close price across a historical data set.
-   *
-   * @param position Position object of the position to calculate the mean across
-   * @return BigDecimal value representing the mean across the entire data set
-   */
-  public static BigDecimal calculateMean(Position position) {
-    BigDecimal meanStockPrice = new BigDecimal("0.0");
-
-    // Increment through the data and sum them all up
-    for (int i = 0; i < position.getHistoricalDataSize(); i++) {
-      meanStockPrice = meanStockPrice.add(position.getHistoricalData().get(i).getAdjClose());
-    }
-
-    meanStockPrice = meanStockPrice
-        .divide(new BigDecimal(position.getHistoricalDataSize()), 2, RoundingMode.UP);
-
-    return meanStockPrice;
   }
 
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,

@@ -41,4 +41,26 @@ public class testModelBuildingVar {
 
     assertNotEquals(new BigDecimal(0), calculation.calculateVar(google, microsoft, 10, 0.99, VolatilityMethod.EWMA));
   }
+
+  @Test
+  public void testSingleAssetSimple() {
+    ModelBuildingVar calculation = new ModelBuildingVar();
+    Portfolio portfolio = new Portfolio(new Position("GOOG", 1000000));
+    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.99, VolatilityMethod.SIMPLE));
+
+    System.out.println("----------------");
+    portfolio = new Portfolio(new Position("TSLA", 10000000));
+    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.95, VolatilityMethod.SIMPLE));
+  }
+
+  @Test
+  public void testTwoAssetsSimple() {
+    ModelBuildingVar calculation = new ModelBuildingVar();
+
+    //Create each position object
+    Position google = new Position("GOOG", 1000000);
+    Position microsoft = new Position("MSFT", 10000000);
+
+    assertNotEquals(new BigDecimal(0), calculation.calculateVar(google, microsoft, 10, 0.99, VolatilityMethod.SIMPLE));
+  }
 }

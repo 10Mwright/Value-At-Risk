@@ -51,7 +51,7 @@ public class Volatility {
 
   /**
    * Exponentially Weighted Moving Average model for calculating volatility.
-   * 
+   *
    * @param portfolio Portfolio object containing the position objects to be calculated using
    * @param index Int value representing the index of the position within the Portfolios array
    * @param lambda Double value representing the lambda constant to be used in calculation
