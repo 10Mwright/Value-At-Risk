@@ -13,7 +13,7 @@ public class Position {
 
   private String tickerSymbol;
   private BigDecimal positionValue, perUnitPrice;
-  private double holdings;
+  private double holdings, volatility;
   private List<HistoricalQuote> historicalData;
 
   /**
@@ -95,5 +95,13 @@ public class Position {
 
   public void setPerUnitPrice(BigDecimal perUnitPrice) {
     this.perUnitPrice = perUnitPrice;
+  }
+
+  public double getVolatility() {
+    return volatility;
+  }
+
+  public void setVolatility(double volatility) {
+    this.volatility = volatility;
   }
 }
