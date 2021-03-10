@@ -5,10 +5,7 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
 import net.mdwright.var.objects.VolatilityMethod;
-import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Class for performing complex value at risk calculations using the model-building methodology.
@@ -71,9 +68,9 @@ public class ModelBuildingVar implements VarCalculator {
       double dailyVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        dailyVolatility = Volatility.calculateVolatility(position);
+        dailyVolatility = Varmath.calculateVolatility(position);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        dailyVolatility = Volatility.calculateVolatility(portfolioData, 0, 0.94);
+        dailyVolatility = Varmath.calculateVolatility(portfolioData, 0, 0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
@@ -140,11 +137,11 @@ public class ModelBuildingVar implements VarCalculator {
       double positionTwoVolatility = 0;
 
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        positionOneVolatility = Volatility.calculateVolatility(positionOne);
-        positionTwoVolatility = Volatility.calculateVolatility(positionTwo);
+        positionOneVolatility = Varmath.calculateVolatility(positionOne);
+        positionTwoVolatility = Varmath.calculateVolatility(positionTwo);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        positionOneVolatility = Volatility.calculateVolatility(portfolioData, 0, 0.94);
-        positionTwoVolatility = Volatility.calculateVolatility(portfolioData, 1,0.94);
+        positionOneVolatility = Varmath.calculateVolatility(portfolioData, 0, 0.94);
+        positionTwoVolatility = Varmath.calculateVolatility(portfolioData, 1,0.94);
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
@@ -206,8 +203,8 @@ public class ModelBuildingVar implements VarCalculator {
       dataSize = positionOne.getHistoricalDataSize();
     }
 
-    BigDecimal positionOneMean = Volatility.calculateMean(positionOne);
-    BigDecimal positionTwoMean = Volatility.calculateMean(positionTwo);
+    BigDecimal positionOneMean = Varmath.calculateMean(positionOne);
+    BigDecimal positionTwoMean = Varmath.calculateMean(positionTwo);
 
     // Column 1: positionOneMean - positionOnePrice
     // Column 2: positionTwoMean - positionTwoPrice

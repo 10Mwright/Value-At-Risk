@@ -7,7 +7,11 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
 
-public class Volatility {
+/**
+ * Class for supporting calculations used in value at risk models.
+ * @author Matthew Wright
+ */
+public class Varmath {
 
   private static final int divisionScale = 2;
 
@@ -107,11 +111,5 @@ public class Volatility {
         .divide(new BigDecimal(position.getHistoricalDataSize()), 2, RoundingMode.UP);
 
     return meanStockPrice;
-  }
-
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength) {
-    throw new UnsupportedOperationException(
-        "Invalid operation for model-building VaR (No such thing as Historical Data)");
   }
 }

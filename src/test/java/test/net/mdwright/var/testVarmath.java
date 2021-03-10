@@ -6,21 +6,20 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
-import net.mdwright.var.Volatility;
+import net.mdwright.var.Varmath;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Before;
 import org.junit.Test;
 
-public class testVolatility {
+public class testVarmath {
 
-  Volatility volCalculator;
+  Varmath volCalculator;
 
   @Before
   public void setup() {
-    volCalculator = new Volatility();
+    volCalculator = new Varmath();
   }
 
   @Test
