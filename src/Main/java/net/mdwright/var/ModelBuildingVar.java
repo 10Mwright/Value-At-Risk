@@ -140,15 +140,8 @@ public class ModelBuildingVar implements VarCalculator {
       double positionOneVolatility = 0;
       double positionTwoVolatility = 0;
 
-      if(volatilityChoice == VolatilityMethod.SIMPLE) {
-        positionOneVolatility = VarMath.calculateVolatility(positionOne);
-        positionTwoVolatility = VarMath.calculateVolatility(positionTwo);
-      } else if(volatilityChoice == VolatilityMethod.EWMA) {
-        positionOneVolatility = VarMath.calculateVolatility(portfolioData, 0, 0.94);
-        positionTwoVolatility = VarMath.calculateVolatility(portfolioData, 1,0.94);
-      } else if(volatilityChoice == VolatilityMethod.GARCH) {
-        //TODO: IMPLEMENT GARCH METHOD
-      }
+      positionOneVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 0);
+      positionTwoVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 1);
 
       // Calculate the coefficient of correlation between each position
       double coefficientOfCorrelation = VarMath.calculateCoefficient(positionOne, positionTwo);

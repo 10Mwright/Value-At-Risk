@@ -19,6 +19,8 @@ public class EWMAVolatility implements VolatilityModel {
   public double calculateVolatility(Portfolio portfolio, int positionIndex) {
     this.lambda = portfolio.getVolatilityLambda(); //Retrieve any user inputted lambda, defaults to 0.94 if no input
 
+    System.out.println("LAMBDA: " + lambda);
+
     List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
 
     double[][] returns = new double[3][historicalData.size()];

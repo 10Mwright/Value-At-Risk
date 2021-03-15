@@ -15,48 +15,6 @@ import org.junit.Test;
 
 public class testVarMath {
 
-  VarMath volCalculator;
-
-  @Before
-  public void setup() {
-    volCalculator = new VarMath();
-  }
-
-  @Test
-  public void testSimpleVolatility() {
-    Position testPosition = new Position("GOOGL", 1000);
-
-    try {
-      DataManager.getHistoricalPrices(testPosition, 252);
-
-      double volatility = volCalculator.calculateVolatility(testPosition);
-
-      assertNotEquals(0, volatility);
-      assertNotNull(testPosition.getVolatility());
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail();
-    }
-  }
-
-  @Test
-  public void testEWMAVolatility() {
-    Position testPosition = new Position("GME", 10);
-    Portfolio portfolio = new Portfolio(new Position[] {testPosition});
-
-    try {
-      DataManager.getHistoricalPrices(testPosition, 252);
-
-      double volatility = volCalculator.calculateVolatility(portfolio, 0, 0.94);
-
-      assertNotEquals(0, volatility);
-      assertNotNull(testPosition.getVolatility());
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail();
-    }
-  }
-
   @Test
   public void testMean() {
     Position testPosition = new Position("TSLA", 1000);
@@ -64,7 +22,7 @@ public class testVarMath {
     try {
       DataManager.getHistoricalPrices(testPosition, 252);
 
-      BigDecimal mean = volCalculator.calculateMean(testPosition);
+      BigDecimal mean = VarMath.calculateMean(testPosition);
 
       assertNotEquals(0, mean);
       assertNotNull(testPosition.getMeanPrice());
@@ -83,7 +41,7 @@ public class testVarMath {
       DataManager.getHistoricalPrices(testPosition, 252);
       DataManager.getHistoricalPrices(testPositionTwo, 252);
 
-      double coefficientCorr = volCalculator.calculateCoefficient(testPosition, testPositionTwo);
+      double coefficientCorr = VarMath.calculateCoefficient(testPosition, testPositionTwo);
 
       assertNotEquals(0, coefficientCorr);
     } catch (IOException e) {
