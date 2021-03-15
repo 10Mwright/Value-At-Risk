@@ -15,7 +15,8 @@ public class MonteCarloVar implements VarCalculator {
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
-    return null;
+    throw new UnsupportedOperationException(
+        "Invalid operation for model-building VaR (No such thing as Historical Data)");
   }
 
   @Override

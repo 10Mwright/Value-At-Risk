@@ -19,32 +19,22 @@ public class SimpleVolatility implements VolatilityModel {
    */
   public double calculateVolatility(Portfolio portfolio, int positionIndex) {
     List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
+    double[] percentageChange = VarMath.getPercentageChanges(portfolio, 0);
 
-    BigDecimal meanStockPrice = VarMath.calculateMean(portfolio.getPosition(positionIndex));
+    double variance = 0;
 
-    BigDecimal[][] deviations = new BigDecimal[2][historicalData.size()];
-    BigDecimal sumOfSquaredDeviations = new BigDecimal(0.0);
-
-    for (int j = 0; j < historicalData.size(); j++) {
-      deviations[0][j] = meanStockPrice.subtract(historicalData.get(j).getAdjClose());
-      deviations[1][j] = deviations[0][j].multiply(deviations[0][j]);
-
-      sumOfSquaredDeviations = sumOfSquaredDeviations.add(deviations[1][j]);
+    for(int j = 0; j < percentageChange.length; j++) {
+      variance += Math.pow(percentageChange[j], 2);
     }
 
-    BigDecimal stockPriceVariance = sumOfSquaredDeviations
-        .divide(new BigDecimal(historicalData.size()), divisionScale, RoundingMode.UP);
+    variance = variance / historicalData.size(); //Take average of % changes
 
-    double dailyVolatility = Math.sqrt(stockPriceVariance.doubleValue());
+    System.out.println("Variance: " + variance);
 
-    dailyVolatility = dailyVolatility / (meanStockPrice.doubleValue());
+    double volatility = Math.sqrt(variance); //Square root to find volatility (daily)
 
-    System.out.println("Mean: " + meanStockPrice);
-    System.out.println("Sum of Squared Deviations: " + sumOfSquaredDeviations);
-    System.out.println("Stock price Variance: " + stockPriceVariance);
-    System.out.println("Daily Volatility: " + dailyVolatility);
+    System.out.println("Volatility: " + volatility);
 
-    portfolio.getPosition(positionIndex).setVolatility(dailyVolatility);
-    return dailyVolatility;
+    return volatility;
   }
 }

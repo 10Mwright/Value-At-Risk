@@ -50,4 +50,24 @@ public class testVarMath {
     }
   }
 
+  @Test
+  public void testPercentageChanges() {
+    Position testPosition = new Position("GOOGL", 10);
+    Portfolio portfolio = new Portfolio(testPosition);
+
+    try {
+      DataManager.getHistoricalPrices(testPosition, 252);
+
+      double[] percentageChanges = VarMath.getPercentageChanges(portfolio, 0);
+
+      for (int i = 0; i < percentageChanges.length; i++) {
+        System.out.println(percentageChanges[i]);
+        assertNotNull(percentageChanges[i]);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
 }

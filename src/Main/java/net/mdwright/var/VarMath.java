@@ -93,4 +93,28 @@ public class VarMath {
 
     return coefficient;
   }
+
+  /**
+   * Method to create an array of percentage changes between each days prices.
+   * @param portfolio Portfolio object containing the position object and historical data
+   * @param positionIndex int value representing the index pointer for the target asset in the portfolio array
+   * @return An array of doubles representing the percentage changes between each day's closing price
+   */
+  public static double[] getPercentageChanges(Portfolio portfolio, int positionIndex) {
+    List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
+    double[] percentageChanges = new double[historicalData.size()-1];
+
+    for (int i = 1; i < historicalData.size(); i++) {
+      BigDecimal currentDay = historicalData.get(i).getAdjClose();
+      BigDecimal previousDay = historicalData.get(i-1).getAdjClose();
+
+      BigDecimal tempValue = currentDay.subtract(previousDay);
+
+      tempValue = tempValue.divide(previousDay, divisionScale, BigDecimal.ROUND_UP);
+
+      percentageChanges[i-1] = tempValue.doubleValue();
+    }
+
+    return percentageChanges;
+  }
 }
