@@ -13,6 +13,8 @@ public interface VolatilityModel {
    * @param portfolio Portfolio object containing historical data for each Position
    * @return double value representing the volatility in percentage decimal format
    */
+  double calculateVariance(Portfolio portfolio, int positionIndex);
+
   double calculateVolatility(Portfolio portfolio, int positionIndex);
 
 }

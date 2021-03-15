@@ -1,14 +1,10 @@
 package net.mdwright.var;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import yahoofinance.histquotes.HistoricalQuote;
 
 public class SimpleVolatility implements VolatilityModel {
-
-  private static final int divisionScale = 2;
 
   /**
    * Simple Method for calculating volatility over a position's time period.
@@ -17,7 +13,7 @@ public class SimpleVolatility implements VolatilityModel {
    * @return A double value representing the daily volatility of the stock influence from website:
    * https://www.wallstreetmojo.com/volatility-formula/
    */
-  public double calculateVolatility(Portfolio portfolio, int positionIndex) {
+  public double calculateVariance(Portfolio portfolio, int positionIndex) {
     List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
     double[] percentageChange = VarMath.getPercentageChanges(portfolio, 0);
 
@@ -31,9 +27,13 @@ public class SimpleVolatility implements VolatilityModel {
 
     System.out.println("Variance: " + variance);
 
-    double volatility = Math.sqrt(variance); //Square root to find volatility (daily)
+    return variance;
+  }
 
-    System.out.println("Volatility: " + volatility);
+  public double calculateVolatility(Portfolio portfolio, int positionIndex) {
+    double variance = calculateVariance(portfolio, positionIndex);
+
+    double volatility = Math.sqrt(variance);
 
     return volatility;
   }
