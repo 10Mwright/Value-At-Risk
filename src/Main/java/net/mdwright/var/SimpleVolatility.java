@@ -7,7 +7,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class SimpleVolatility implements VolatilityModel {
 
   /**
-   * Simple Method for calculating volatility over a position's time period.
+   * Method for calculating variance using the equally weighted model.
    *
    * @param portfolio Portfolio object containing all the positions and their historical data
    * @return A double value representing the daily volatility of the stock influence from website:
@@ -35,6 +35,7 @@ public class SimpleVolatility implements VolatilityModel {
 
     double volatility = Math.sqrt(variance);
 
+    portfolio.getPosition(positionIndex).setVolatility(volatility);
     return volatility;
   }
 }

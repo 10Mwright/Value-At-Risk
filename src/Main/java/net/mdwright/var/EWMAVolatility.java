@@ -10,7 +10,7 @@ public class EWMAVolatility implements VolatilityModel {
   private static double lambda = 0.94; //0.94 by default
 
   /**
-   * Exponentially Weighted Moving Average model for calculating volatility.
+   * Method for calculating variance using the EWMA model.
    *
    * @param portfolio Portfolio object containing the position objects to be calculated using
    * @param positionIndex Int value representing the index of the position within the Portfolios array
@@ -27,7 +27,7 @@ public class EWMAVolatility implements VolatilityModel {
     double currentWeight = (1 - lambda); //Initial weight
     System.out.println("INITIAL WEIGHT: " + currentWeight);
 
-    double dailyVolatility = 0;
+    double variance = 0;
 
     for (int i = (historicalData.size() - 2); i >= 0; i--) { //Increment through historical data day by day
       double currentDay = historicalData.get(i).getAdjClose().doubleValue();
@@ -39,16 +39,19 @@ public class EWMAVolatility implements VolatilityModel {
 
       returns[2][i] = returns[1][i] * currentWeight; //Weighted variance
 
-      dailyVolatility += returns[2][i]; //Sum all weighted values to get a final volatility
+      variance += returns[2][i]; //Sum all weighted values to get a final volatility
       currentWeight = currentWeight * (lambda);
       System.out.println("CURRENT WEIGHT: " + currentWeight);
     }
 
-    dailyVolatility = Math.sqrt(dailyVolatility);
+    return variance;
+  }
 
-    System.out.println("Daily Volatility (EWMA): " + dailyVolatility);
+  public double calculateVolatility(Portfolio portfolio, int positionIndex) {
+    double variance = calculateVariance(portfolio, positionIndex);
 
-    portfolio.getPosition(positionIndex).setVolatility(dailyVolatility);
-    return dailyVolatility; //Final volatility value by sqrt
+    double volatility = Math.sqrt(variance);
+
+    return volatility;
   }
 }
