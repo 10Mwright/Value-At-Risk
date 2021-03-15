@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import net.mdwright.var.objects.Portfolio;
+import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.Scenario;
+import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
 
 /**
@@ -17,7 +19,8 @@ public class HistoricalSimVar implements VarCalculator {
 
   //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
 
-  Portfolio portfolio;
+  private DataManager data = new DataManager();
+  private Portfolio portfolio;
 
   /**
    * {@inheritDoc}
@@ -26,7 +29,6 @@ public class HistoricalSimVar implements VarCalculator {
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
     int portfolioSize = portfolio.getSize();
-    DataManager data = new DataManager();
 
     Boolean multiDay = false; //Default to false for multi day calculation
     if (timeHorizon > 1) {
@@ -39,10 +41,9 @@ public class HistoricalSimVar implements VarCalculator {
 
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
-        String targetTickerSymbol = portfolio.getPosition(i).getTickerSymbol();
-        portfolio.getPosition(i)
-            .setHistoricalData(data.getHistoricalPrices(targetTickerSymbol, historicalDataLength));
-        portfolio.getPosition(i).setPositionValue(data.getCurrentValue(portfolio.getPosition(i))); //Calculate current position value
+        Position targetPosition = portfolio.getPosition(i);
+        data.getHistoricalPrices(targetPosition, historicalDataLength);
+        data.getCurrentValue(portfolio.getPosition(i)); //Calculate current position value
       }
 
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
@@ -154,6 +155,8 @@ public class HistoricalSimVar implements VarCalculator {
 
   @Override
   public Portfolio getData() {
+    data.getCurrentPortfolioValue(portfolio);
+
     return portfolio;
   }
 
@@ -166,7 +169,7 @@ public class HistoricalSimVar implements VarCalculator {
    * https://stackoverflow.com/questions/41413544/calculate-percentile-from-a-long-array
    */
   public int getPercentileIndex(Scenario[] scenarios, double desiredPercentile) {
-    int indexOfPercentile = (int) Math.ceil(desiredPercentile / 100.0 * scenarios.length);
+    int indexOfPercentile = (int) Math.ceil(desiredPercentile / 10000 * scenarios.length);
 
     return indexOfPercentile;
   }
@@ -175,7 +178,7 @@ public class HistoricalSimVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
     throw new UnsupportedOperationException(
         "Invalid operation for historical Simulation VaR (Requires historical data length)");
   }

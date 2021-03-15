@@ -12,8 +12,8 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private BigDecimal positionValue;
-  private double holdings;
+  private BigDecimal positionValue, perUnitPrice, meanPrice;
+  private double holdings, volatility;
   private List<HistoricalQuote> historicalData;
 
   /**
@@ -88,4 +88,28 @@ public class Position {
   }
 
   public void setPositionValue(BigDecimal positionValue) { this.positionValue = positionValue; }
+
+  public BigDecimal getPerUnitPrice() {
+    return perUnitPrice;
+  }
+
+  public void setPerUnitPrice(BigDecimal perUnitPrice) {
+    this.perUnitPrice = perUnitPrice;
+  }
+
+  public double getVolatility() {
+    return volatility;
+  }
+
+  public void setVolatility(double volatility) {
+    this.volatility = volatility;
+  }
+
+  public BigDecimal getMeanPrice() {
+    return meanPrice;
+  }
+
+  public void setMeanPrice(BigDecimal meanPrice) {
+    this.meanPrice = meanPrice;
+  }
 }

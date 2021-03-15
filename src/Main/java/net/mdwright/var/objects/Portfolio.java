@@ -12,6 +12,8 @@ public class Portfolio {
   private Position[] positions;
   private Scenario[] scenarios;
   private BigDecimal valueAtRisk;
+  private BigDecimal currentValue;
+  private double volatilityLambda = 0.94;
 
   /**
    * Constructor method for creating a portfolio with multiple Positions.
@@ -26,7 +28,6 @@ public class Portfolio {
    * @param position A Position object representing the desired position
    */
   public Portfolio(Position position) {
-    //TODO: validation to ensure portfolio has a single position
     this.positions = new Position[]{position};
   }
 
@@ -35,9 +36,12 @@ public class Portfolio {
    * @param positionIndex An int value representing the index of the desired position within the array
    * @return The Position object representing the desired position
    */
-  public Position getPosition(int positionIndex) {
-    //TODO: validation to ensure portfolio contains a valid array
-    return positions[positionIndex];
+  public Position getPosition(int positionIndex) throws NullPointerException {
+    if(positions.length != 0) { //Portfolio object isn't empty
+      return positions[positionIndex];
+    } else {
+      throw new NullPointerException("Positions Array in Portfolio Object is Empty!");
+    }
   }
 
   /**
@@ -98,5 +102,21 @@ public class Portfolio {
    */
   public void setValueAtRisk(BigDecimal valueAtRisk) {
     this.valueAtRisk = valueAtRisk;
+  }
+
+  public BigDecimal getCurrentValue() {
+    return currentValue;
+  }
+
+  public void setCurrentValue(BigDecimal currentValue) {
+    this.currentValue = currentValue;
+  }
+
+  public double getVolatilityLambda() {
+    return volatilityLambda;
+  }
+
+  public void setVolatilityLambda(double volatilityLambda) {
+    this.volatilityLambda = volatilityLambda;
   }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.Stock;
 import yahoofinance.YahooFinance;
@@ -23,26 +24,25 @@ public class DataManager {
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
-   * @param tickerSymbol the requested stocks ticker symbol
+   * @param position the requested stocks position object
    * @param dataLength An int value representing the number of days to go back for historical data
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs or the response is invalid
    */
-  public static List<HistoricalQuote> getHistoricalPrices(String tickerSymbol, int dataLength)
+  public static List<HistoricalQuote> getHistoricalPrices(Position position, int dataLength)
       throws IOException {
     Calendar startDate = Calendar.getInstance();
     Calendar endDate = Calendar.getInstance();
-    startDate.add(Calendar.DAY_OF_YEAR,
-        -dataLength); //We'll initially only consider the previous year of data
+    startDate.add(Calendar.DAY_OF_YEAR, -dataLength);
 
-    Stock target = YahooFinance.get(tickerSymbol, startDate, endDate, Interval.DAILY);
+    Stock target = YahooFinance.get(position.getTickerSymbol(), startDate, endDate, Interval.DAILY);
 
     String currencyFrom = target.getCurrency(); //Find the currency of the historical data
     String currencyTo = "GBP";
 
     BigDecimal exchangeRate = getFXQuote(currencyFrom,
         currencyTo); //Retrieve the exchange rate for above currencies
-    System.out.println("EXCHANGE RATE: " + exchangeRate);
+    System.out.println("EXCHANGE RATE: 1:" + exchangeRate);
 
     List<HistoricalQuote> historical = target.getHistory();
 
@@ -53,6 +53,7 @@ public class DataManager {
     }
 
     System.out.println(historical);
+    position.setHistoricalData(historical);
     return historical;
   }
 
@@ -103,7 +104,28 @@ public class DataManager {
 
     System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
 
-    return currentPrice.multiply(new BigDecimal(position.getHoldings()));
+    position.setPerUnitPrice(currentPrice);
+
+    currentPrice = currentPrice.multiply(new BigDecimal(position.getHoldings()));
+
+    position.setPositionValue(currentPrice);
+    return currentPrice;
+  }
+
+  /**
+   * Method for retrieving the current total value of the portfolio using previously retrieved current values.
+   * @param portfolio The target portfolio object
+   * @return BigDecimal value representing the current GBP price of all holdings in the portfolio
+   */
+  public static BigDecimal getCurrentPortfolioValue(Portfolio portfolio) {
+    BigDecimal currentValue = new BigDecimal(0);
+
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      currentValue = currentValue.add(portfolio.getPosition(i).getPositionValue());
+    }
+
+    portfolio.setCurrentValue(currentValue);
+    return currentValue;
   }
 
 }

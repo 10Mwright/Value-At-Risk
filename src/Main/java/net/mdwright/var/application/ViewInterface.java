@@ -1,10 +1,11 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
-import java.util.function.Consumer;
 import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Model;
+import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Interface class for GUI Views.
@@ -18,7 +19,7 @@ public interface ViewInterface {
    *
    * @return An array of type Position
    */
-  Position[] getPortfolio();
+  Portfolio getPortfolio();
 
   /**
    * Method to retrieve the position to be added to the portfolio.
@@ -39,7 +40,7 @@ public interface ViewInterface {
    *
    * @return A double value representing the probability in decimal format (e.g. 0.99)
    */
-  double getProbability();
+  int getProbability();
 
   /**
    * Method to retrieve the user's preferred data length for historical sim.
@@ -55,6 +56,10 @@ public interface ViewInterface {
    */
   void setResult(BigDecimal varValue);
 
+  /**
+   * Method to set draw the price history chart in the GUI.
+   * @param chart A LineChart object representing the completed chart
+   */
   void setChart(LineChart chart);
 
   /**
@@ -79,11 +84,38 @@ public interface ViewInterface {
   void addPortfolioObserver(Observer obs);
 
   /**
-   * Adds an observer to monitor user's change in model selection.
-   *
-   * @param model Object of type Observer
+   * Method to set the portfolio value field in GUI.
+   * @param PortfolioValue BigDecimal value representing the total value of the user's portfolio
    */
-  @Deprecated //Method has been deprecated as the GUIs have now been separated on a per model basis.
-  void addModelObserver(Consumer<Model> model);
+  void setPortfolioValue(BigDecimal PortfolioValue);
+
+  /**
+   * Method to set the value after var field in GUI.
+   * @param valueAfterVar BigDecimal value representing the value after var is taken
+   */
+  void setValueAfterVar(BigDecimal valueAfterVar);
+
+  /**
+   * Method to set the var as a percentage field in GUI.
+   * @param percentage double value representing the percentage out of 100
+   */
+  void setVarPercentage(double percentage);
+
+  /**
+   * Method to setup the volatility choice on the model-building GUI.
+   */
+  void setupVolatilityChoice();
+
+  /**
+   * Method to retrieve the volatility choice on the model-building GUI.
+   * @return VolatilityMethod Enum object
+   */
+  VolatilityMethod getVolatilityChoice();
+
+  /**
+   * Method to retrieve the current GUI's Model.
+   * @return Model Enum object representing the GUI's respective model
+   */
+  Model getModelToUse();
 
 }
