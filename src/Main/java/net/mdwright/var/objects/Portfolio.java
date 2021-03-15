@@ -13,6 +13,7 @@ public class Portfolio {
   private Scenario[] scenarios;
   private BigDecimal valueAtRisk;
   private BigDecimal currentValue;
+  private double volatilityLambda = 0;
 
   /**
    * Constructor method for creating a portfolio with multiple Positions.
@@ -109,5 +110,13 @@ public class Portfolio {
 
   public void setCurrentValue(BigDecimal currentValue) {
     this.currentValue = currentValue;
+  }
+
+  public double getVolatilityLambda() {
+    return volatilityLambda;
+  }
+
+  public void setVolatilityLambda(double volatilityLambda) {
+    this.volatilityLambda = volatilityLambda;
   }
 }

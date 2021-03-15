@@ -9,10 +9,6 @@ public class EWMAVolatility implements VolatilityModel {
 
   private static double lambda = 0.94; //0.94 by default
 
-  public EWMAVolatility(double lambda) {
-    this.lambda = lambda;
-  }
-
   /**
    * Exponentially Weighted Moving Average model for calculating volatility.
    *
@@ -21,6 +17,8 @@ public class EWMAVolatility implements VolatilityModel {
    * @return double value representing the volatility of the position over the time period
    */
   public double calculateVolatility(Portfolio portfolio, int positionIndex) {
+    this.lambda = portfolio.getVolatilityLambda(); //Retrieve any user inputted lambda, defaults to 0.94 if no input
+
     List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
 
     double[][] returns = new double[3][historicalData.size()];

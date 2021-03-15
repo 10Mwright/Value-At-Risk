@@ -21,7 +21,7 @@ public class testEWMAVolatility {
     try {
       DataManager.getHistoricalPrices(testPosition, 252);
 
-      EWMAVolatility volCalculator = new EWMAVolatility(0.94);
+      EWMAVolatility volCalculator = new EWMAVolatility();
 
       double volatility = volCalculator.calculateVolatility(portfolio, 0);
 
