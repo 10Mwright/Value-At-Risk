@@ -67,6 +67,9 @@ public class ModelBuildingVar implements VarCalculator {
 
       double dailyVolatility = 0;
 
+      dailyVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 0);
+
+      /*
       if(volatilityChoice == VolatilityMethod.SIMPLE) {
         dailyVolatility = VarMath.calculateVolatility(position);
       } else if(volatilityChoice == VolatilityMethod.EWMA) {
@@ -74,6 +77,7 @@ public class ModelBuildingVar implements VarCalculator {
       } else if(volatilityChoice == VolatilityMethod.GARCH) {
         //TODO: IMPLEMENT GARCH METHOD
       }
+      */
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
