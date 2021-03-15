@@ -47,7 +47,13 @@ public class ModelBuildingGUI implements ViewInterface {
       positions[i] = portfolioList.getItems().get(i);
     }
 
-    return new Portfolio(positions);
+    Portfolio portfolio = new Portfolio(positions);
+
+    if(!lambdaField.getText().equals("")) {
+      portfolio.setVolatilityLambda(Double.parseDouble(lambdaField.getText()));
+    }
+
+    return portfolio;
   }
 
   @Override
@@ -199,5 +205,9 @@ public class ModelBuildingGUI implements ViewInterface {
   @FXML
   // fx:id="volatilityMethod"
   private ChoiceBox<String> volatilityMethod;
+
+  @FXML
+  // fx:id="lambdaField"
+  private TextField lambdaField;
 
 }

@@ -92,6 +92,12 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
+                        <TextField fx:id="lambdaField" layoutX="261.0" layoutY="170.0" />
+                        <Label layoutX="198.0" layoutY="168.0" prefHeight="27.0" prefWidth="66.0" text="Lambda:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>
