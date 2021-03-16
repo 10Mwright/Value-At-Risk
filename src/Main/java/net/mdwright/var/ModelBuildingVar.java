@@ -183,13 +183,13 @@ public class ModelBuildingVar implements VarCalculator {
       double[][] covariances = VolatilityModelFactory.getModel(volatilityChoice).calculateCovarianceMatrix(portfolio);
       BigDecimal portfolioVariance = new BigDecimal(0);
 
-      for (int i = 0; i < portfolio.getSize(); i++) {
-        for (int j = 0; j < portfolio.getSize(); j++) {
-          BigDecimal variance = new BigDecimal(covariances[i][j]);
-          variance = variance.multiply(currentValues[i]);
-          variance = variance.multiply(currentValues[j]);
+      for (int i = 0; i < portfolio.getSize(); i++) { //Run through rows
+        for (int j = 0; j < portfolio.getSize(); j++) { //Run through columns
+          BigDecimal variance = new BigDecimal(covariances[i][j]); //Takes covariance between asset i and j
+          variance = variance.multiply(currentValues[i]); //Multiplied by current value of asset i
+          variance = variance.multiply(currentValues[j]); //Multiplied by current value of asset j
 
-          portfolioVariance = portfolioVariance.add(variance);
+          portfolioVariance = portfolioVariance.add(variance); //Sum up all variances
         }
       }
 

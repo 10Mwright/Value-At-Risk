@@ -66,11 +66,13 @@ public class testModelBuildingVar {
 
   @Test
   public void testLinearSimple() {
-    Position google = new Position("GOOG", 1000000);
-    Position microsoft = new Position("MSFT", 10000000);
+    Position google = new Position("GOOG", 100);
+    Position microsoft = new Position("MSFT", 1000);
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
-    BigDecimal var = modelBuilding.calculateVarLinear(portfolio, 10, 0.99, VolatilityMethod.SIMPLE);
+    ModelBuildingVar calculation = new ModelBuildingVar();
+
+    BigDecimal var = calculation.calculateVarLinear(portfolio, 10, 0.99, VolatilityMethod.EWMA);
     System.out.println(var);
 
     assertNotEquals(new BigDecimal(0), var);
