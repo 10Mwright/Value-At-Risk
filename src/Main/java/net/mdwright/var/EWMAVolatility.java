@@ -2,10 +2,9 @@ package net.mdwright.var;
 
 import java.util.List;
 import net.mdwright.var.objects.Portfolio;
-import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
 
-public class EWMAVolatility implements VolatilityModel {
+public class EWMAVolatility extends VolatilityModel {
 
   private static double lambda = 0.94; //0.94 by default
 
@@ -45,13 +44,5 @@ public class EWMAVolatility implements VolatilityModel {
     }
 
     return variance;
-  }
-
-  public double calculateVolatility(Portfolio portfolio, int positionIndex) {
-    double variance = calculateVariance(portfolio, positionIndex);
-
-    double volatility = Math.sqrt(variance);
-
-    return volatility;
   }
 }

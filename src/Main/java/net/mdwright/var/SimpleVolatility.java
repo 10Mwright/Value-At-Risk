@@ -4,7 +4,7 @@ import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import yahoofinance.histquotes.HistoricalQuote;
 
-public class SimpleVolatility implements VolatilityModel {
+public class SimpleVolatility extends VolatilityModel {
 
   /**
    * Method for calculating variance using the equally weighted model.
@@ -28,14 +28,5 @@ public class SimpleVolatility implements VolatilityModel {
     System.out.println("Variance: " + variance);
 
     return variance;
-  }
-
-  public double calculateVolatility(Portfolio portfolio, int positionIndex) {
-    double variance = calculateVariance(portfolio, positionIndex);
-
-    double volatility = Math.sqrt(variance);
-
-    portfolio.getPosition(positionIndex).setVolatility(volatility);
-    return volatility;
   }
 }
