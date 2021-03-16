@@ -3,18 +3,25 @@ package net.mdwright.var;
 import net.mdwright.var.objects.Portfolio;
 
 /**
- * Interface for volatility models.
+ * Abstract class for volatility models.
  * @author Matthew Wright
  */
 public abstract class VolatilityModel {
 
   /**
-   * Method to calculate volatility using one of several methods.
+   * Method to calculate variance using one of several methods.
    * @param portfolio Portfolio object containing historical data for each Position
-   * @return double value representing the volatility in percentage decimal format
+   * @param positionIndex int value representing the index pointer for the relevant position
+   * @return double value representing the variance
    */
   abstract double calculateVariance(Portfolio portfolio, int positionIndex);
 
+  /**
+   * Method to calculate volatility using the relevant variance method.
+   * @param portfolio Portfolio object containing historical data for each Position
+   * @param positionIndex int value representing the index pointer for the relevant position
+   * @return double value representing the volatility in percentage decimal format
+   */
   public double calculateVolatility(Portfolio portfolio, int positionIndex) {
     double variance = calculateVariance(portfolio, positionIndex);
 
@@ -22,6 +29,27 @@ public abstract class VolatilityModel {
 
     portfolio.getPosition(positionIndex).setVolatility(volatility);
     return volatility;
+  }
+
+  /**
+   * Method to create the covariance matrix for a portfolio
+   * @param portfolio
+   * @return
+   */
+  public double[][] calculateCovarianceMatrix(Portfolio portfolio) {
+    double[][] covariance = new double[portfolio.getSize()][portfolio.getSize()];
+
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      for (int j = 0; j < portfolio.getSize(); j++) {
+        double volatilityI = calculateVolatility(portfolio, i);
+        double volatilityJ = calculateVolatility(portfolio, j);
+        double correlation = VarMath.calculateCoefficient(portfolio.getPosition(i), portfolio.getPosition(j));
+
+        covariance[i][j] = volatilityI * volatilityJ * correlation; //Covariance between asset i and j
+      }
+    }
+
+    return covariance;
   }
 
 }

@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import net.mdwright.var.DataManager;
-import net.mdwright.var.SimpleVolatility;
 import net.mdwright.var.VolatilityModel;
 import net.mdwright.var.VolatilityModelFactory;
 import net.mdwright.var.objects.Portfolio;
