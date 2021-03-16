@@ -63,4 +63,16 @@ public class testModelBuildingVar {
 
     assertNotEquals(new BigDecimal(0), calculation.calculateVar(google, microsoft, 10, 0.99, VolatilityMethod.SIMPLE));
   }
+
+  @Test
+  public void testLinearSimple() {
+    Position google = new Position("GOOG", 1000000);
+    Position microsoft = new Position("MSFT", 10000000);
+    Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
+
+    BigDecimal var = modelBuilding.calculateVarLinear(portfolio, 10, 0.99, VolatilityMethod.SIMPLE);
+    System.out.println(var);
+
+    assertNotEquals(new BigDecimal(0), var);
+  }
 }
