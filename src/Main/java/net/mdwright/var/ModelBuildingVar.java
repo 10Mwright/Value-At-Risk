@@ -167,6 +167,14 @@ public class ModelBuildingVar implements VarCalculator {
     }
   }
 
+  /**
+   * Method to calculate value at risk using the linear covariance method.
+   * @param portfolio Portfolio object containing associated positions
+   * @param timeHorizon number of days as an integer to act as the time horizon
+   * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum value representing the volatility calculation to be used
+   * @return A BigDecimal value representing the value at risk across the time horizon and at a certain probability
+   */
   public BigDecimal calculateVarLinear(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -195,7 +203,9 @@ public class ModelBuildingVar implements VarCalculator {
 
       double portfolioVolatility = Math.sqrt(portfolioVariance.doubleValue());
 
-      var = new BigDecimal(normSinV);
+      System.out.println("Volatiliy Portfolio: " + portfolioVolatility);
+
+      var = new BigDecimal(Math.abs(normSinV)); //Using absolute value to remove negative sign if necessary
       var = var.multiply(new BigDecimal(portfolioVolatility));
       var = var.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
 
