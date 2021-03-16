@@ -20,6 +20,7 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * {@inheritDoc}
    */
+
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
     BigDecimal varValue = new BigDecimal(0);
@@ -164,6 +165,46 @@ public class ModelBuildingVar implements VarCalculator {
       portfolioData.setValueAtRisk(singleDayVar);
       return singleDayVar;
     }
+  }
+
+  public BigDecimal calculateVarLinear(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
+    double normSinV = Normals
+        .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
+    BigDecimal var = new BigDecimal(0);
+
+    try {
+      BigDecimal[] currentValues = new BigDecimal[portfolio.getSize()];
+
+      for (int i = 0; i < portfolio.getSize(); i++) {
+        data.getHistoricalPrices(portfolio.getPosition(i), 252);
+        currentValues[i] = data.getCurrentValue(portfolio.getPosition(i));
+      }
+
+      double[][] covariances = VolatilityModelFactory.getModel(volatilityChoice).calculateCovarianceMatrix(portfolio);
+      BigDecimal portfolioVariance = new BigDecimal(0);
+
+      for (int i = 0; i < portfolio.getSize(); i++) {
+        for (int j = 0; j < portfolio.getSize(); j++) {
+          BigDecimal variance = new BigDecimal(covariances[i][j]);
+          variance = variance.multiply(currentValues[i]);
+          variance = variance.multiply(currentValues[j]);
+
+          portfolioVariance = portfolioVariance.add(variance);
+        }
+      }
+
+      double portfolioVolatility = Math.sqrt(portfolioVariance.doubleValue());
+
+      var = new BigDecimal(normSinV);
+      var = var.multiply(new BigDecimal(portfolioVolatility));
+      var = var.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+
+      System.out.println("Var: " + var);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return var;
   }
 
   /**
