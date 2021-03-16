@@ -54,4 +54,46 @@ public class testVolatilityModelFactory {
       fail();
     }
   }
+
+  @Test
+  public void testCalculateCovariancesSimple() {
+    Position testPositionOne = new Position("GOOGL", 100);
+    Position testPositionTwo = new Position("GME", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 252);
+
+      VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.SIMPLE);
+
+      double[][] covariances = volCalculator.calculateCovarianceMatrix(portfolio);
+
+      assertNotNull(covariances);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testCalculateCovariancesEWMA() {
+    Position testPositionOne = new Position("GOOGL", 100);
+    Position testPositionTwo = new Position("GME", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 252);
+
+      VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
+
+      double[][] covariances = volCalculator.calculateCovarianceMatrix(portfolio);
+
+      assertNotNull(covariances);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
 }
