@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.VarMath;
@@ -102,6 +103,29 @@ public class testVarMath {
       int smallestDataset = VarMath.getSmallestDatasetSize(portfolio);
 
       assertEquals(testPosition.getHistoricalDataSize(), smallestDataset);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testPercentageChangeMatrix() {
+    Position testPositionOne = new Position("GOOGL", 10);
+    Position testPositionTwo = new Position("GME", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 75);
+
+      double[][] percentageChangeMatrix = VarMath.getPercentageChangeMatrix(portfolio);
+
+
+      System.out.println(
+          Arrays.deepToString(percentageChangeMatrix).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+
+      assertNotNull(percentageChangeMatrix);
     } catch (IOException e) {
       e.printStackTrace();
       fail();
