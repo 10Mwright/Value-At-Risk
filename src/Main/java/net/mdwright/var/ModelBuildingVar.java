@@ -28,9 +28,11 @@ public class ModelBuildingVar implements VarCalculator {
     if (portfolio.getSize() == 1) {
       varValue = calculateVar(portfolio.getPosition(0),
           timeHorizon, probability, volatilityChoice);
-    } else if (portfolio.getSize() >= 2) {
+    } else if (portfolio.getSize() == 2) {
       varValue = calculateVar(portfolio.getPosition(0), portfolio.getPosition(1), timeHorizon,
           probability, volatilityChoice);
+    } else {
+      varValue = calculateVarLinear(portfolio, timeHorizon, probability, volatilityChoice);
     }
 
     return varValue;
@@ -209,11 +211,14 @@ public class ModelBuildingVar implements VarCalculator {
       var = var.multiply(new BigDecimal(portfolioVolatility));
       var = var.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
 
+      portfolioData = portfolio;
+
       System.out.println("Var: " + var);
     } catch (IOException e) {
       e.printStackTrace();
     }
 
+    portfolioData.setValueAtRisk(var);
     return var;
   }
 

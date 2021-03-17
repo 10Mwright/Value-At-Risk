@@ -45,6 +45,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
     for (int i = 0; i < portfolioSize; i++) {
       positions[i] = portfolioList.getItems().get(i);
+      System.out.println("Positon: " + positions[i]);
     }
 
     Portfolio portfolio = new Portfolio(positions);

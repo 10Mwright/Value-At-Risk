@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Arrays;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.VolatilityModel;
 import net.mdwright.var.VolatilityModelFactory;
@@ -80,15 +81,20 @@ public class testVolatilityModelFactory {
   public void testCalculateCovariancesEWMA() {
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("GME", 100);
-    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+    Position testPositionThree = new Position("TSLA", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo, testPositionThree});
 
     try {
       DataManager.getHistoricalPrices(testPositionOne, 252);
       DataManager.getHistoricalPrices(testPositionTwo, 252);
+      DataManager.getHistoricalPrices(testPositionThree, 252);
 
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
 
       double[][] covariances = volCalculator.calculateCovarianceMatrix(portfolio);
+
+      System.out.println(
+          Arrays.deepToString(covariances).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
 
       assertNotNull(covariances);
     } catch (IOException e) {
