@@ -119,13 +119,18 @@ public class VarMath {
   }
 
   public static double[][] getPercentageChangeMatrix(Portfolio portfolio) {
-    for (int i = 0; i < portfolio.getSize(); i++) {
+    int smallestDataset = getSmallestDatasetSize(portfolio);
 
+    double[][] percentageChangesMatrix = new double[portfolio.getSize()][smallestDataset]; //Only calculate matrix over the smallest dataset
+
+    for (int i = 0; i < portfolio.getSize(); i++) { //Increment through positions
+      double[] percentageChanges = getPercentageChanges(portfolio, i); //Get percentage changes
+      for (int j = 0; j < smallestDataset; j++) {
+        percentageChangesMatrix[i][j] = percentageChanges[j]; //Scale down the percentage changes to smallest dataset size
+      }
     }
 
-    double[][] percentageChanges = new double[portfolio.getSize()][1];
-
-    return percentageChanges;
+    return percentageChangesMatrix;
   }
 
   /**
@@ -144,6 +149,6 @@ public class VarMath {
       }
     }
 
-    return smallestDataset;
+    return smallestDataset-1; //To correct size for for loops
   }
 }
