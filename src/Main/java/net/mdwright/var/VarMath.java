@@ -117,4 +117,18 @@ public class VarMath {
 
     return percentageChanges;
   }
+
+  public static double[][] getPercentageChangeMatrix(Portfolio portfolio) {
+    for (int i = 0; i < portfolio.getSize(); i++) {
+
+    }
+
+    double[][] percentageChanges = new Double[portfolio.getSize()][portfolio.get]
+  }
+
+  public static int getSmallestDatasetSize(Portfolio portfolio) {
+    for (int i = 0; i < portfolio.getSize(); i++) {
+
+    }
+  }
 }

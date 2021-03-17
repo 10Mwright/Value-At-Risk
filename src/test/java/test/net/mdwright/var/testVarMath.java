@@ -3,9 +3,11 @@ package test.net.mdwright.var;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.VarMath;
 import net.mdwright.var.objects.Portfolio;
@@ -64,6 +66,25 @@ public class testVarMath {
         System.out.println(percentageChanges[i]);
         assertNotNull(percentageChanges[i]);
       }
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testSmallestDatasetSize() {
+    Position testPositionOne = new Position("GOOGL", 10);
+    Position testPositionTwo = new Position("GME", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 10);
+
+      int smallestDataset = VarMath.getSmallestDatasetSize(portfolio);
+
+      assertEquals(10, smallestDataset);
     } catch (IOException e) {
       e.printStackTrace();
       fail();
