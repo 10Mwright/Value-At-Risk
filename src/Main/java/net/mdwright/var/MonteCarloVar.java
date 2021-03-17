@@ -19,7 +19,7 @@ public class MonteCarloVar implements VarCalculator {
         data.getCurrentValue(portfolio.getPosition(i)); //Get current value of all positions in portfolio
       }
 
-
+      double[][] percentageChangesMatrix = VarMath.getPercentageChangeMatrix(portfolio); //Get matrix of percent changes in portfolio
 
 
     } catch (IOException e) {
