@@ -61,34 +61,6 @@ public class Portfolio {
   }
 
   /**
-   * Method for returning a sorted array of scenarios.
-   *
-   * @return Array of type Scenario containing a sorted array by value (Descending)
-   *
-   * Code adapted from:
-   * https://stackoverflow.com/questions/33462923/sort-elements-of-an-array-in-ascending-order
-   */
-  public Scenario[] sortScenarios() {
-    Scenario temp;
-
-    //Runs through each scenario and the scenarios proceeding it
-    for (int i = 0; i <= this.scenarios.length; i++) {
-      for (int j = i + 1; j < this.scenarios.length; j++) {
-        if (this.scenarios[i] != null && this.scenarios[j] != null) {
-          //Compares the values, if lower then swap around
-          if (this.scenarios[i].getValueUnderScenario()
-              .compareTo(this.scenarios[j].getValueUnderScenario()) < 0) {
-            temp = this.scenarios[i];
-            this.scenarios[i] = this.scenarios[j];
-            this.scenarios[j] = temp;
-          }
-        }
-      }
-    }
-    return this.scenarios;
-  }
-
-  /**
    * Method for retrieving the VaR value for this portfolio.
    * @return A BigDecimal value representing the VaR value
    */

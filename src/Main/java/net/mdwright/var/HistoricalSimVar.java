@@ -17,10 +17,18 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class HistoricalSimVar implements VarCalculator {
 
-  //TODO: data validation, ensure that for stocks with less than the historicalDataLength worth of days the code doesn't error
-
   private DataManager data = new DataManager();
-  private Portfolio portfolio;
+  private Portfolio portfolioData;
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
+      VolatilityMethod volatilityChoice) {
+    throw new UnsupportedOperationException(
+        "Invalid operation for Historical Simulation VaR (Requires historical data length)");
+  }
 
   /**
    * {@inheritDoc}
@@ -30,15 +38,9 @@ public class HistoricalSimVar implements VarCalculator {
       int historicalDataLength) {
     int portfolioSize = portfolio.getSize();
 
-    Boolean multiDay = false; //Default to false for multi day calculation
-    if (timeHorizon > 1) {
-      multiDay = true;
-    }
-
-    System.out.println("TIMEHORZION: " + timeHorizon);
+    BigDecimal valueAtRisk = new BigDecimal(0);
 
     try {
-
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
         Position targetPosition = portfolio.getPosition(i);
@@ -53,8 +55,12 @@ public class HistoricalSimVar implements VarCalculator {
       //For each pair of dates
       for (int j = 0; j < dataSize; j++) {
         if ((j + 1) != dataSize) {
-          BigDecimal scenarioValue = new BigDecimal(0), scenarioValueTemp = new BigDecimal(0);
-          HistoricalQuote dayOne = null, dayTwo = null;
+          BigDecimal scenarioValue = new BigDecimal(0);
+          BigDecimal scenarioValueTemp;
+
+          //Setup objects to hold each day's data
+          HistoricalQuote dayOne = null;
+          HistoricalQuote dayTwo = null;
 
           // For each position in the portfolio
           for (int n = 0; n < portfolioSize; n++) {
@@ -63,7 +69,7 @@ public class HistoricalSimVar implements VarCalculator {
             System.out.println("WITH: " + sdf.format(
                 portfolio.getPosition(n).getHistoricalData().get(j + 1).getDate().getTime()));
 
-            //Gather historical data for these dates
+            //Gather the historical quote for these dates
             dayOne = portfolio.getPosition(n).getHistoricalData().get(j);
             dayTwo = portfolio.getPosition(n).getHistoricalData().get(j + 1);
 
@@ -71,7 +77,7 @@ public class HistoricalSimVar implements VarCalculator {
             BigDecimal currentDayValue = portfolio.getPosition(n).getHistoricalData()
                 .get(dataSize - 1).getAdjClose();
 
-            // Dividing our 2nd day's value by our first day's value then multiplying by most recent value
+            // Dividing our 2nd day's value by our first day's value then multiplying by most recent
             BigDecimal tempScenario = dayTwo.getAdjClose()
                 .divide(dayOne.getAdjClose(), 10, BigDecimal.ROUND_UP);
 
@@ -101,10 +107,10 @@ public class HistoricalSimVar implements VarCalculator {
                 .subtract(portfolioValue); //Get loss or gain compared to current value
 
             scenarioValueTemp = scenarioValueTemp.subtract(scenarioValueTemp
-                .multiply(new BigDecimal(2))); //Swap signs, gains are recorded as negative losses
+                .multiply(new BigDecimal(2))); //Swap signs, gains are recorded as -'tive losses
 
             scenarioValue = scenarioValue.add(
-                scenarioValueTemp); //Add all scenario values of each position up for total scenario value
+                scenarioValueTemp); //Add all scenario values of each position up for total value
 
           }
 
@@ -117,12 +123,10 @@ public class HistoricalSimVar implements VarCalculator {
         }
       }
 
-      //Transfer this array to the portfolio object
-      portfolio.setScenarios(scenarios);
+      Scenario[] scenariosSorted = sortScenarios(scenarios); //Sort the scenarios
+      portfolio.setScenarios(scenariosSorted); //Set portfolio's scenario array to sorted array
 
-      Scenario[] scenariosSorted = portfolio.sortScenarios();
-
-      for (int o = 0; o < scenariosSorted.length; o++) {
+      for (int o = 0; o < scenariosSorted.length; o++) { //Run through sorted array
         if (scenariosSorted[o] != null) {
           System.out.println("SCENARIO 0 SORTED: " + scenariosSorted[o].getValueUnderScenario());
           System.out.println(
@@ -132,15 +136,16 @@ public class HistoricalSimVar implements VarCalculator {
       }
 
       // Retrieving our percentile value in our sorted array
-      BigDecimal varValue = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
+      valueAtRisk = scenariosSorted[getPercentileIndex(scenariosSorted, probability)]
           .getValueUnderScenario();
 
-      if (multiDay) { //Multiply by sqrt of timeHorizon to calculate multiday var if required
-        System.out.println("TRIGGER: " + varValue);
-        varValue = varValue.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
-      }
+      System.out.println("Single Day " + (probability * 100) + "VaR is: " + valueAtRisk);
 
-      portfolio.setValueAtRisk(varValue);
+      //Calculate VaR over time horizon
+      valueAtRisk = valueAtRisk.multiply(new BigDecimal(Math.sqrt(timeHorizon)));
+
+      System.out.println(timeHorizon + " Day " + (probability * 100) + "VaR is: " + valueAtRisk);
+      portfolio.setValueAtRisk(valueAtRisk);
 
       System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
 
@@ -148,16 +153,46 @@ public class HistoricalSimVar implements VarCalculator {
       e.printStackTrace();
     }
 
-    this.portfolio = portfolio; //Update portfolio object for graphing usage
+    portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 
-    return portfolio.getValueAtRisk();
+    portfolioData = portfolio; //Store portfolio object for data gathering by GUI
+    return valueAtRisk;
+  }
+
+  /**
+   * Method for returning a sorted array of scenarios.
+   *
+   * @return Array of type Scenario containing a sorted array by value (Descending)
+   *
+   *     Code adapted from:
+   *     https://stackoverflow.com/questions/33462923/sort-elements-of-an-array-in-ascending-order
+   */
+  public Scenario[] sortScenarios(Scenario[] unsortedScenarios) {
+    Scenario temp;
+
+    //Runs through each scenario and the scenarios proceeding it
+    for (int i = 0; i <= unsortedScenarios.length; i++) {
+      for (int j = i + 1; j < unsortedScenarios.length; j++) {
+        if (unsortedScenarios[i] != null && unsortedScenarios[j] != null) {
+          //Compares the values, if lower then swap around
+          if (unsortedScenarios[i].getValueUnderScenario()
+              .compareTo(unsortedScenarios[j].getValueUnderScenario()) < 0) {
+            temp = unsortedScenarios[i];
+            unsortedScenarios[i] = unsortedScenarios[j];
+            unsortedScenarios[j] = temp;
+          }
+        }
+      }
+    }
+
+    return unsortedScenarios;
   }
 
   @Override
   public Portfolio getData() {
-    data.getCurrentPortfolioValue(portfolio);
+    data.getCurrentPortfolioValue(portfolioData);
 
-    return portfolio;
+    return portfolioData;
   }
 
   /**
@@ -166,20 +201,11 @@ public class HistoricalSimVar implements VarCalculator {
    * @param scenarios Array of type Scenario containing all scenarios for the position
    * @param desiredPercentile Double value representing the percentile in decimal format
    * @return int value representing the index of this percentile influence taken from
-   * https://stackoverflow.com/questions/41413544/calculate-percentile-from-a-long-array
+   *     https://stackoverflow.com/questions/41413544/calculate-percentile-from-a-long-array
    */
   public int getPercentileIndex(Scenario[] scenarios, double desiredPercentile) {
     int indexOfPercentile = (int) Math.ceil(desiredPercentile / 10000 * scenarios.length);
 
     return indexOfPercentile;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
-    throw new UnsupportedOperationException(
-        "Invalid operation for historical Simulation VaR (Requires historical data length)");
   }
 }
