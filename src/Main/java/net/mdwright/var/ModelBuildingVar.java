@@ -23,13 +23,13 @@ public class ModelBuildingVar implements VarCalculator {
 
   @Override
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice) {
-    BigDecimal varValue = new BigDecimal(0);
+    BigDecimal varValue;
 
     if (portfolio.getSize() == 1) {
-      varValue = calculateVar(portfolio.getPosition(0),
+      varValue = calculateVarSingle(portfolio,
           timeHorizon, probability, volatilityChoice);
     } else if (portfolio.getSize() == 2) {
-      varValue = calculateVar(portfolio.getPosition(0), portfolio.getPosition(1), timeHorizon,
+      varValue = calculateVarDouble(portfolio, timeHorizon,
           probability, volatilityChoice);
     } else {
       varValue = calculateVarLinear(portfolio, timeHorizon, probability, volatilityChoice);
@@ -41,12 +41,12 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method to calculate VaR for 1 stock.
    *
-   * @param position Position object containing position information.
+   * @param portfolio Portfolio object containing a singular position
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
-  public BigDecimal calculateVar(Position position, int timeHorizon,
+  public BigDecimal calculateVarSingle(Portfolio portfolio, int timeHorizon,
       double probability, VolatilityMethod volatilityChoice) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -59,9 +59,9 @@ public class ModelBuildingVar implements VarCalculator {
     }
 
     try {
-      data.getHistoricalPrices(position, 365);
+      Position position = portfolio.getPosition(0); //Get single position from portfolio
 
-      portfolioData = new Portfolio(position);
+      data.getHistoricalPrices(position, 365);
 
       for (int i = 0; i < position.getHistoricalDataSize(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
@@ -70,7 +70,7 @@ public class ModelBuildingVar implements VarCalculator {
 
       double dailyVolatility = 0;
 
-      dailyVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 0);
+      dailyVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolio, 0);
 
       System.out.println("Daily Volatility: " + dailyVolatility);
 
@@ -92,6 +92,8 @@ public class ModelBuildingVar implements VarCalculator {
       e.printStackTrace();
     }
 
+    portfolioData = portfolio;
+
     if (multiDay) {
       portfolioData.setValueAtRisk(multiDayVar);
       return multiDayVar;
@@ -104,13 +106,12 @@ public class ModelBuildingVar implements VarCalculator {
   /**
    * Method to calculate VaR for 2 stocks.
    *
-   * @param positionOne Position object containing data on first position
-   * @param positionTwo Position object containing data on second position
+   * @param portfolio Portfolio object containing two positions
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the two stock portfolio
    */
-  public BigDecimal calculateVar(Position positionOne, Position positionTwo, int timeHorizon,
+  public BigDecimal calculateVarDouble(Portfolio portfolio, int timeHorizon,
       double probability, VolatilityMethod volatilityChoice) {
     double normSinV = Normals
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
@@ -125,16 +126,17 @@ public class ModelBuildingVar implements VarCalculator {
 
     DataManager data = new DataManager();
     try {
+      Position positionOne = portfolio.getPosition(0); //Get first position in portfolio
+      Position positionTwo = portfolio.getPosition(1); //Get 2nd position in portfolio
+
       data.getHistoricalPrices(positionOne, 365);
       data.getHistoricalPrices(positionTwo, 365);
-
-      portfolioData = new Portfolio(new Position[] {positionOne, positionTwo});
 
       double positionOneVolatility = 0;
       double positionTwoVolatility = 0;
 
-      positionOneVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 0);
-      positionTwoVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolioData, 1);
+      positionOneVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolio, 0);
+      positionTwoVolatility = VolatilityModelFactory.getModel(volatilityChoice).calculateVolatility(portfolio, 1);
 
       // Calculate the coefficient of correlation between each position
       double coefficientOfCorrelation = VarMath.calculateCoefficient(positionOne, positionTwo);
@@ -159,6 +161,8 @@ public class ModelBuildingVar implements VarCalculator {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    portfolioData = portfolio;
 
     if (multiDay) {
       portfolioData.setValueAtRisk(multiDayVar);

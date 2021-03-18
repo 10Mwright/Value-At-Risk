@@ -22,20 +22,29 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class HistoricalSimGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format to be used on numbers
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void setupVolatilityChoice() {
+  public void setupVolatilityChoice() { //Dummy method, isn't required on this interface
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public VolatilityMethod getVolatilityChoice() {
+  public VolatilityMethod getVolatilityChoice() { //Dummy method, isn't required on this interface
     return null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size();
+    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
     Position[] positions = new Position[portfolioSize];
 
     for (int i = 0; i < portfolioSize; i++) {
@@ -45,6 +54,9 @@ public class HistoricalSimGUI implements ViewInterface {
     return new Portfolio(positions);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Position getNewPosition() {
     if(tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
@@ -60,6 +72,9 @@ public class HistoricalSimGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int getTimeHorizon() {
     if(!timeHorizonField.getText().equals("")) {
@@ -69,6 +84,9 @@ public class HistoricalSimGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int getProbability() {
     if(!probabilityField.getText().equals("")) {
@@ -78,6 +96,9 @@ public class HistoricalSimGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int getDataLength() {
     if(!dataLengthField.getText().equals("")) {
@@ -87,11 +108,17 @@ public class HistoricalSimGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setResult(BigDecimal varValue) {
     resultField.setText(numberFormat.format(varValue));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setChart(LineChart chart) {
     graphPane.getChildren().clear();
@@ -102,26 +129,41 @@ public class HistoricalSimGUI implements ViewInterface {
     graphPane.getChildren().add(chart);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addNewPosition(Position newPos) {
     portfolioList.getItems().add(newPos);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setPortfolioValue(BigDecimal portfolioValue) {
     this.portfolioValue.setText("£" + numberFormat.format(portfolioValue));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setValueAfterVar(BigDecimal valueAfterVar) {
     this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setVarPercentage(double percentage) {
     this.varPercentage.setText(numberFormat.format(percentage) + "%");
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -132,6 +174,9 @@ public class HistoricalSimGUI implements ViewInterface {
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addPortfolioObserver(Observer obs) {
     addAssetButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -142,10 +187,15 @@ public class HistoricalSimGUI implements ViewInterface {
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Model getModelToUse() {
     return Model.HISTORICAL_SIMULATION;
   }
+
+  //FXML Elements below
 
   @FXML
   // fx:id="timeHorizonField"

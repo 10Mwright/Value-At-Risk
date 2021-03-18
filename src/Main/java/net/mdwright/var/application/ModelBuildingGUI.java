@@ -18,14 +18,17 @@ import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 
 /**
- * Class for managing GUI for user interactions for historical simulations.
+ * Class for managing GUI for user interactions for model-building approach.
  *
  * @author Matthew Wright
  */
 public class ModelBuildingGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format to be used on numbers
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setupVolatilityChoice() {
     volatilityMethod.getItems().removeAll();
@@ -33,24 +36,30 @@ public class ModelBuildingGUI implements ViewInterface {
     volatilityMethod.getSelectionModel().select(0);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public VolatilityMethod getVolatilityChoice() {
     return VolatilityMethod.fromString(volatilityMethod.getSelectionModel().getSelectedItem());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size();
+    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
     Position[] positions = new Position[portfolioSize];
 
     for (int i = 0; i < portfolioSize; i++) {
       positions[i] = portfolioList.getItems().get(i);
-      System.out.println("Positon: " + positions[i]);
     }
 
     Portfolio portfolio = new Portfolio(positions);
 
-    if(!lambdaField.getText().equals("")) {
+    if(!lambdaField.getText().equals("")) { //Retrieves lambda value
+      System.out.println(Double.parseDouble(lambdaField.getText()));
       portfolio.setVolatilityLambda(Double.parseDouble(lambdaField.getText()));
     }
 
