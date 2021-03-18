@@ -188,13 +188,6 @@ public class HistoricalSimVar implements VarCalculator {
     return unsortedScenarios;
   }
 
-  @Override
-  public Portfolio getData() {
-    data.getCurrentPortfolioValue(portfolioData);
-
-    return portfolioData;
-  }
-
   /**
    * Method for finding the index of the desired percentile value.
    *
@@ -207,5 +200,12 @@ public class HistoricalSimVar implements VarCalculator {
     int indexOfPercentile = (int) Math.ceil(desiredPercentile / 10000 * scenarios.length);
 
     return indexOfPercentile;
+  }
+
+  @Override
+  public Portfolio getData() {
+    data.getCurrentPortfolioValue(portfolioData);
+
+    return portfolioData;
   }
 }
