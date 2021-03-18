@@ -21,6 +21,8 @@ import yahoofinance.quotes.fx.FxQuote;
  */
 public class DataManager {
 
+  private static final String localCurrency = "GBP";
+
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
@@ -38,7 +40,7 @@ public class DataManager {
     Stock target = YahooFinance.get(position.getTickerSymbol(), startDate, endDate, Interval.DAILY);
 
     String currencyFrom = target.getCurrency(); //Find the currency of the historical data
-    String currencyTo = "GBP";
+    String currencyTo = localCurrency;
 
     BigDecimal exchangeRate = getFXQuote(currencyFrom,
         currencyTo); //Retrieve the exchange rate for above currencies
@@ -52,8 +54,8 @@ public class DataManager {
       historical.get(i).setAdjClose(temp);
     }
 
-    System.out.println(historical);
-    position.setHistoricalData(historical);
+    System.out.println(historical); //Print out historical data
+    position.setHistoricalData(historical); //Transfer to position object
     return historical;
   }
 
@@ -74,7 +76,7 @@ public class DataManager {
   }
 
   /**
-   * Method for retrieving the current price of a position in GBP.
+   * Method for retrieving the current price per unit of an asset in GBP.
    * @param position The target position object
    * @return BigDecimal value representing the current GBP price
    */
@@ -82,9 +84,10 @@ public class DataManager {
     try {
       Stock stock = YahooFinance.get(position.getTickerSymbol());
 
-      BigDecimal currentPrice = stock.getQuote().getPrice();
+      BigDecimal currentPrice = stock.getQuote().getPrice(); //Gets current price per unit
 
-      currentPrice = currentPrice.multiply(getFXQuote(stock.getCurrency(), "GBP"));
+      // Exchange this price into GBP
+      currentPrice = currentPrice.multiply(getFXQuote(stock.getCurrency(), localCurrency));
 
       return currentPrice;
     } catch (IOException e) {
@@ -95,7 +98,7 @@ public class DataManager {
   }
 
   /**
-   * Method for retrieving the total price of the position.
+   * Method for retrieving the cumulative price of a position.
    * @param position The target position object
    * @return BigDecimal value representing the current GBP price of the holdings
    */
