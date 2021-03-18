@@ -3,17 +3,13 @@ package test.net.mdwright.var;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import javax.xml.crypto.Data;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.VarMath;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
-import org.junit.Before;
 import org.junit.Test;
 
 public class testVarMath {
@@ -67,65 +63,6 @@ public class testVarMath {
         System.out.println(percentageChanges[i]);
         assertNotNull(percentageChanges[i]);
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail();
-    }
-  }
-
-  @Test
-  public void testSmallestDatasetSize() {
-    Position testPositionOne = new Position("GOOGL", 10);
-    Position testPositionTwo = new Position("GME", 100);
-    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
-
-    try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 10);
-
-      int smallestDataset = VarMath.getSmallestDatasetSize(portfolio);
-
-      assertEquals(testPositionTwo.getHistoricalDataSize(), smallestDataset);
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail();
-    }
-  }
-
-  @Test
-  public void testSmallestDatasetSizeSingle() {
-    Position testPosition = new Position("GOOGL", 10);
-    Portfolio portfolio = new Portfolio(testPosition);
-
-    try {
-      DataManager.getHistoricalPrices(testPosition, 252);
-
-      int smallestDataset = VarMath.getSmallestDatasetSize(portfolio);
-
-      assertEquals(testPosition.getHistoricalDataSize(), smallestDataset);
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail();
-    }
-  }
-
-  @Test
-  public void testPercentageChangeMatrix() {
-    Position testPositionOne = new Position("GOOGL", 10);
-    Position testPositionTwo = new Position("GME", 100);
-    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
-
-    try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 75);
-
-      double[][] percentageChangeMatrix = VarMath.getPercentageChangeMatrix(portfolio);
-
-
-      System.out.println(
-          Arrays.deepToString(percentageChangeMatrix).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-
-      assertNotNull(percentageChangeMatrix);
     } catch (IOException e) {
       e.printStackTrace();
       fail();

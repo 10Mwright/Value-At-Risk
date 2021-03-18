@@ -2,11 +2,10 @@ package net.mdwright.var.objects;
 
 public enum VolatilityMethod {
   SIMPLE("Simple Volatility"),
-  EWMA("EWMA"),
-  GARCH("GARCH(1,1)");
+  EWMA("EWMA");
 
   private String stringValue;
-  public static String[] stringValues = {"Simple Volatility", "EWMA", "GARCH(1,1)"};
+  public static String[] stringValues = {"Simple Volatility", "EWMA"};
 
   VolatilityMethod(String value) {
     stringValue = value;

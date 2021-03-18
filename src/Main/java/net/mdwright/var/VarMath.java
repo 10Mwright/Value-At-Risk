@@ -117,38 +117,4 @@ public class VarMath {
 
     return percentageChanges;
   }
-
-  public static double[][] getPercentageChangeMatrix(Portfolio portfolio) {
-    int smallestDataset = getSmallestDatasetSize(portfolio);
-
-    double[][] percentageChangesMatrix = new double[portfolio.getSize()][smallestDataset]; //Only calculate matrix over the smallest dataset
-
-    for (int i = 0; i < portfolio.getSize(); i++) { //Increment through positions
-      double[] percentageChanges = getPercentageChanges(portfolio, i); //Get percentage changes
-      for (int j = 0; j < smallestDataset; j++) {
-        percentageChangesMatrix[i][j] = percentageChanges[j]; //Scale down the percentage changes to smallest dataset size
-      }
-    }
-
-    return percentageChangesMatrix;
-  }
-
-  /**
-   * Method to retrieve the size of the smallest historical dataset in a portfolio.
-   * @param portfolio Portfolio object containing position objects with historical data
-   * @return int value representing the size of the smallest dataset in the portfolio
-   */
-  public static int getSmallestDatasetSize(Portfolio portfolio) {
-    int smallestDataset = portfolio.getPosition(0).getHistoricalDataSize();
-
-    for (int i = 0; i < portfolio.getSize(); i++) { //Cycle through portfolio sampling dataset sizes to find smallest
-      int currentPositionDataset = portfolio.getPosition(i).getHistoricalDataSize();
-
-      if(currentPositionDataset < smallestDataset) {
-        smallestDataset = currentPositionDataset; //Set smallest size to this size if smaller than current smallestSize
-      }
-    }
-
-    return smallestDataset-1; //To correct size for for loops
-  }
 }
