@@ -74,24 +74,14 @@ public class ModelBuildingGUI implements ViewInterface {
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      try {
-        if(DataManager.testStockIsValid(tickerSymbolField.getText())) {
-          Position newPositon = new Position(tickerSymbolField.getText(),
-              Double.parseDouble(assetHoldingsField.getText()));
+      Position newPositon = new Position(tickerSymbolField.getText(),
+          Double.parseDouble(assetHoldingsField.getText()));
 
-          //Clear fields
-          tickerSymbolField.setText("");
-          assetHoldingsField.setText("");
+      //Clear fields
+      tickerSymbolField.setText("");
+      assetHoldingsField.setText("");
 
-          return newPositon;
-        } else {
-          return null;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      return null; //Failure to verify stock
+      return newPositon;
     }
   }
 

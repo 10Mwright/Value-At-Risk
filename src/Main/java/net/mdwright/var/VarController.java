@@ -1,5 +1,6 @@
 package net.mdwright.var;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -205,29 +206,38 @@ public class VarController {
 
     boolean isExists = false; //Defaults to not existing in current portfolio
 
-    if (!isFailure) {
-      if(view.getPortfolio().getSize() > 0) { //Currently a standing portfolio
-        Portfolio portfolio = view.getPortfolio();
+    try {
+      if (!isFailure) {
+        if (DataManager.testStockIsValid(newPos.getTickerSymbol())) { //Check ticker is valid
+          if (view.getPortfolio().getSize() > 0) { //Currently a standing portfolio
+            Portfolio portfolio = view.getPortfolio();
 
-        //Check portfolio doesn't contain this position already
-        for (int i = 0; i < portfolio.getSize(); i++) {
-          if(portfolio.getPosition(i).getTickerSymbol().equals(newPos.getTickerSymbol())) {
-            isExists = true; //set boolean to true to alter code below
-            break; //Break out of loop, not need to continue
+            //Check portfolio doesn't contain this position already
+            for (int i = 0; i < portfolio.getSize(); i++) {
+              if (portfolio.getPosition(i).getTickerSymbol().equals(newPos.getTickerSymbol())) {
+                isExists = true; //set boolean to true to alter code below
+                break; //Break out of loop, not need to continue
+              }
+            }
           }
+
+          if (!isExists) { //Doesn't exist, just add it
+            //Set new position in view
+            view.addNewPosition(newPos);
+          } else {
+            sendAlert("Position Already Exists!",
+                "This position already exists in your portfolio!", AlertType.ERROR);
+          }
+        } else { //Ticker symbol isn't valid
+          sendAlert("Ticker Symbol Invalid!", "The provided ticker symbol "
+              + newPos.getTickerSymbol() + " isn't a valid ticker symbol!", AlertType.ERROR);
         }
-      }
 
-      if(!isExists) { //Doesn't exist, just add it
-        //Set new position in view
-        view.addNewPosition(newPos);
-      } else {
-        sendAlert("Position Already Exists!",
-            "This position already exists in your portfolio!", AlertType.ERROR);
+        isFailure = false; //Reset failure boolean
       }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-    isFailure = false; //Reset failure boolean
   }
 
   /**
