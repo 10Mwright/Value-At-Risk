@@ -3,6 +3,7 @@ package net.mdwright.var.application;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -51,22 +52,8 @@ public class ModelBuildingGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
-    Position[] positions = new Position[portfolioSize];
-
-    for (int i = 0; i < portfolioSize; i++) {
-      positions[i] = portfolioList.getItems().get(i);
-    }
-
-    Portfolio portfolio = new Portfolio(positions);
-
-    if (!lambdaField.getText().equals("")) { //Retrieves lambda value
-      System.out.println(Double.parseDouble(lambdaField.getText()));
-      portfolio.setVolatilityLambda(Double.parseDouble(lambdaField.getText()));
-    }
-
-    return portfolio;
+  public ObservableList getPortfolio() {
+    return portfolioList.getItems();
   }
 
   @Override
@@ -120,9 +107,6 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public void setChart(LineChart chart) {
     graphPane.getChildren().clear();
-
-    chart.setLegendVisible(false);
-    chart.setPrefSize(670, 530);
 
     graphPane.getChildren().add(chart);
   }

@@ -1,6 +1,7 @@
 package net.mdwright.var.application;
 
 import java.math.BigDecimal;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
@@ -19,7 +20,7 @@ public interface ViewInterface {
    *
    * @return An array of type Position
    */
-  Portfolio getPortfolio();
+  ObservableList getPortfolio();
 
   /**
    * Method to retrieve the position to be added to the portfolio.

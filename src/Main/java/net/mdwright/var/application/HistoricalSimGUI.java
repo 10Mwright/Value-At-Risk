@@ -2,6 +2,7 @@ package net.mdwright.var.application;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -43,15 +44,8 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
-    Position[] positions = new Position[portfolioSize];
-
-    for (int i = 0; i < portfolioSize; i++) {
-      positions[i] = portfolioList.getItems().get(i);
-    }
-
-    return new Portfolio(positions);
+  public ObservableList getPortfolio() {
+    return portfolioList.getItems();
   }
 
   /**
@@ -123,9 +117,6 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public void setChart(LineChart chart) {
     graphPane.getChildren().clear();
-
-    chart.setLegendVisible(false);
-    chart.setPrefSize(670, 530);
 
     graphPane.getChildren().add(chart);
   }

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -51,56 +52,83 @@ public class VarController {
   public void calculateVar() {
     Portfolio portfolio = null;
     int timeHorizon = 0;
-    double probability = 0;
+    int probability = 0;
+    int dataLength = 0; //Only applicable for historical sim.
 
-    if (view.getPortfolio().getSize() != 0) { //Incoming portfolio isn't empty
-      portfolio = view.getPortfolio();
+    if (getPortfolio().getSize() != 0) { //Incoming portfolio isn't empty
+      portfolio = getPortfolio();
     } else {
       isFailure = true;
       sendAlert("Invalid Portfolio",
           "Please enter some valid positions in the portfolio", AlertType.ERROR);
     }
 
-    if (view.getTimeHorizon() != 0) { //Time horizon is set, not 0
-      timeHorizon = view.getTimeHorizon();
+    if (view.getTimeHorizon() != null) { //Time horizon is set, not 0
+      try {
+        timeHorizon = Integer.parseInt(view.getTimeHorizon());
+      } catch(NumberFormatException e) {
+        isFailure = true;
+        sendAlert("Invalid Time Horizon",
+            "The value entered in the time horizon field is not a valid integer!",
+            AlertType.ERROR);
+      }
     } else {
       isFailure = true;
-      sendAlert("Invalid Time Horizon",
+      sendAlert("Empty Time Horizon Field",
           "Please enter a valid Integer in the time horizon field!", AlertType.ERROR);
     }
 
-    if (view.getProbability() != 0) { //Probability is set, not 0
-      probability = view.getProbability(); //Convert to double percentage
+    //Get probability
+    if (view.getProbability() != null) { //Probability is set, not 0
+      try {
+        probability = Integer.parseInt(view.getProbability());
+      } catch(NumberFormatException e) {
+        isFailure = true;
+        sendAlert("Invalid Probability", "Please enter a valid Integer in the "
+            + "probability field! (e.g. 95 or 99, not 0.99)", AlertType.ERROR);
+      }
     } else {
       isFailure = true;
-      sendAlert("Invalid Probability",
+      sendAlert("Blank Probability",
           "Please enter a valid Integer value for the probability!", AlertType.ERROR);
     }
 
-    BigDecimal valueAtRisk = new BigDecimal(0); //Defaults to a value of 0
+    if(view.getModelToUse() == Model.HISTORICAL_SIMULATION) {
+      if (view.getDataLength() != null) {
+        try {
+          dataLength = Integer.parseInt(view.getDataLength());
+        } catch (NumberFormatException e) {
+          isFailure = true;
+          sendAlert("Invalid Data Length", "Please enter a valid Integer in "
+              + "the data length field! (e.g. 252 or 512 days)", AlertType.ERROR);
+        }
+      } else {
+        isFailure = true;
+        sendAlert("Blank Data Length",
+            "Please enter a valid number of days in the data length field!", AlertType.ERROR);
+      }
+    }
+
+    BigDecimal valueAtRisk;
 
     if (!isFailure) { //Nothing above has failed
       if (view.getModelToUse()
           == Model.HISTORICAL_SIMULATION) { //If the request originates from the historical sim GUI
-        if (view.getDataLength() == 0) {
-          sendAlert("Invalid Integer in Data Length Field",
-              "Please enter a valid Integer in the data length field!", AlertType.ERROR);
-        } else {
-            valueAtRisk = model
-                .calculateVar(portfolio, timeHorizon, probability, view.getDataLength());
-        }
+
+        valueAtRisk = model
+            .calculateVar(portfolio, timeHorizon, probability, dataLength);
+
       } else {
+
         valueAtRisk = model
             .calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
-      }
 
-      if (!isFailure) { //Prevent extra code running if the calculation wasn't successful
+      }
         //Rounding result to 2 decimal places
         valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
         view.setResult(valueAtRisk); //Set result in GUI
         drawChart(); //Calls code to create a price chart
-      }
     }
 
     isFailure = false; //Reset failure boolean for next run
@@ -175,6 +203,10 @@ public class VarController {
 
     lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
 
+    //Set up some options for chart
+    lineChart.setLegendVisible(false);
+    lineChart.setPrefSize(670, 530);
+
     //Pass new chart over to the GUI
     view.setChart(lineChart);
 
@@ -209,8 +241,8 @@ public class VarController {
     try {
       if (!isFailure) {
         if (DataManager.testStockIsValid(newPos.getTickerSymbol())) { //Check ticker is valid
-          if (view.getPortfolio().getSize() > 0) { //Currently a standing portfolio
-            Portfolio portfolio = view.getPortfolio();
+          if (getPortfolio().getSize() > 0) { //Currently a standing portfolio
+            Portfolio portfolio = getPortfolio();
 
             //Check portfolio doesn't contain this position already
             for (int i = 0; i < portfolio.getSize(); i++) {
@@ -256,6 +288,19 @@ public class VarController {
     isFailure = true;
 
     alert.showAndWait();
+  }
+
+  public Portfolio getPortfolio() {
+    ObservableList<Position> portfolioList = view.getPortfolio();
+
+    int portfolioSize = portfolioList.size(); //Size of position's list on GUI
+    Position[] positions = new Position[portfolioSize];
+
+    for (int i = 0; i < portfolioSize; i++) {
+      positions[i] = portfolioList.get(i);
+    }
+
+    return new Portfolio(positions);
   }
 
 }
