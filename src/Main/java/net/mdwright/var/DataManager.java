@@ -131,8 +131,20 @@ public class DataManager {
     return currentValue;
   }
 
-  public static boolean testStockIsValid(String tickerSymbol) {
-    return false;
+  /**
+   * Method for checking if a provided tickerSymbol is a valid symbol.
+   * @param tickerSymbol String representation of the stock's ticker symbol
+   * @return Boolean value, true if the stock exists and false if it doesn't
+   * @throws IOException When there is a connection error
+   */
+  public static boolean testStockIsValid(String tickerSymbol) throws IOException {
+    Stock targetStock = YahooFinance.get(tickerSymbol);
+
+    if (targetStock == null) { //Stock object came back with null
+      return false;
+    } else { //Stock object came back with data
+      return true;
+    }
   }
 
 }

@@ -1,7 +1,9 @@
 package test.net.mdwright.var;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -78,5 +80,23 @@ public class testDataManager {
   }
 
   @Test
+  public void testValidStock() {
+    try {
+      assertTrue(data.testStockIsValid("GOOGL"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testInvalidStock() {
+    try {
+      assertFalse(data.testStockIsValid("INVALID"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
 
 }
