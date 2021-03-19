@@ -37,6 +37,24 @@ public class EntranceGUI {
     });
   }
 
+  public void addVersionObserver(Observer obs) {
+    versionButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        obs.tell();
+      }
+    });
+  }
+
+  public void addHelpObserver(Observer obs) {
+    helpButton.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        obs.tell();
+      }
+    });
+  }
+
   //FXML Elements Below
 
   @FXML
@@ -46,4 +64,12 @@ public class EntranceGUI {
   @FXML
   // fx:id="historicalSimButton"
   private Button historicalSimButton;
+
+  @FXML
+  // fx:id="versionButton"
+  private Button versionButton;
+
+  @FXML
+  // fx:id="helpButton"
+  private Button helpButton;
 }
