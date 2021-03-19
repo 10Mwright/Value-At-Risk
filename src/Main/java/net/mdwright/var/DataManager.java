@@ -14,14 +14,13 @@ import yahoofinance.quotes.fx.FxQuote;
 
 /**
  * Class for retrieving historical data using the Yahoo Finance API
- *
  * API Used: https://financequotes-api.com/
  *
  * @author Matthew Wright
  */
 public class DataManager {
 
-  private static final String localCurrency = "GBP";
+  private static final String localCurrency = "GBP"; //Currency converted to
 
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
@@ -42,7 +41,7 @@ public class DataManager {
     String currencyFrom = target.getCurrency(); //Find the currency of the historical data
     String currencyTo = localCurrency;
 
-    BigDecimal exchangeRate = getFXQuote(currencyFrom,
+    BigDecimal exchangeRate = getFxQuote(currencyFrom,
         currencyTo); //Retrieve the exchange rate for above currencies
     System.out.println("EXCHANGE RATE: 1:" + exchangeRate);
 
@@ -63,13 +62,13 @@ public class DataManager {
    * Method for retrieving foreign exchange quotes to perform currency exchange.
    *
    * @param fromCurrency String value representing the abbreviated currency to convert from (e.g.
-   * USD)
+   *     USD)
    * @param toCurrency String value representing the abbreviated currency to convert to (e.g. GBP)
    * @return A BigDecimal value representing the conversion rate (e.g. 1 USD to 0.75 GBP would
-   * return 0.75)
+   *     return 0.75)
    * @throws IOException When a connection error occurs or the response is invalid
    */
-  public static BigDecimal getFXQuote(String fromCurrency, String toCurrency) throws IOException {
+  public static BigDecimal getFxQuote(String fromCurrency, String toCurrency) throws IOException {
     FxQuote exchange = YahooFinance.getFx(fromCurrency + toCurrency + "=X");
 
     return exchange.getPrice();
@@ -87,7 +86,7 @@ public class DataManager {
       BigDecimal currentPrice = stock.getQuote().getPrice(); //Gets current price per unit
 
       // Exchange this price into GBP
-      currentPrice = currentPrice.multiply(getFXQuote(stock.getCurrency(), localCurrency));
+      currentPrice = currentPrice.multiply(getFxQuote(stock.getCurrency(), localCurrency));
 
       return currentPrice;
     } catch (IOException e) {
@@ -105,7 +104,9 @@ public class DataManager {
   public static BigDecimal getCurrentValue(Position position) {
     BigDecimal currentPrice = getCurrentQuote(position); //Retrieves converted current price
 
-    System.out.println("Value of " + position.getHoldings() + " quantity of position " + position.getTickerSymbol() + " is: " + currentPrice.multiply(new BigDecimal(position.getHoldings())));
+    System.out.println("Value of " + position.getHoldings() + " quantity of position "
+        + position.getTickerSymbol() + " is: " + currentPrice.multiply(new
+        BigDecimal(position.getHoldings())));
 
     position.setPerUnitPrice(currentPrice);
 
@@ -116,14 +117,15 @@ public class DataManager {
   }
 
   /**
-   * Method for retrieving the current total value of the portfolio using previously retrieved current values.
+   * Method for retrieving the current total value of the portfolio using previously retrieved
+   *     current values.
    * @param portfolio The target portfolio object
    * @return BigDecimal value representing the current GBP price of all holdings in the portfolio
    */
   public static BigDecimal getCurrentPortfolioValue(Portfolio portfolio) {
     BigDecimal currentValue = new BigDecimal(0);
 
-    for (int i = 0; i < portfolio.getSize(); i++) {
+    for (int i = 0; i < portfolio.getSize(); i++) { //Run through entire portfolio
       currentValue = currentValue.add(portfolio.getPosition(i).getPositionValue());
     }
 

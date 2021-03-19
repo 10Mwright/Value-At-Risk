@@ -4,19 +4,23 @@ import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import yahoofinance.histquotes.HistoricalQuote;
 
+/**
+ * Extension of VolatilityModel for calculating variance with the EWMA approach.
+ *
+ * @author Matthew Wright
+ */
 public class EWMAVolatility extends VolatilityModel {
-
-  private static double lambda = 0.94; //0.94 by default
 
   /**
    * Method for calculating variance using the EWMA model.
    *
    * @param portfolio Portfolio object containing the position objects to be calculated using
-   * @param positionIndex Int value representing the index of the position within the Portfolios array
-   * @return double value representing the volatility of the position over the time period
+   * @param positionIndex Int value representing the index of the position within Portfolios array
+   * @return double value representing the daily variance of the asset
    */
   public double calculateVariance(Portfolio portfolio, int positionIndex) {
-    this.lambda = portfolio.getVolatilityLambda(); //Retrieve any user inputted lambda, defaults to 0.94 if no input
+    double lambda = portfolio.getVolatilityLambda(); //Retrieve any user inputted lambda,
+    // defaults to 0.94 if no input
 
     System.out.println("LAMBDA: " + lambda);
 
@@ -28,9 +32,9 @@ public class EWMAVolatility extends VolatilityModel {
 
     double variance = 0;
 
-    for (int i = (historicalData.size() - 2); i >= 0; i--) { //Increment through historical data day by day
+    for (int i = (historicalData.size() - 2); i >= 0; i--) { //Increment through historical data
       double currentDay = historicalData.get(i).getAdjClose().doubleValue();
-      double yesterday = historicalData.get(i+1).getAdjClose().doubleValue();
+      double yesterday = historicalData.get(i + 1).getAdjClose().doubleValue();
 
       double returnCurrentDay = currentDay / yesterday;
       returns[0][i] = Math.log(returnCurrentDay); //The natural log of the return in day i
