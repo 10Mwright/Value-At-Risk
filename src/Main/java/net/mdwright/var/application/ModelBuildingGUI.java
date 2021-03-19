@@ -1,5 +1,6 @@
 package net.mdwright.var.application;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import net.mdwright.var.DataManager;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -72,14 +74,24 @@ public class ModelBuildingGUI implements ViewInterface {
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(),
-          Double.parseDouble(assetHoldingsField.getText()));
+      try {
+        if(DataManager.testStockIsValid(tickerSymbolField.getText())) {
+          Position newPositon = new Position(tickerSymbolField.getText(),
+              Double.parseDouble(assetHoldingsField.getText()));
 
-      //Clear fields
-      tickerSymbolField.setText("");
-      assetHoldingsField.setText("");
+          //Clear fields
+          tickerSymbolField.setText("");
+          assetHoldingsField.setText("");
 
-      return newPositon;
+          return newPositon;
+        } else {
+          return null;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      return null; //Failure to verify stock
     }
   }
 
