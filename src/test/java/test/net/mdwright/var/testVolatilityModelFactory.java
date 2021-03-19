@@ -1,13 +1,15 @@
 package test.net.mdwright.var;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.util.Arrays;
 import net.mdwright.var.DataManager;
+import net.mdwright.var.EWMAVolatility;
+import net.mdwright.var.SimpleVolatility;
 import net.mdwright.var.VolatilityModel;
 import net.mdwright.var.VolatilityModelFactory;
 import net.mdwright.var.objects.Portfolio;
@@ -38,6 +40,26 @@ public class testVolatilityModelFactory {
       e.printStackTrace();
       fail();
     }
+  }
+
+  /*
+  Code taken from //https://stackoverflow.com/questions/12404650/assert-an-object-is-a-specific-type
+   */
+  @Test
+  public void testSimpleInstance() {
+    VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.SIMPLE);
+
+    assertThat(volCalculator, instanceOf(SimpleVolatility.class));
+  }
+
+  /*
+  Code taken from //https://stackoverflow.com/questions/12404650/assert-an-object-is-a-specific-type
+   */
+  @Test
+  public void testEwmaInstance() {
+    VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
+
+    assertThat(volCalculator, instanceOf(EWMAVolatility.class));
   }
 
   @Test
