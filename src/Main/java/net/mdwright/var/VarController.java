@@ -3,7 +3,9 @@ package net.mdwright.var;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -15,16 +17,16 @@ import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
-import yahoofinance.histquotes.HistoricalQuote;
 
 /**
- * Controller class for Var Calculations.
- *
+ * Controller class for Var Calculations.*
  * Note: influence from Calculator code 2nd Year software Engineering Coursework
  *
  * @author Matthew Wright
  */
 public class VarController {
+
+  private final int plotResolution = 5; //How many days between each chart point
 
   private boolean isFailure = false;
   private VarModel model = new VarModel();
@@ -50,30 +52,33 @@ public class VarController {
     int timeHorizon = 0;
     double probability = 0;
 
-    if(view.getPortfolio().getSize() != 0) {
+    if (view.getPortfolio().getSize() != 0) { //Incoming portfolio isn't empty
       portfolio = view.getPortfolio();
     } else {
       isFailure = true;
-      sendAlert("Invalid Portfolio", "Please enter some valid positions in the portfolio", AlertType.ERROR);
+      sendAlert("Invalid Portfolio",
+          "Please enter some valid positions in the portfolio", AlertType.ERROR);
     }
 
-    if(view.getTimeHorizon() != 0) {
+    if (view.getTimeHorizon() != 0) { //Time horizon is set, not 0
       timeHorizon = view.getTimeHorizon();
     } else {
       isFailure = true;
-      sendAlert("Invalid Time Horizon", "Please enter a valid Integer in the time horizon field!", AlertType.ERROR);
+      sendAlert("Invalid Time Horizon",
+          "Please enter a valid Integer in the time horizon field!", AlertType.ERROR);
     }
 
-    if(view.getProbability() != 0) {
+    if (view.getProbability() != 0) { //Probability is set, not 0
       probability = view.getProbability(); //Convert to double percentage
     } else {
       isFailure = true;
-      sendAlert("Invalid Probability", "Please enter a valid Integer value for the probability!", AlertType.ERROR);
+      sendAlert("Invalid Probability",
+          "Please enter a valid Integer value for the probability!", AlertType.ERROR);
     }
 
     BigDecimal valueAtRisk = new BigDecimal(0); //Defaults to a value of 0
 
-    if(!isFailure) {
+    if (!isFailure) { //Nothing above has failed
       if (view.getModelToUse()
           == Model.HISTORICAL_SIMULATION) { //If the request originates from the historical sim GUI
         if (view.getDataLength() == 0) {
@@ -97,15 +102,14 @@ public class VarController {
       }
     }
 
-    isFailure = false; //Reset failure boolean
+    isFailure = false; //Reset failure boolean for next run
   }
 
   /**
-   * Method for drawing a linechart using historical data from the calculation classes.
+   * Method for drawing a linechart using historical data from the VarModel.
    */
   public void drawChart() {
     Portfolio portfolioData = model.getPortfolioData();
-    List<HistoricalQuote>[] portfolioPrice;
 
     System.out.println(portfolioData);
 
@@ -122,39 +126,69 @@ public class VarController {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
     /*
-      the first position is used as a benchmark, the number of data points on the graph
-      is decided by the historical data gathered for the first position
+      The number of dates plotted is dependant on the smallest number of prices gathered, for
+      example if a position only has 200 prices while all other positions have 500 then the chart
+      will only be plotted with 200 prices.
      */
 
-    for(int j = 0; j < portfolioData.getPosition(0).getHistoricalDataSize(); j = j + 5) { //Plots every 5th data point on the graph of the first position
-      BigDecimal totalForDay = new BigDecimal(0);
-      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData().get(j).getDate().getTime()); //Finds date, will be used to ensure totals are done using the same dates
+    int smallestSetSize = VarMath.getSmallestDatasetSize(portfolioData);
+    List<Map<String, BigDecimal>> portfolioPriceMap = VarMath.getHashMaps(portfolioData);
 
-      for (int i = 0; i < portfolioData.getSize(); i++) { //Runs through each position in the portfolio to get a daily total value
-        Position position = portfolioData.getPosition(i);
+    int dataLength = portfolioData.getPosition(0).getHistoricalDataSize();
+    Calendar currentDate = portfolioData.getPosition(0).getHistoricalData()
+        .get(dataLength - 1).getDate(); //Using first position to get a starting date
 
-        if(date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) { //Ensure it's only totalled when the data is from the same date
-          totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
-          totalForDay = totalForDay.multiply(new BigDecimal(position.getHoldings()));
+    //Move the date back by the smallest number of prices a position has in the portfolio
+    currentDate.add(Calendar.DAY_OF_YEAR, -smallestSetSize);
+
+    for (int i = 0; i < smallestSetSize; i++) {
+      BigDecimal totalPriceForDay = new BigDecimal(0);
+      String targetDateString = sdf.format(currentDate.getTime());
+      Boolean isPlottable = true; //Used to plot only valid data
+
+      for (int j = 0; j < portfolioData.getSize(); j++) { //For each position
+        Map<String, BigDecimal> positionPriceMap = portfolioPriceMap.get(j);
+
+        if (positionPriceMap.get(targetDateString) != null) { //Ensure there is data here
+          BigDecimal positionValueOnDay = positionPriceMap.get(targetDateString);
+          positionValueOnDay = positionValueOnDay.multiply(
+              new BigDecimal(portfolioData.getPosition(j).getHoldings())); //Total value of pos.
+          totalPriceForDay = totalPriceForDay.add(positionValueOnDay); //Add to the current day
+        } else {
+          isPlottable = false; //There is missing data, we don't want to plot this
         }
       }
 
-      series.getData().add(new XYChart.Data(date, totalForDay)); //Add data point to data series
+      if (isPlottable) { //Only plot if all positions had data for this day
+        series.getData().add(new XYChart.Data(targetDateString, totalPriceForDay));
+      }
+
+      currentDate.add(Calendar.DAY_OF_YEAR, plotResolution); //Increment the date by plotResolution
     }
+
+    //We add the most recent valuation using the today's prices
+    Calendar todaysDate = Calendar.getInstance();
+    String todaysDateString = sdf.format(todaysDate.getTime());
+
+    series.getData().add(new XYChart.Data(todaysDateString, portfolioData.getCurrentValue()));
 
     lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
 
+    //Pass new chart over to the GUI
     view.setChart(lineChart);
 
     //Fill in values below graph pane
     view.setPortfolioValue(portfolioData.getCurrentValue());
-    view.setValueAfterVar(portfolioData.getCurrentValue().subtract(portfolioData.getValueAtRisk())); //current value - value at risk
 
-    BigDecimal percentage = portfolioData.getValueAtRisk().divide(portfolioData.getCurrentValue(), RoundingMode.UP);
+    //current value of portfolio - value at risk
+    view.setValueAfterVar(portfolioData.getCurrentValue().subtract(portfolioData.getValueAtRisk()));
+
+    //VaR as a percentage of portfolio value
+    BigDecimal percentage = portfolioData.getValueAtRisk().divide(portfolioData.getCurrentValue(),
+        RoundingMode.UP);
     percentage = percentage.multiply(new BigDecimal(100));
 
     view.setVarPercentage(percentage.doubleValue());
-
   }
 
   /**
@@ -162,12 +196,14 @@ public class VarController {
    */
   public void addAsset() {
     Position newPos = view.getNewPosition();
-    if(newPos == null) {
-      sendAlert("Invalid Position Fields", "Please enter a valid ticker symbol & holdings amount for a new position!", AlertType.ERROR);
+    if (newPos == null) {
+      sendAlert("Invalid Position Fields",
+          "Please enter a valid ticker symbol & holdings amount for a new position!",
+          AlertType.ERROR);
       isFailure = true;
     }
 
-    if(!isFailure) {
+    if (!isFailure) {
       //Set in view
       view.addNewPosition(newPos);
     }
@@ -180,7 +216,7 @@ public class VarController {
    * @param alertTitle String representing the desired alert title
    * @param alertContent String representing the desired alert content text
    * @param alertType alertType enum representing the desired alert type
-   * Code taken from https://code.makery.ch/blog/javafx-dialogs-official/
+   *     Code taken from https://code.makery.ch/blog/javafx-dialogs-official/
    */
   public void sendAlert(String alertTitle, String alertContent, AlertType alertType) {
     Alert alert = new Alert(alertType);

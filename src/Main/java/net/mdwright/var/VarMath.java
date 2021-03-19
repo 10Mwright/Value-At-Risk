@@ -2,7 +2,11 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -14,6 +18,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class VarMath {
 
   private static final int divisionScale = 2; //Scale to be used when dividing using big decimals
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
 
   /**
    * Method for calculating the mean close price across a historical data set.
@@ -42,7 +47,7 @@ public class VarMath {
    * @param positionOne Position object of the first position to calculate with
    * @param positionTwo Position object of the second position to calculate with
    * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
-   * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
+   *     method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
   public static double calculateCoefficient(Position positionOne,
       Position positionTwo) {
@@ -75,8 +80,10 @@ public class VarMath {
     BigDecimal sumProduct = new BigDecimal(0.0);
 
     for (int i = 0; i < dataSize; i++) {
-      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData().get(i).getAdjClose());
-      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData().get(i).getAdjClose());
+      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData()
+          .get(i).getAdjClose());
+      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData()
+          .get(i).getAdjClose());
       deviations[i][2] = deviations[i][0].multiply(deviations[i][0]);
       deviations[i][3] = deviations[i][1].multiply(deviations[i][1]);
       deviations[i][4] = deviations[i][0].multiply(deviations[i][1]);
@@ -92,5 +99,76 @@ public class VarMath {
     System.out.println("Coefficient of Correlation: " + coefficient);
 
     return coefficient;
+  }
+
+  /**
+   * Method to create an array of percentage changes between each days prices.
+   * @param portfolio Portfolio object containing the position object and historical data
+   * @param positionIndex int value representing the index pointer for the target asset in
+   *     the portfolio array
+   * @return An array of doubles representing the percentage changes between each day's
+   *     closing price
+   */
+  public static double[] getPercentageChanges(Portfolio portfolio, int positionIndex) {
+    List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
+    double[] percentageChanges = new double[historicalData.size() - 1];
+
+    for (int i = 1; i < historicalData.size(); i++) {
+      BigDecimal currentDay = historicalData.get(i).getAdjClose();
+      BigDecimal previousDay = historicalData.get(i - 1).getAdjClose();
+
+      BigDecimal tempValue = currentDay.subtract(previousDay);
+
+      tempValue = tempValue.divide(previousDay, divisionScale, BigDecimal.ROUND_UP);
+
+      percentageChanges[i - 1] = tempValue.doubleValue();
+    }
+
+    return percentageChanges;
+  }
+
+  /**
+   * Method to retrieve the size of the smallest historical dataset in a portfolio.
+   * @param portfolio Portfolio object containing position objects with historical data
+   * @return int value representing the size of the smallest dataset in the portfolio
+   */
+  public static int getSmallestDatasetSize(Portfolio portfolio) {
+    int smallestDataset = portfolio.getPosition(0).getHistoricalDataSize();
+
+    for (int i = 0; i < portfolio.getSize(); i++) { //Cycle through portfolio sampling dataset size
+      int currentPositionDataset = portfolio.getPosition(i).getHistoricalDataSize();
+
+      if (currentPositionDataset < smallestDataset) {
+        smallestDataset = currentPositionDataset; //Set smallest size to this size
+      }
+    }
+
+    return smallestDataset - 1; //To correct size for for loops
+  }
+
+  /**
+   * Method to retrieve a list of hashmaps relating dates to prices for charting the portfolio
+   *     value.
+   * @param portfolio Portfolio object containing position objects with historical data
+   * @return List of Maps mapping a date in string format to the days adj. closing price
+   */
+  public static List<Map<String, BigDecimal>> getHashMaps(Portfolio portfolio) {
+    //List of maps to store dates along with their adj. closing prices on those dates
+    List<Map<String, BigDecimal>> portfolioPriceMap = new ArrayList<Map<String, BigDecimal>>();
+
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      Map<String, BigDecimal> positionPriceMap = new HashMap<String, BigDecimal>();
+      List<HistoricalQuote> currentPositionData = portfolio.getPosition(i).getHistoricalData();
+
+      for (int j = 0; j < currentPositionData.size(); j++) {
+        String currentDate = dateFormat.format(currentPositionData.get(j).getDate().getTime());
+
+        positionPriceMap.put(currentDate, currentPositionData.get(j).getAdjClose());
+      }
+
+      portfolioPriceMap.add(positionPriceMap); //Add this price map to the portfolio's price map
+    }
+
+    return portfolioPriceMap;
   }
 }

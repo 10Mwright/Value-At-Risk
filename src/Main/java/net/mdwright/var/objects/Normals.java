@@ -34,7 +34,7 @@ public class Normals {
    *
    * @param value A double value representing the probability percentage in decimal format
    * @return A double value representing the result of the NormSinV function on the desired
-   * percentage
+   *     percentage
    */
   public static double getNormSinV(double value) {
     //Must format value to array index

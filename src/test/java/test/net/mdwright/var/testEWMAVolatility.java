@@ -11,10 +11,13 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Test;
 
+/*
+ Testing class for EWMAVolatility object
+ */
 public class testEWMAVolatility {
 
   @Test
-  public void testEWMAVolatility() {
+  public void testEWMAVolatility() { //testing to ensure getVolatility returns a valid value
     Position testPosition = new Position("GME", 10);
     Portfolio portfolio = new Portfolio(new Position[] {testPosition});
 

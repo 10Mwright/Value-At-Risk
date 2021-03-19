@@ -1,5 +1,6 @@
 package net.mdwright.var.application;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import javafx.event.ActionEvent;
@@ -12,35 +13,46 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import net.mdwright.var.DataManager;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 
 /**
- * Class for managing GUI for user interactions for historical simulations.
+ * Class for managing GUI for user interactions for model-building approach.
  *
  * @author Matthew Wright
  */
 public class ModelBuildingGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format for numbers
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setupVolatilityChoice() {
     volatilityMethod.getItems().removeAll();
-    volatilityMethod.getItems().addAll(VolatilityMethod.stringValues); //Fill in choices from available volatility method enums
+    //Fill in choices from available volatility method enums
+    volatilityMethod.getItems().addAll(VolatilityMethod.stringValues);
     volatilityMethod.getSelectionModel().select(0);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public VolatilityMethod getVolatilityChoice() {
     return VolatilityMethod.fromString(volatilityMethod.getSelectionModel().getSelectedItem());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size();
+    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
     Position[] positions = new Position[portfolioSize];
 
     for (int i = 0; i < portfolioSize; i++) {
@@ -49,7 +61,8 @@ public class ModelBuildingGUI implements ViewInterface {
 
     Portfolio portfolio = new Portfolio(positions);
 
-    if(!lambdaField.getText().equals("")) {
+    if (!lambdaField.getText().equals("")) { //Retrieves lambda value
+      System.out.println(Double.parseDouble(lambdaField.getText()));
       portfolio.setVolatilityLambda(Double.parseDouble(lambdaField.getText()));
     }
 
@@ -58,22 +71,33 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    if(tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
+    if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+      try {
+        if(DataManager.testStockIsValid(tickerSymbolField.getText())) {
+          Position newPositon = new Position(tickerSymbolField.getText(),
+              Double.parseDouble(assetHoldingsField.getText()));
 
-      //Clear fields
-      tickerSymbolField.setText("");
-      assetHoldingsField.setText("");
+          //Clear fields
+          tickerSymbolField.setText("");
+          assetHoldingsField.setText("");
 
-      return newPositon;
+          return newPositon;
+        } else {
+          return null;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      return null; //Failure to verify stock
     }
   }
 
   @Override
   public int getTimeHorizon() {
-    if(!timeHorizonField.getText().equals("")) {
+    if (!timeHorizonField.getText().equals("")) {
       return Integer.parseInt(timeHorizonField.getText());
     } else {
       return 0;
@@ -82,7 +106,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public int getProbability() {
-    if(!probabilityField.getText().equals("")) {
+    if (!probabilityField.getText().equals("")) {
       return (Integer.parseInt(probabilityField.getText()));
     } else {
       return 0;

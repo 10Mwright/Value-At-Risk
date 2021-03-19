@@ -8,9 +8,11 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+/*
+ Test class for VarModel object
+ */
 public class testVarModel {
 
   VarModel var = new VarModel();
@@ -21,17 +23,25 @@ public class testVarModel {
   }
 
   @Test
-  public void testSingleModelBuilding() {
-    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 1000000)});
+  public void testSingleModelBuilding() { //Testing to ensure model-building passthrough works
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 100)});
 
     assertNotEquals(new BigDecimal(0.0), var.calculateVar(portfolio, 10, 0.99, VolatilityMethod.EWMA));
   }
 
   @Test
-  public void testTwoModelBuilding() {
-    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 100000), new Position("TSLA", 1000000)});
+  public void testTwoModelBuilding() { //Testing to ensure dual asset model-building works
+    Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOG", 100), new Position("TSLA", 10)});
 
     assertNotEquals(new BigDecimal(0), var.calculateVar(portfolio, 10, 0.99, VolatilityMethod.EWMA));
+  }
+
+  @Test
+  public void testHistorical() { //Testing to ensure historical sim passthrough works
+    Position position = new Position("GOOGL", 10);
+    Portfolio portfolio = new Portfolio(position);
+
+    assertNotEquals(new BigDecimal(0), var.calculateVar(portfolio, 10, 0.99, 252));
   }
 
 }

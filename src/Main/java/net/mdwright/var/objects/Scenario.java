@@ -10,7 +10,8 @@ import java.util.Calendar;
  */
 public class Scenario {
 
-  private Calendar dateOne, dateTwo;
+  private Calendar dateOne;
+  private Calendar dateTwo;
   private BigDecimal valueUnderScenario;
 
   /**
@@ -20,7 +21,7 @@ public class Scenario {
    * @param dateOne A Calendar object containing the from date
    * @param dateTwo A Calendar object containing the to date
    * @param valueUnderScenario A BigDecimal value representing the gain or loss during this
-   * scenarios period
+   *     scenarios period
    */
   public Scenario(Calendar dateOne, Calendar dateTwo, BigDecimal valueUnderScenario) {
     this.dateOne = dateOne;

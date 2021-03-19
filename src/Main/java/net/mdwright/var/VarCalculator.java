@@ -5,7 +5,7 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.VolatilityMethod;
 
 /**
- * Interface for different models of VaR calculations.
+ * Interface for different approaches to VaR calculations.
  *
  * @author Matthew Wright
  */
@@ -15,22 +15,23 @@ public interface VarCalculator {
    * Method to calculate VaR for a portfolio using the model-building model.
    *
    * @param portfolio An array of Positions containing ticker symbols and values for each position
-   * in the portfolio
+   *     in the portfolio
    * @param timeHorizon An int value representing the of days to calculate VaR over
    * @param probability A double value representing the percentage probability in decimal form
    * @return BigDecimal value representing the VaR of the portfolio
    */
-  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability, VolatilityMethod volatilityChoice);
+  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
+      VolatilityMethod volatilityChoice);
 
   /**
    * Method to calculate VaR for a portfolio using the historical sim model.
    *
    * @param portfolio An array of Positions containing ticker symbols and values for each position
-   * in the portfolio
+   *     in the portfolio
    * @param timeHorizon An int value representing the number of days to calculate VaR over
    * @param probability A double value representing the percentage probability in decimal form
    * @param historicalDataLength An int value representing the number of days to fetch historical
-   * data for
+   *     data for
    * @return BigDecimal value representing the VaR of the portfolio
    */
   BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,

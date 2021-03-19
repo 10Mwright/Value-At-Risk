@@ -12,15 +12,18 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class Position {
 
   private String tickerSymbol;
-  private BigDecimal positionValue, perUnitPrice, meanPrice;
-  private double holdings, volatility;
+  private BigDecimal positionValue = new BigDecimal(0);
+  private BigDecimal meanPrice = new BigDecimal(0);
+  private double holdings;
+  private double volatility = 0;
   private List<HistoricalQuote> historicalData;
 
   /**
    * Constructor method for creating a new Position object.
    *
    * @param tickerSymbol String value representing the abbreviated stock symbol (e.g. GOOGL)
-   * @param holdings Int value representing the total number of holdings (e.g. number of stocks held)
+   * @param holdings Int value representing the total number of holdings
+   *     (e.g. number of stocks held)
    */
   public Position(String tickerSymbol, double holdings) {
     this.tickerSymbol = tickerSymbol;
@@ -37,12 +40,20 @@ public class Position {
   }
 
   /**
-   * Method for retrieving the total value of the position in £
+   * Method for retrieving the total value of the position in £.
    *
    * @return Double value representing the total value of the position
    */
   public BigDecimal getPositionValue() {
     return positionValue;
+  }
+
+  /**
+   * Method for setting the position's cumulative value.
+   * @param positionValue A BigDecimal value representing the position's cumulative value
+   */
+  public void setPositionValue(BigDecimal positionValue) {
+    this.positionValue = positionValue;
   }
 
   /**
@@ -83,32 +94,42 @@ public class Position {
     return historicalData.size();
   }
 
+  /**
+   * Method for retrieving the holdings value of the position.
+   * @return A double value representing the number of holdings in this position
+   */
   public double getHoldings() {
     return holdings;
   }
 
-  public void setPositionValue(BigDecimal positionValue) { this.positionValue = positionValue; }
-
-  public BigDecimal getPerUnitPrice() {
-    return perUnitPrice;
-  }
-
-  public void setPerUnitPrice(BigDecimal perUnitPrice) {
-    this.perUnitPrice = perUnitPrice;
-  }
-
+  /**
+   * Method for retrieving the stored volatility value of this position after calculation.
+   * @return A double value representing the volatility of the underlying asset
+   */
   public double getVolatility() {
     return volatility;
   }
 
+  /**
+   * Method for setting the stored volatility value of this position after calculation.
+   * @param volatility A double value representing the volatility of the underlying asset
+   */
   public void setVolatility(double volatility) {
     this.volatility = volatility;
   }
 
+  /**
+   * Method for getting the mean price of the underlying asset after calculation.
+   * @return A BigDecimal value representing the underlying asset's mean value
+   */
   public BigDecimal getMeanPrice() {
     return meanPrice;
   }
 
+  /**
+   * Method for setting the mean price of the underlying asset after calculation.
+   * @param meanPrice A BigDecimal value representing the underlying asset's mean value
+   */
   public void setMeanPrice(BigDecimal meanPrice) {
     this.meanPrice = meanPrice;
   }

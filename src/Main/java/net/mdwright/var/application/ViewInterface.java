@@ -77,7 +77,7 @@ public interface ViewInterface {
   void addCalcObserver(Observer obs);
 
   /**
-   * Adds an observer to monitor additions to the portfolio
+   * Adds an observer to monitor additions to the portfolio.
    *
    * @param obs Object of type Observer
    */
@@ -85,9 +85,9 @@ public interface ViewInterface {
 
   /**
    * Method to set the portfolio value field in GUI.
-   * @param PortfolioValue BigDecimal value representing the total value of the user's portfolio
+   * @param portfolioValue BigDecimal value representing the total value of the user's portfolio
    */
-  void setPortfolioValue(BigDecimal PortfolioValue);
+  void setPortfolioValue(BigDecimal portfolioValue);
 
   /**
    * Method to set the value after var field in GUI.
