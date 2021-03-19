@@ -80,11 +80,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getTimeHorizon() {
-    if (!timeHorizonField.getText().equals("")) {
       return timeHorizonField.getText();
-    } else {
-      return null;
-    }
   }
 
   /**
@@ -92,11 +88,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getProbability() {
-    if (!probabilityField.getText().equals("")) {
       return probabilityField.getText();
-    } else {
-      return null;
-    }
   }
 
   /**
@@ -104,11 +96,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getDataLength() {
-    if (!dataLengthField.getText().equals("")) {
       return dataLengthField.getText();
-    } else {
-      return null;
-    }
   }
 
   /**

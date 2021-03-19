@@ -88,11 +88,7 @@ public class ModelBuildingGUI implements ViewInterface {
    */
   @Override
   public String getTimeHorizon() {
-    if (!timeHorizonField.getText().equals("")) {
-      return timeHorizonField.getText();
-    } else {
-      return null;
-    }
+    return timeHorizonField.getText();
   }
 
   /**
@@ -100,11 +96,7 @@ public class ModelBuildingGUI implements ViewInterface {
    */
   @Override
   public String getProbability() {
-    if (!probabilityField.getText().equals("")) {
-      return probabilityField.getText();
-    } else {
-      return null;
-    }
+    return probabilityField.getText();
   }
 
   /**
