@@ -1,5 +1,6 @@
 package test.net.mdwright.var;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -63,6 +64,27 @@ public class testVarMath {
         System.out.println(percentageChanges[i]);
         assertNotNull(percentageChanges[i]);
       }
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testSmallestDataset() {
+    Position testPositionOne = new Position("GOOGL", 100);
+    Position testPositionTwo = new Position("TSLA", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 100);
+
+      int expectedSize = testPositionTwo.getHistoricalDataSize();
+
+      int returnedSize = VarMath.getSmallestDatasetSize(portfolio);
+
+      assertEquals(expectedSize - 1, returnedSize);
     } catch (IOException e) {
       e.printStackTrace();
       fail();

@@ -2,7 +2,10 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -116,5 +119,46 @@ public class VarMath {
     }
 
     return percentageChanges;
+  }
+
+  /**
+   * Method to retrieve the size of the smallest historical dataset in a portfolio.
+   * @param portfolio Portfolio object containing position objects with historical data
+   * @return int value representing the size of the smallest dataset in the portfolio
+   */
+  public static int getSmallestDatasetSize(Portfolio portfolio) {
+    int smallestDataset = portfolio.getPosition(0).getHistoricalDataSize();
+
+    for (int i = 0; i < portfolio.getSize(); i++) { //Cycle through portfolio sampling dataset sizes to find smallest
+      int currentPositionDataset = portfolio.getPosition(i).getHistoricalDataSize();
+
+      if(currentPositionDataset < smallestDataset) {
+        smallestDataset = currentPositionDataset; //Set smallest size to this size if smaller than current smallestSize
+      }
+    }
+
+    return smallestDataset-1; //To correct size for for loops
+  }
+
+  /**
+   * Method to retrieve a list of hashmaps relating dates to prices for charting the portfolio
+   *     value.
+   * @param portfolio Portfolio object containing position objects with historical data
+   * @return List of Maps mapping a date in string format to the days adj. closing price
+   */
+  public List<Map<String, BigDecimal>> getHashMaps(Portfolio portfolio) {
+    //List of maps to store dates along with their adj. closing prices on those dates
+    List<Map<String, BigDecimal>> portfolioPriceMap = new ArrayList<Map<String, BigDecimal>>();
+
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      Map<String, BigDecimal> positionPriceMap = new HashMap<String, BigDecimal>();
+      Position currentPosition = portfolio.getPosition(i);
+
+      for (int j = 0; j < currentPosition.getHistoricalDataSize(); j++) {
+
+      }
+    }
+
+    return portfolioPriceMap;
   }
 }
