@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 public class Portfolio {
 
   private Position[] positions;
-  private Scenario[] scenarios;
   private BigDecimal valueAtRisk;
   private BigDecimal currentValue;
   private double volatilityLambda = 0.94;
@@ -33,11 +32,12 @@ public class Portfolio {
 
   /**
    * Method for retrieving a specific Position from a portfolio of multiple positions.
-   * @param positionIndex An int value representing the index of the desired position within the array
+   * @param positionIndex An int value representing the index of the desired position
+   *     within the array
    * @return The Position object representing the desired position
    */
   public Position getPosition(int positionIndex) throws NullPointerException {
-    if(positions.length != 0) { //Portfolio object isn't empty
+    if (positions.length != 0) { //Portfolio object isn't empty
       return positions[positionIndex];
     } else {
       throw new NullPointerException("Positions Array in Portfolio Object is Empty!");
@@ -50,14 +50,6 @@ public class Portfolio {
    */
   public int getSize() {
     return positions.length;
-  }
-
-  /**
-   * Method for setting the scenarios array during historical sim calculations.
-   * @param scenarios An array of type Scenario containing all scenarios for this portfolio
-   */
-  public void setScenarios(Scenario[] scenarios) {
-    this.scenarios = scenarios;
   }
 
   /**

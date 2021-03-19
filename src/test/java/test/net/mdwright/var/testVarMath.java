@@ -16,10 +16,13 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Test;
 
+/*
+ Test class for VarMath object
+ */
 public class testVarMath {
 
   @Test
-  public void testMean() {
+  public void testMean() { //Testing to ensure calculateMean returns a valid value
     Position testPosition = new Position("TSLA", 1000);
 
     try {
@@ -28,7 +31,7 @@ public class testVarMath {
       BigDecimal mean = VarMath.calculateMean(testPosition);
 
       assertNotEquals(0, mean);
-      assertNotNull(testPosition.getMeanPrice());
+      assertNotNull(testPosition.getMeanPrice()); //Check position object has received this value
     } catch (IOException e) {
       e.printStackTrace();
       fail();
@@ -36,7 +39,7 @@ public class testVarMath {
   }
 
   @Test
-  public void testCoefficient() {
+  public void testCoefficient() { //Testing to ensure calculateCoefficient returns a valid value
     Position testPosition = new Position("GOOGL", 10);
     Position testPositionTwo = new Position("TSLA", 100);
 
@@ -54,7 +57,7 @@ public class testVarMath {
   }
 
   @Test
-  public void testPercentageChanges() {
+  public void testPercentageChanges() { //Testing to ensure getPercentageChanges returns valid
     Position testPosition = new Position("GOOGL", 10);
     Portfolio portfolio = new Portfolio(testPosition);
 
@@ -74,7 +77,7 @@ public class testVarMath {
   }
 
   @Test
-  public void testSmallestDataset() {
+  public void testSmallestDataset() { //Testing to ensure the smallest dataset method works
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("TSLA", 100);
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
@@ -95,7 +98,7 @@ public class testVarMath {
   }
 
   @Test
-  public void testGetHashMaps() {
+  public void testGetHashMaps() { //Testing to ensure valid hashMaps are returned from getHashMaps
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("TSLA", 100);
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});

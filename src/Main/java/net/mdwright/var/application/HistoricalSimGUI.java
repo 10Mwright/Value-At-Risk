@@ -59,10 +59,11 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public Position getNewPosition() {
-    if(tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
+    if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+      Position newPositon = new Position(tickerSymbolField.getText(),
+          Double.parseDouble(assetHoldingsField.getText()));
 
       //Clear fields
       tickerSymbolField.setText("");
@@ -77,7 +78,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public int getTimeHorizon() {
-    if(!timeHorizonField.getText().equals("")) {
+    if (!timeHorizonField.getText().equals("")) {
       return Integer.parseInt(timeHorizonField.getText());
     } else {
       return 0;
@@ -89,7 +90,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public int getProbability() {
-    if(!probabilityField.getText().equals("")) {
+    if (!probabilityField.getText().equals("")) {
       return (Integer.parseInt(probabilityField.getText()));
     } else {
       return 0;
@@ -101,7 +102,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public int getDataLength() {
-    if(!dataLengthField.getText().equals("")) {
+    if (!dataLengthField.getText().equals("")) {
       return Integer.parseInt(dataLengthField.getText());
     } else {
       return 0;

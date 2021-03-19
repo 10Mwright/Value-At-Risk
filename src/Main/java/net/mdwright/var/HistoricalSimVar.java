@@ -124,7 +124,6 @@ public class HistoricalSimVar implements VarCalculator {
       }
 
       Scenario[] scenariosSorted = sortScenarios(scenarios); //Sort the scenarios
-      portfolio.setScenarios(scenariosSorted); //Set portfolio's scenario array to sorted array
 
       for (int o = 0; o < scenariosSorted.length; o++) { //Run through sorted array
         if (scenariosSorted[o] != null) {

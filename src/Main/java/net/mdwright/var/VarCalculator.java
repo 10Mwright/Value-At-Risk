@@ -5,7 +5,7 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.VolatilityMethod;
 
 /**
- * Interface for different approaches to VaR calculations
+ * Interface for different approaches to VaR calculations.
  *
  * @author Matthew Wright
  */

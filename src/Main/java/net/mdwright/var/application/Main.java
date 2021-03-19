@@ -58,10 +58,10 @@ public class Main extends Application {
   }
 
   /**
-   * 
-   * @param scenePath
-   * @param sceneName
-   * @throws IOException
+   * Method to change the current scene to a new scene using a file path.
+   * @param scenePath File path to fxml file
+   * @param sceneName Name of scene to be set as the title
+   * @throws IOException When the requested file path isn't valid or the fxml file isn't valid
    */
   public static void changeScene(String scenePath, String sceneName) throws IOException {
     ViewInterface view;

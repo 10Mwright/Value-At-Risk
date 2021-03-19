@@ -24,7 +24,7 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class ModelBuildingGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format to be used on numbers
+  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format for numbers
 
   /**
    * {@inheritDoc}
@@ -32,7 +32,8 @@ public class ModelBuildingGUI implements ViewInterface {
   @Override
   public void setupVolatilityChoice() {
     volatilityMethod.getItems().removeAll();
-    volatilityMethod.getItems().addAll(VolatilityMethod.stringValues); //Fill in choices from available volatility method enums
+    //Fill in choices from available volatility method enums
+    volatilityMethod.getItems().addAll(VolatilityMethod.stringValues);
     volatilityMethod.getSelectionModel().select(0);
   }
 
@@ -58,7 +59,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
     Portfolio portfolio = new Portfolio(positions);
 
-    if(!lambdaField.getText().equals("")) { //Retrieves lambda value
+    if (!lambdaField.getText().equals("")) { //Retrieves lambda value
       System.out.println(Double.parseDouble(lambdaField.getText()));
       portfolio.setVolatilityLambda(Double.parseDouble(lambdaField.getText()));
     }
@@ -68,10 +69,11 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public Position getNewPosition() {
-    if(tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
+    if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(), Double.parseDouble(assetHoldingsField.getText()));
+      Position newPositon = new Position(tickerSymbolField.getText(),
+          Double.parseDouble(assetHoldingsField.getText()));
 
       //Clear fields
       tickerSymbolField.setText("");
@@ -83,7 +85,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public int getTimeHorizon() {
-    if(!timeHorizonField.getText().equals("")) {
+    if (!timeHorizonField.getText().equals("")) {
       return Integer.parseInt(timeHorizonField.getText());
     } else {
       return 0;
@@ -92,7 +94,7 @@ public class ModelBuildingGUI implements ViewInterface {
 
   @Override
   public int getProbability() {
-    if(!probabilityField.getText().equals("")) {
+    if (!probabilityField.getText().equals("")) {
       return (Integer.parseInt(probabilityField.getText()));
     } else {
       return 0;

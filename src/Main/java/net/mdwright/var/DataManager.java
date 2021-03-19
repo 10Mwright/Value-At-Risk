@@ -108,8 +108,6 @@ public class DataManager {
         + position.getTickerSymbol() + " is: " + currentPrice.multiply(new
         BigDecimal(position.getHoldings())));
 
-    position.setPerUnitPrice(currentPrice);
-
     currentPrice = currentPrice.multiply(new BigDecimal(position.getHoldings()));
 
     position.setPositionValue(currentPrice);
@@ -131,6 +129,10 @@ public class DataManager {
 
     portfolio.setCurrentValue(currentValue);
     return currentValue;
+  }
+
+  public static boolean testStockIsValid(String tickerSymbol) {
+    return false;
   }
 
 }

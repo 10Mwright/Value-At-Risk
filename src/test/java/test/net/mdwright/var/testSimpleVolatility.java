@@ -11,10 +11,13 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Test;
 
+/*
+ Test class for SimpleVolatility object
+ */
 public class testSimpleVolatility {
 
   @Test
-  public void testSimpleVolatility() {
+  public void testSimpleVolatility() { //Testing to ensure getVolatility returns a valid value
     Position testPosition = new Position("GOOGL", 1000);
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
