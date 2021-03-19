@@ -3,6 +3,7 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -29,6 +30,8 @@ import net.mdwright.var.objects.Position;
 public class VarController {
 
   private final int plotResolution = 5; //How many days between each chart point
+
+  private final DecimalFormat numberFormat = new DecimalFormat("#,###.00");
 
   private boolean isFailure = false;
   private VarModel model = new VarModel();
@@ -63,10 +66,17 @@ public class VarController {
           "Please enter some valid positions in the portfolio", AlertType.ERROR);
     }
 
-    if (view.getTimeHorizon() != null) { //Time horizon is set, not 0
+    /*
+    Below blocks of code gets each respective element from the GUI
+    Each block ensures that the respective field isn't empty and that the values in the
+    field are of the correct data type.
+     */
+
+    //Get time horizon
+    if (view.getTimeHorizon() != null) {
       try {
         timeHorizon = Integer.parseInt(view.getTimeHorizon());
-      } catch(NumberFormatException e) {
+      } catch (NumberFormatException e) {
         isFailure = true;
         sendAlert("Invalid Time Horizon",
             "The value entered in the time horizon field is not a valid integer!",
@@ -93,6 +103,7 @@ public class VarController {
           "Please enter a valid Integer value for the probability!", AlertType.ERROR);
     }
 
+    //Get data length (Only ran when the request originates from the historical sim. gui
     if(view.getModelToUse() == Model.HISTORICAL_SIMULATION) {
       if (view.getDataLength() != null) {
         try {
@@ -112,8 +123,8 @@ public class VarController {
     BigDecimal valueAtRisk;
 
     if (!isFailure) { //Nothing above has failed
-      if (view.getModelToUse()
-          == Model.HISTORICAL_SIMULATION) { //If the request originates from the historical sim GUI
+      if (view.getModelToUse() == Model.HISTORICAL_SIMULATION) {
+        //If the request originates from the historical sim GUI
 
         valueAtRisk = model
             .calculateVar(portfolio, timeHorizon, probability, dataLength);
@@ -124,10 +135,8 @@ public class VarController {
             .calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
 
       }
-      //Rounding result to 2 decimal places
-      valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
-      view.setResult(valueAtRisk); //Set result in GUI
+      view.setResult(numberFormat.format(valueAtRisk)); //Set result in GUI
       drawChart(); //Calls code to create a price chart
     }
 
@@ -211,17 +220,19 @@ public class VarController {
     view.setChart(lineChart);
 
     //Fill in values below graph pane
-    view.setPortfolioValue(portfolioData.getCurrentValue());
+    view.setPortfolioValue(numberFormat.format(portfolioData.getCurrentValue()));
 
     //current value of portfolio - value at risk
-    view.setValueAfterVar(portfolioData.getCurrentValue().subtract(portfolioData.getValueAtRisk()));
+    BigDecimal valueAfterVar = portfolioData.getCurrentValue()
+        .subtract(portfolioData.getValueAtRisk());
+    view.setValueAfterVar(numberFormat.format(valueAfterVar));
 
     //VaR as a percentage of portfolio value
     BigDecimal percentage = portfolioData.getValueAtRisk().divide(portfolioData.getCurrentValue(),
         RoundingMode.UP);
     percentage = percentage.multiply(new BigDecimal(100));
 
-    view.setVarPercentage(percentage.doubleValue());
+    view.setVarPercentage(numberFormat.format(percentage.doubleValue()));
   }
 
   /**

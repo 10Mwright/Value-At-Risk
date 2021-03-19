@@ -53,9 +53,9 @@ public interface ViewInterface {
   /**
    * Method to set the result in GUI.
    *
-   * @param varValue A BigDecimal object representing the value at risk given the user's criteria
+   * @param varValue A String object representing the value at risk given the user's criteria
    */
-  void setResult(BigDecimal varValue);
+  void setResult(String varValue);
 
   /**
    * Method to set draw the price history chart in the GUI.
@@ -91,21 +91,21 @@ public interface ViewInterface {
 
   /**
    * Method to set the portfolio value field in GUI.
-   * @param portfolioValue BigDecimal value representing the total value of the user's portfolio
+   * @param portfolioValue String value representing the total value of the user's portfolio
    */
-  void setPortfolioValue(BigDecimal portfolioValue);
+  void setPortfolioValue(String portfolioValue);
 
   /**
    * Method to set the value after var field in GUI.
-   * @param valueAfterVar BigDecimal value representing the value after var is taken
+   * @param valueAfterVar String value representing the value after var is taken
    */
-  void setValueAfterVar(BigDecimal valueAfterVar);
+  void setValueAfterVar(String valueAfterVar);
 
   /**
    * Method to set the var as a percentage field in GUI.
    * @param percentage double value representing the percentage out of 100
    */
-  void setVarPercentage(double percentage);
+  void setVarPercentage(String percentage);
 
   /**
    * Method to setup the volatility choice on the model-building GUI.

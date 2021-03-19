@@ -23,8 +23,9 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class HistoricalSimGUI implements ViewInterface {
 
-  private final DecimalFormat numberFormat = new DecimalFormat("#,###.00");
   private final int positionFields = 2; //Number of fields that consitutes a new position
+
+  private final String localCurrency = "£";
 
   /**
    * {@inheritDoc}
@@ -103,8 +104,8 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public void setResult(BigDecimal varValue) {
-    resultField.setText(numberFormat.format(varValue));
+  public void setResult(String varValue) {
+    resultField.setText(varValue);
   }
 
   /**
@@ -129,24 +130,24 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public void setPortfolioValue(BigDecimal portfolioValue) {
-    this.portfolioValue.setText("£" + numberFormat.format(portfolioValue));
+  public void setPortfolioValue(String portfolioValue) {
+    this.portfolioValue.setText(localCurrency + portfolioValue);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setValueAfterVar(BigDecimal valueAfterVar) {
-    this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
+  public void setValueAfterVar(String valueAfterVar) {
+    this.valueAfterVar.setText(localCurrency + valueAfterVar);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setVarPercentage(double percentage) {
-    this.varPercentage.setText(numberFormat.format(percentage) + "%");
+  public void setVarPercentage(String percentage) {
+    this.varPercentage.setText(percentage + "%");
   }
 
   /**
