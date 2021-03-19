@@ -79,6 +79,23 @@ public class Main extends Application {
     primaryStage.setHeight(root.getScene().getHeight());
     primaryStage.centerOnScreen(); //Centers the window on the users screen
     primaryStage.setTitle(sceneName);
+  }
 
+  /**
+   * Method to add a second scene and show it in a second stage (no controller).
+   * @param scenePath File path to fxml file
+   * @param sceneName Name of scene to be set as the title
+   * @throws IOException When the requested file path isn't valid or the fxml file isn't valid
+   */
+  public static void addScene(String scenePath, String sceneName) throws IOException {
+    Stage secondaryStage = new Stage();
+
+    loader = new FXMLLoader(Main.class.getResource(scenePath));
+    Parent secondaryRoot = loader.load();
+
+    Scene secondaryScene = new Scene(secondaryRoot);
+    secondaryStage.setScene(secondaryScene);
+    secondaryStage.setTitle(sceneName);
+    secondaryStage.show();
   }
 }

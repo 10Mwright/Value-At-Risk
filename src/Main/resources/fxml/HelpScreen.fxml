@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<AnchorPane prefHeight="654.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="214.0" layoutY="25.0" text="How to use this program?">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Text layoutX="48.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This program is designed to calculate the Value At Risk for a portfolio of assets, investments in which we refer to as Positions. For example lets say that as part of our portfolio we have a position in Google (ticker: GOOGL) in which we have a holding of 5 shares, in simple terms this means that within our portfolio we own 5 shares in Google." textAlignment="JUSTIFY" wrappingWidth="607.0" />
+      <Text layoutX="48.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Value of Risk (VaR) estimate is effectively the maximum amount we expect to lose over a specified time horizon and at a certain probability. For example if our VaR estimate for the above Google investment was say £500 and our time horizon was 5 days while our probability was 99% then what we are saying is that in 99% of the &quot;cases&quot; we don't expect to lose more than £500 over the next 5 days. Of course this means that in 1% of the cases our VaR could actually be much higher." textAlignment="JUSTIFY" wrappingWidth="607.0" />
+      <Text layoutX="48.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To use this program follow the below steps, each is split into a different approach as the user required inputs are slightly different:" textAlignment="JUSTIFY" wrappingWidth="607.0" />
+      <Text layoutX="48.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Add positions to our portfolio under the &quot;portfolio management tab&quot; by inputting a valid ticker symbol and holdings amount and pressing add." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="48.0" layoutY="408.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Under the &quot;Additional Values&quot; tab fill in your desired time horizon in days (e.g. 5) and your desired probability as a percentage (e.g. 99%)." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="48.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Select the desired method for calculating variance/volatility from the drop down, if selecting EWMA then you can (optionally) define a preferred lambda value, this defaults to 0.94." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="48.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Finally once you have filled all the fields in then simply press calculate at the bottom left, the program will run for a while and output the VaR estimate in the bottom left, on the right side you will see additional information along with a portfolio price history chart." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="75.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Model-Building Approach" textAlignment="JUSTIFY" underline="true" wrappingWidth="220.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text layoutX="393.0" layoutY="318.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Historical Simulation Appoach" textAlignment="JUSTIFY" underline="true" wrappingWidth="250.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text layoutX="381.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Finally once you have filled all the fields in then simply press calculate at the bottom left, the program will run for a while and output the VaR estimate in the bottom left, on the right side you will see additional information along with a portfolio price history chart." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="381.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. As opposed to the Model-Building method you will see a data length value as well, simply input the desired number of days to look back into. (e.g. 252 or 512)" textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="381.0" layoutY="408.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Under the &quot;Additional Values&quot; tab fill in your desired time horizon in days (e.g. 5) and your desired probability as a percentage (e.g. 99%)." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+      <Text layoutX="381.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1. Add positions to our portfolio under the &quot;portfolio management tab&quot; by inputting a valid ticker symbol and holdings amount and pressing add." textAlignment="JUSTIFY" wrappingWidth="274.0" />
+   </children>
+</AnchorPane>
