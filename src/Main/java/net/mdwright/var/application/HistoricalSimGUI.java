@@ -1,6 +1,5 @@
 package net.mdwright.var.application;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import javafx.event.ActionEvent;
@@ -12,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import net.mdwright.var.DataManager;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -39,7 +37,7 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public VolatilityMethod getVolatilityChoice() { //Dummy method, isn't required on this interface
     return null;
-  }
+  } //Dummy method, not required
 
   /**
    * {@inheritDoc}
@@ -79,11 +77,11 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public int getTimeHorizon() {
+  public String getTimeHorizon() {
     if (!timeHorizonField.getText().equals("")) {
-      return Integer.parseInt(timeHorizonField.getText());
+      return timeHorizonField.getText();
     } else {
-      return 0;
+      return null;
     }
   }
 
@@ -91,11 +89,11 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public int getProbability() {
+  public String getProbability() {
     if (!probabilityField.getText().equals("")) {
-      return (Integer.parseInt(probabilityField.getText()));
+      return probabilityField.getText();
     } else {
-      return 0;
+      return null;
     }
   }
 
@@ -103,11 +101,11 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public int getDataLength() {
+  public String getDataLength() {
     if (!dataLengthField.getText().equals("")) {
-      return Integer.parseInt(dataLengthField.getText());
+      return dataLengthField.getText();
     } else {
-      return 0;
+      return null;
     }
   }
 

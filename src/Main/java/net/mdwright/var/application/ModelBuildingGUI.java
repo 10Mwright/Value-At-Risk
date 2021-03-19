@@ -74,38 +74,42 @@ public class ModelBuildingGUI implements ViewInterface {
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(),
-          Double.parseDouble(assetHoldingsField.getText()));
+      try {
+        Position newPositon = new Position(tickerSymbolField.getText(),
+            Double.parseDouble(assetHoldingsField.getText()));
 
-      //Clear fields
-      tickerSymbolField.setText("");
-      assetHoldingsField.setText("");
+        //Clear fields
+        tickerSymbolField.setText("");
+        assetHoldingsField.setText("");
 
-      return newPositon;
+        return newPositon;
+      } catch(NumberFormatException e) {
+        return null;
+      }
     }
   }
 
   @Override
-  public int getTimeHorizon() {
+  public String getTimeHorizon() {
     if (!timeHorizonField.getText().equals("")) {
-      return Integer.parseInt(timeHorizonField.getText());
+      return timeHorizonField.getText();
     } else {
-      return 0;
+      return null;
     }
   }
 
   @Override
-  public int getProbability() {
+  public String getProbability() {
     if (!probabilityField.getText().equals("")) {
-      return (Integer.parseInt(probabilityField.getText()));
+      return probabilityField.getText();
     } else {
-      return 0;
+      return null;
     }
   }
 
   @Override
-  public int getDataLength() {
-    return 0; //Returns 0 always to trigger usage of Model-Building.
+  public String getDataLength() {
+    return null; //Returns 0 always to trigger usage of Model-Building.
   }
 
   @Override

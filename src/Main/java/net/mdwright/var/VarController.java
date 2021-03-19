@@ -86,8 +86,8 @@ public class VarController {
           sendAlert("Invalid Integer in Data Length Field",
               "Please enter a valid Integer in the data length field!", AlertType.ERROR);
         } else {
-          valueAtRisk = model
-              .calculateVar(portfolio, timeHorizon, probability, view.getDataLength());
+            valueAtRisk = model
+                .calculateVar(portfolio, timeHorizon, probability, view.getDataLength());
         }
       } else {
         valueAtRisk = model

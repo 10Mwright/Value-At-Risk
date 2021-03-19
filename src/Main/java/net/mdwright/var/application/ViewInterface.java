@@ -33,21 +33,21 @@ public interface ViewInterface {
    *
    * @return An int value representing the number of days to calculate Var for
    */
-  int getTimeHorizon();
+  String getTimeHorizon();
 
   /**
    * Method to retrieve the user's preffered confidence level/probability for calculation.
    *
    * @return A double value representing the probability in decimal format (e.g. 0.99)
    */
-  int getProbability();
+  String getProbability();
 
   /**
    * Method to retrieve the user's preferred data length for historical sim.
    *
    * @return An int value representing the number of days to gather data for
    */
-  int getDataLength();
+  String getDataLength();
 
   /**
    * Method to set the result in GUI.
