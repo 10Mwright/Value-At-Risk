@@ -92,7 +92,7 @@ public class VarController {
     if (view.getProbability() != null) { //Probability is set, not 0
       try {
         probability = Integer.parseInt(view.getProbability());
-      } catch(NumberFormatException e) {
+      } catch (NumberFormatException e) {
         isFailure = true;
         sendAlert("Invalid Probability", "Please enter a valid Integer in the "
             + "probability field! (e.g. 95 or 99, not 0.99)", AlertType.ERROR);
@@ -104,7 +104,7 @@ public class VarController {
     }
 
     //Get data length (Only ran when the request originates from the historical sim. gui
-    if(view.getModelToUse() == Model.HISTORICAL_SIMULATION) {
+    if (view.getModelToUse() == Model.HISTORICAL_SIMULATION) {
       if (view.getDataLength() != null) {
         try {
           dataLength = Integer.parseInt(view.getDataLength());

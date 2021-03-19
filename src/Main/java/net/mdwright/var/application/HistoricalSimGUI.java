@@ -81,7 +81,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getTimeHorizon() {
-      return timeHorizonField.getText();
+    return timeHorizonField.getText();
   }
 
   /**
@@ -89,7 +89,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getProbability() {
-      return probabilityField.getText();
+    return probabilityField.getText();
   }
 
   /**
@@ -97,7 +97,7 @@ public class HistoricalSimGUI implements ViewInterface {
    */
   @Override
   public String getDataLength() {
-      return dataLengthField.getText();
+    return dataLengthField.getText();
   }
 
   /**
