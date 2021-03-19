@@ -146,7 +146,7 @@ public class VarMath {
    * @param portfolio Portfolio object containing position objects with historical data
    * @return List of Maps mapping a date in string format to the days adj. closing price
    */
-  public List<Map<String, BigDecimal>> getHashMaps(Portfolio portfolio) {
+  public static List<Map<String, BigDecimal>> getHashMaps(Portfolio portfolio) {
     //List of maps to store dates along with their adj. closing prices on those dates
     List<Map<String, BigDecimal>> portfolioPriceMap = new ArrayList<Map<String, BigDecimal>>();
 

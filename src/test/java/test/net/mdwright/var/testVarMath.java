@@ -1,12 +1,15 @@
 package test.net.mdwright.var;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.VarMath;
 import net.mdwright.var.objects.Portfolio;
@@ -85,6 +88,25 @@ public class testVarMath {
       int returnedSize = VarMath.getSmallestDatasetSize(portfolio);
 
       assertEquals(expectedSize - 1, returnedSize);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
+  public void testGetHashMaps() {
+    Position testPositionOne = new Position("GOOGL", 100);
+    Position testPositionTwo = new Position("TSLA", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
+
+    try {
+      DataManager.getHistoricalPrices(testPositionOne, 252);
+      DataManager.getHistoricalPrices(testPositionTwo, 100);
+
+      List<Map<String, BigDecimal>> portfolioPriceMaps = VarMath.getHashMaps(portfolio);
+
+      assertFalse(portfolioPriceMaps.isEmpty());
     } catch (IOException e) {
       e.printStackTrace();
       fail();
