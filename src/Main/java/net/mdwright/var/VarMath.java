@@ -157,7 +157,7 @@ public class VarMath {
       List<HistoricalQuote> currentPositionData = portfolio.getPosition(i).getHistoricalData();
 
       for (int j = 0; j < currentPositionData.size(); j++) {
-        String currentDate = dateFormat.format(currentPositionData.get(j).getDate());
+        String currentDate = dateFormat.format(currentPositionData.get(j).getDate().getTime());
 
         positionPriceMap.put(currentDate, currentPositionData.get(j).getAdjClose());
       }
