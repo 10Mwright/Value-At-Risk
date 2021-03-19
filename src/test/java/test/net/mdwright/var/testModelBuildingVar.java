@@ -48,11 +48,11 @@ public class testModelBuildingVar {
   @Test
   public void testSingleAssetSimple() {
     ModelBuildingVar calculation = new ModelBuildingVar();
-    Portfolio portfolio = new Portfolio(new Position("GOOG", 1000000));
+    Portfolio portfolio = new Portfolio(new Position("GOOG", 1000));
     assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.99, VolatilityMethod.SIMPLE));
 
     System.out.println("----------------");
-    portfolio = new Portfolio(new Position("TSLA", 10000000));
+    portfolio = new Portfolio(new Position("TSLA", 1000));
     assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.95, VolatilityMethod.SIMPLE));
   }
 
