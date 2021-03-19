@@ -2,6 +2,7 @@ package net.mdwright.var;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class VarMath {
 
   private static final int divisionScale = 2; //Scale to be used when dividing using big decimals
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
 
   /**
    * Method for calculating the mean close price across a historical data set.
@@ -152,11 +154,15 @@ public class VarMath {
 
     for (int i = 0; i < portfolio.getSize(); i++) {
       Map<String, BigDecimal> positionPriceMap = new HashMap<String, BigDecimal>();
-      Position currentPosition = portfolio.getPosition(i);
+      List<HistoricalQuote> currentPositionData = portfolio.getPosition(i).getHistoricalData();
 
-      for (int j = 0; j < currentPosition.getHistoricalDataSize(); j++) {
+      for (int j = 0; j < currentPositionData.size(); j++) {
+        String currentDate = dateFormat.format(currentPositionData.get(j).getDate());
 
+        positionPriceMap.put(currentDate, currentPositionData.get(j).getAdjClose());
       }
+
+      portfolioPriceMap.add(positionPriceMap); //Add this price map to the portfolio's price map
     }
 
     return portfolioPriceMap;
