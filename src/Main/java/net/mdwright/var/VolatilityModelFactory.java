@@ -6,6 +6,9 @@ import net.mdwright.var.objects.VolatilityMethod;
  * Factory class for creating VolatilityModels.
  *
  * @author Matthew Wright
+ *     Note influence for this design was taken from Adrian Ng, see link below
+ *         https://github.com/Adrian-Ng/ValueAtRisk/blob/master/src/main/java/com/adrian
+ *             /ng/VolatilityAbstract.java
  */
 public class VolatilityModelFactory {
 
