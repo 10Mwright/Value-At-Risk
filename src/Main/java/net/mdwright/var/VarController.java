@@ -203,9 +203,28 @@ public class VarController {
       isFailure = true;
     }
 
+    boolean isExists = false; //Defaults to not existing in current portfolio
+
     if (!isFailure) {
-      //Set in view
-      view.addNewPosition(newPos);
+      if(view.getPortfolio().getSize() > 0) { //Currently a standing portfolio
+        Portfolio portfolio = view.getPortfolio();
+
+        //Check portfolio doesn't contain this position already
+        for (int i = 0; i < portfolio.getSize(); i++) {
+          if(portfolio.getPosition(i).getTickerSymbol().equals(newPos.getTickerSymbol())) {
+            isExists = true; //set boolean to true to alter code below
+            break; //Break out of loop, not need to continue
+          }
+        }
+      }
+
+      if(!isExists) { //Doesn't exist, just add it
+        //Set new position in view
+        view.addNewPosition(newPos);
+      } else {
+        sendAlert("Position Already Exists!",
+            "This position already exists in your portfolio!", AlertType.ERROR);
+      }
     }
 
     isFailure = false; //Reset failure boolean

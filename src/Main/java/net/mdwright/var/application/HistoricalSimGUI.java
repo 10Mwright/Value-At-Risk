@@ -66,14 +66,18 @@ public class HistoricalSimGUI implements ViewInterface {
     } else {
       try {
         if(DataManager.testStockIsValid(tickerSymbolField.getText())) {
-          Position newPositon = new Position(tickerSymbolField.getText(),
-              Double.parseDouble(assetHoldingsField.getText()));
+          try {
+            Position newPositon = new Position(tickerSymbolField.getText(),
+                Double.parseDouble(assetHoldingsField.getText()));
 
-          //Clear fields
-          tickerSymbolField.setText("");
-          assetHoldingsField.setText("");
+            //Clear fields
+            tickerSymbolField.setText("");
+            assetHoldingsField.setText("");
 
-          return newPositon;
+            return newPositon;
+          } catch(NumberFormatException e) {
+            return null;
+          }
         } else {
           return null;
         }
