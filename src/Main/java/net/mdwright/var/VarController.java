@@ -124,11 +124,11 @@ public class VarController {
             .calculateVar(portfolio, timeHorizon, probability, view.getVolatilityChoice());
 
       }
-        //Rounding result to 2 decimal places
-        valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
+      //Rounding result to 2 decimal places
+      valueAtRisk = valueAtRisk.setScale(2, RoundingMode.UP);
 
-        view.setResult(valueAtRisk); //Set result in GUI
-        drawChart(); //Calls code to create a price chart
+      view.setResult(valueAtRisk); //Set result in GUI
+      drawChart(); //Calls code to create a price chart
     }
 
     isFailure = false; //Reset failure boolean for next run
@@ -228,13 +228,7 @@ public class VarController {
    * Observing method to add a new position to the list view on the GUI.
    */
   public void addAsset() {
-    Position newPos = view.getNewPosition();
-    if (newPos == null) {
-      sendAlert("Invalid Position Fields",
-          "Please enter a valid ticker symbol & holdings amount for a new position!",
-          AlertType.ERROR);
-      isFailure = true;
-    }
+    Position newPos = getNewPosition();
 
     boolean isExists = false; //Defaults to not existing in current portfolio
 
@@ -267,6 +261,8 @@ public class VarController {
 
         isFailure = false; //Reset failure boolean
       }
+
+      isFailure = false; //Reset failure boolean
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -290,6 +286,10 @@ public class VarController {
     alert.showAndWait();
   }
 
+  /**
+   * Method to retrieve the portfolio from the view and format it into a portfolio object.
+   * @return Portfolio object containing the portfolio object
+   */
   public Portfolio getPortfolio() {
     ObservableList<Position> portfolioList = view.getPortfolio();
 
@@ -301,6 +301,39 @@ public class VarController {
     }
 
     return new Portfolio(positions);
+  }
+
+  /**
+   * Method to retrieve the new position from the view fields and format it into a position object.
+   * @return Position object built using user entered values
+   */
+  public Position getNewPosition() {
+    if (view.getNewPosition() != null) {
+      String[] positionValues = view.getNewPosition();
+
+      try {
+        int holdingsValue = Integer.parseInt(positionValues[1]);
+
+        Position newPosition = new Position(positionValues[0], holdingsValue);
+
+        view.emptyPositionFields(); //Clear the fields on GUI
+
+        return newPosition;
+      } catch (NumberFormatException e) {
+        isFailure = true;
+        sendAlert("Invalid Holdings Field",
+            "Please enter a valid numerical value in the holdings field!",
+            AlertType.ERROR);
+
+        return null;
+      }
+    } else {
+      isFailure = true;
+      sendAlert("Invalid Positions Field!",
+          "Please enter a valid ticker symbol & holdings value in the relevant fields!",
+          AlertType.ERROR);
+      return null;
+    }
   }
 
 }

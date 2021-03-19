@@ -27,7 +27,8 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class ModelBuildingGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format for numbers
+  private final DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+  private final int positionFields = 2; //Number of fields that constitute a new position
 
   /**
    * {@inheritDoc}
@@ -56,26 +57,35 @@ public class ModelBuildingGUI implements ViewInterface {
     return portfolioList.getItems();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public Position getNewPosition() {
+  public String[] getNewPosition() {
+    String[] positionValues = new String[positionFields];
+
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      try {
-        Position newPositon = new Position(tickerSymbolField.getText(),
-            Double.parseDouble(assetHoldingsField.getText()));
+      positionValues[0] = tickerSymbolField.getText();
+      positionValues[1] = assetHoldingsField.getText();
 
-        //Clear fields
-        tickerSymbolField.setText("");
-        assetHoldingsField.setText("");
-
-        return newPositon;
-      } catch(NumberFormatException e) {
-        return null;
-      }
+      return positionValues;
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void emptyPositionFields() {
+    tickerSymbolField.clear();
+    assetHoldingsField.clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getTimeHorizon() {
     if (!timeHorizonField.getText().equals("")) {
@@ -85,6 +95,9 @@ public class ModelBuildingGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getProbability() {
     if (!probabilityField.getText().equals("")) {
@@ -94,16 +107,25 @@ public class ModelBuildingGUI implements ViewInterface {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getDataLength() {
     return null; //Returns 0 always to trigger usage of Model-Building.
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setResult(BigDecimal varValue) {
     resultField.setText(numberFormat.format(varValue));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setChart(LineChart chart) {
     graphPane.getChildren().clear();
@@ -111,26 +133,41 @@ public class ModelBuildingGUI implements ViewInterface {
     graphPane.getChildren().add(chart);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addNewPosition(Position newPos) {
     portfolioList.getItems().add(newPos);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setPortfolioValue(BigDecimal portfolioValue) {
     this.portfolioValue.setText(numberFormat.format(portfolioValue));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setValueAfterVar(BigDecimal valueAfterVar) {
     this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setVarPercentage(double percentage) {
     this.varPercentage.setText(numberFormat.format(percentage) + "%");
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addCalcObserver(Observer obs) {
     calculateButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -141,6 +178,9 @@ public class ModelBuildingGUI implements ViewInterface {
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addPortfolioObserver(Observer obs) {
     addAssetButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -151,10 +191,15 @@ public class ModelBuildingGUI implements ViewInterface {
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Model getModelToUse() {
     return Model.MODEL_BUILDING;
   }
+
+  //FXML Elements below
 
   @FXML
   // fx:id="timeHorizonField"

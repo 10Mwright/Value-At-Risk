@@ -27,7 +27,7 @@ public interface ViewInterface {
    *
    * @return An object of type Position containing user defined data
    */
-  Position getNewPosition();
+  String[] getNewPosition();
 
   /**
    * Method to retrieve the user's preferred time horizon for calculation.
@@ -69,6 +69,11 @@ public interface ViewInterface {
    * @param newPos A Position object with the user defined parameters
    */
   void addNewPosition(Position newPos);
+
+  /**
+   * Method to clear the ticker symbol & holdings fields.
+   */
+  void emptyPositionFields();
 
   /**
    * Adds an observer to monitor user commands to calculate Var.

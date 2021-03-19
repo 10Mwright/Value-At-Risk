@@ -23,7 +23,8 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class HistoricalSimGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format to be used on numbers
+  private final DecimalFormat numberFormat = new DecimalFormat("#,###.00");
+  private final int positionFields = 2; //Number of fields that consitutes a new position
 
   /**
    * {@inheritDoc}
@@ -52,19 +53,26 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public Position getNewPosition() {
+  public String[] getNewPosition() {
+    String[] positionValues = new String[positionFields];
+
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      Position newPositon = new Position(tickerSymbolField.getText(),
-          Double.parseDouble(assetHoldingsField.getText()));
+      positionValues[0] = tickerSymbolField.getText();
+      positionValues[1] = assetHoldingsField.getText();
 
-      //Clear fields
-      tickerSymbolField.setText("");
-      assetHoldingsField.setText("");
-
-      return newPositon;
+      return positionValues;
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void emptyPositionFields() {
+    tickerSymbolField.clear();
+    assetHoldingsField.clear();
   }
 
   /**
