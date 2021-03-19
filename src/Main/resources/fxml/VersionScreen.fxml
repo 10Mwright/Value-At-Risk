@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="214.0" prefWidth="442.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="95.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version Information">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Text>
+      <Text layoutX="120.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author: Matthew Wright">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Text>
+      <Text layoutX="166.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version: v1.3 ">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Text>
+      <Text layoutX="31.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact: Matthew.wright.2018@live.rhul.ac.uk">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

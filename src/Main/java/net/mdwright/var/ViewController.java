@@ -19,6 +19,7 @@ public class ViewController {
     view.addModelBuildingObserver(this::changeToModelBuilding);
     view.addHistoricalSimObserver(this::changeToHistoricalSim);
     view.addHelpObserver(this::showHelpScreen);
+    view.addVersionObserver(this::showVersionScreen);
   }
 
   /**
@@ -53,6 +54,14 @@ public class ViewController {
     try {
       Main.addScene("/fxml/HelpScreen.fxml", "Help Screen");
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void showVersionScreen() {
+    try {
+      Main.addScene("/fxml/VersionScreen.fxml", "Version Screen");
+    } catch(IOException e) {
       e.printStackTrace();
     }
   }
