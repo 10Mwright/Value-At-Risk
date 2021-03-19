@@ -15,10 +15,13 @@ import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 import org.junit.Test;
 
+/*
+ Test class for VolatilityModel object
+ */
 public class testVolatilityModel {
 
   @Test
-  public void testSimpleVolatility() {
+  public void testSimpleVolatility() { //Testing to ensure simple volatility returns a value
     Position testPosition = new Position("GOOGL", 1000);
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
@@ -38,7 +41,7 @@ public class testVolatilityModel {
   }
 
   @Test
-  public void testEWMAVolatility() {
+  public void testEWMAVolatility() { //Testing to see if ewma volatility returns a value
     Position testPosition = new Position("TSLA", 100);
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
@@ -58,7 +61,7 @@ public class testVolatilityModel {
   }
 
   @Test
-  public void testCalculateCovariancesSimple() {
+  public void testCalculateCovariancesSimple() { //Testing to see if covariances work (simple)
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("GME", 100);
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
@@ -79,7 +82,7 @@ public class testVolatilityModel {
   }
 
   @Test
-  public void testCalculateCovariancesEWMA() {
+  public void testCalculateCovariancesEWMA() { //Testing to see if covariances work (EWMA)
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("GME", 100);
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});

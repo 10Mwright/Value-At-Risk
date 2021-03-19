@@ -2,6 +2,7 @@ package test.net.mdwright.var;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -14,10 +15,13 @@ import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 import org.junit.Test;
 
+/*
+ Test class for VolatilityModelFactory
+ */
 public class testVolatilityModelFactory {
 
   @Test
-  public void testSimpleVolatility() {
+  public void testSimpleVolatility() { //Testing to see if simple volatility works via factory
     Position testPosition = new Position("GOOGL", 1000);
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
@@ -37,7 +41,7 @@ public class testVolatilityModelFactory {
   }
 
   @Test
-  public void testEWMAVolatility() {
+  public void testEWMAVolatility() { //Testing to see if EWMA volatility works via factory
     Position testPosition = new Position("GME", 10000);
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
@@ -57,7 +61,7 @@ public class testVolatilityModelFactory {
   }
 
   @Test
-  public void testCalculateCovariancesSimple() {
+  public void testCalculateCovariancesSimple() { //Testing to see if simple covariances work
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("GME", 100);
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
@@ -78,7 +82,7 @@ public class testVolatilityModelFactory {
   }
 
   @Test
-  public void testCalculateCovariancesEWMA() {
+  public void testCalculateCovariancesEWMA() { //Testing to see if EWMA covariances work
     Position testPositionOne = new Position("GOOGL", 100);
     Position testPositionTwo = new Position("GME", 100);
     Position testPositionThree = new Position("TSLA", 100);
@@ -92,9 +96,6 @@ public class testVolatilityModelFactory {
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
 
       double[][] covariances = volCalculator.calculateCovarianceMatrix(portfolio);
-
-      System.out.println(
-          Arrays.deepToString(covariances).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
 
       assertNotNull(covariances);
     } catch (IOException e) {
