@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -24,6 +25,8 @@ import net.mdwright.var.objects.Position;
  * @author Matthew Wright
  */
 public class VarController {
+
+  private final int plotResolution = 5; //How many days between each chart point
 
   private boolean isFailure = false;
   private VarModel model = new VarModel();
@@ -103,7 +106,7 @@ public class VarController {
   }
 
   /**
-   * Method for drawing a linechart using historical data from the VarModel
+   * Method for drawing a linechart using historical data from the VarModel.
    */
   public void drawChart() {
     Portfolio portfolioData = model.getPortfolioData();
@@ -123,57 +126,55 @@ public class VarController {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
     /*
-      the first position is used as a benchmark, the number of data points on the graph
-      is decided by the historical data gathered for the first position
+      The number of dates plotted is dependant on the smallest number of prices gathered, for
+      example if a position only has 200 prices while all other positions have 500 then the chart
+      will only be plotted with 200 prices.
      */
 
     int smallestSetSize = VarMath.getSmallestDatasetSize(portfolioData);
+    List<Map<String, BigDecimal>> portfolioPriceMap = VarMath.getHashMaps(portfolioData);
 
-    /*
+    int dataLength = portfolioData.getPosition(0).getHistoricalDataSize();
+    Calendar currentDate = portfolioData.getPosition(0).getHistoricalData()
+        .get(dataLength - 1).getDate(); //Using first position to get a starting date
+
+    //Move the date back by the smallest number of prices a position has in the portfolio
+    currentDate.add(Calendar.DAY_OF_YEAR, -smallestSetSize);
+
     for (int i = 0; i < smallestSetSize; i++) {
-      BigDecimal totalForDay = new BigDecimal(0);
+      BigDecimal totalPriceForDay = new BigDecimal(0);
+      String targetDateString = sdf.format(currentDate.getTime());
+      Boolean isPlottable = true; //Used to plot only valid data
 
-      Calendar currentDate = portfolioData.getPosition(0).getHistoricalData().get(i).getDate();
-      String currentDateString = sdf.format(currentDate.getTime());
+      for (int j = 0; j < portfolioData.getSize(); j++) { //For each position
+        Map<String, BigDecimal> positionPriceMap = portfolioPriceMap.get(j);
 
-      for (int j = 0; j < portfolioData.getSize(); j++) {
-        Position position = portfolioData.getPosition(j); //Current position object
-
-        for (int k = 0; k < position.getHistoricalDataSize(); k++) { //Run through every day in data
-          if(currentDate.equals(position.getHistoricalData().get(k).getDate())) {
-            totalForDay = totalForDay.add(position.getHistoricalData().get(i).getAdjClose());
-            totalForDay = totalForDay.multiply(new BigDecimal(position.getHoldings()));
-            break;
-          }
-          }
-        }
-
-      series.getData().add(new XYChart.Data(currentDateString, totalForDay));
-    }
-    */
-
-    for (int j = 0; j < portfolioData.getPosition(0)
-        .getHistoricalDataSize(); j = j + 5) { //Plots every 5th data point on the graph
-      BigDecimal totalForDay = new BigDecimal(0);
-      String date = sdf.format(portfolioData.getPosition(0).getHistoricalData()
-          .get(j).getDate().getTime()); //Finds date to ensure totals are done using the same dates
-
-      for (int i = 0; i < portfolioData.getSize(); i++) { //Runs through each position
-        Position position = portfolioData.getPosition(i);
-
-        //Ensure it's only totalled when the data is from the same date
-        if (date.equals(sdf.format(position.getHistoricalData().get(j).getDate().getTime()))) {
-          totalForDay = totalForDay.add(position.getHistoricalData().get(j).getAdjClose());
-          totalForDay = totalForDay.multiply(new BigDecimal(position.getHoldings())); //Total up
+        if (positionPriceMap.get(targetDateString) != null) { //Ensure there is data here
+          BigDecimal positionValueOnDay = positionPriceMap.get(targetDateString);
+          positionValueOnDay = positionValueOnDay.multiply(
+              new BigDecimal(portfolioData.getPosition(j).getHoldings())); //Total value of pos.
+          totalPriceForDay = totalPriceForDay.add(positionValueOnDay); //Add to the current day
+        } else {
+          isPlottable = false; //There is missing data, we don't want to plot this
         }
       }
 
-      series.getData().add(new XYChart.Data(date, totalForDay)); //Add data point to data series
+      if (isPlottable) { //Only plot if all positions had data for this day
+        series.getData().add(new XYChart.Data(targetDateString, totalPriceForDay));
+      }
+
+      currentDate.add(Calendar.DAY_OF_YEAR, plotResolution); //Increment the date by plotResolution
     }
 
+    //We add the most recent valuation using the today's prices
+    Calendar todaysDate = Calendar.getInstance();
+    String todaysDateString = sdf.format(todaysDate.getTime());
+
+    series.getData().add(new XYChart.Data(todaysDateString, portfolioData.getCurrentValue()));
 
     lineChart.getData().add(series); //Construct line chart ready to be passed to the GUI class
 
+    //Pass new chart over to the GUI
     view.setChart(lineChart);
 
     //Fill in values below graph pane
