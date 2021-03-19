@@ -47,7 +47,7 @@ public class VarMath {
    * @param positionOne Position object of the first position to calculate with
    * @param positionTwo Position object of the second position to calculate with
    * @return A double value representing the coefficient in range -1 to 1 Influence for calculation
-   * method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
+   *     method taken from https://budgeting.thenest.com/correlation-two-stocks-32359.html
    */
   public static double calculateCoefficient(Position positionOne,
       Position positionTwo) {
@@ -80,8 +80,10 @@ public class VarMath {
     BigDecimal sumProduct = new BigDecimal(0.0);
 
     for (int i = 0; i < dataSize; i++) {
-      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData().get(i).getAdjClose());
-      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData().get(i).getAdjClose());
+      deviations[i][0] = positionOneMean.subtract(positionOne.getHistoricalData()
+          .get(i).getAdjClose());
+      deviations[i][1] = positionTwoMean.subtract(positionTwo.getHistoricalData()
+          .get(i).getAdjClose());
       deviations[i][2] = deviations[i][0].multiply(deviations[i][0]);
       deviations[i][3] = deviations[i][1].multiply(deviations[i][1]);
       deviations[i][4] = deviations[i][0].multiply(deviations[i][1]);
@@ -102,22 +104,24 @@ public class VarMath {
   /**
    * Method to create an array of percentage changes between each days prices.
    * @param portfolio Portfolio object containing the position object and historical data
-   * @param positionIndex int value representing the index pointer for the target asset in the portfolio array
-   * @return An array of doubles representing the percentage changes between each day's closing price
+   * @param positionIndex int value representing the index pointer for the target asset in
+   *     the portfolio array
+   * @return An array of doubles representing the percentage changes between each day's
+   *     closing price
    */
   public static double[] getPercentageChanges(Portfolio portfolio, int positionIndex) {
     List<HistoricalQuote> historicalData = portfolio.getPosition(positionIndex).getHistoricalData();
-    double[] percentageChanges = new double[historicalData.size()-1];
+    double[] percentageChanges = new double[historicalData.size() - 1];
 
     for (int i = 1; i < historicalData.size(); i++) {
       BigDecimal currentDay = historicalData.get(i).getAdjClose();
-      BigDecimal previousDay = historicalData.get(i-1).getAdjClose();
+      BigDecimal previousDay = historicalData.get(i - 1).getAdjClose();
 
       BigDecimal tempValue = currentDay.subtract(previousDay);
 
       tempValue = tempValue.divide(previousDay, divisionScale, BigDecimal.ROUND_UP);
 
-      percentageChanges[i-1] = tempValue.doubleValue();
+      percentageChanges[i - 1] = tempValue.doubleValue();
     }
 
     return percentageChanges;
@@ -131,15 +135,15 @@ public class VarMath {
   public static int getSmallestDatasetSize(Portfolio portfolio) {
     int smallestDataset = portfolio.getPosition(0).getHistoricalDataSize();
 
-    for (int i = 0; i < portfolio.getSize(); i++) { //Cycle through portfolio sampling dataset sizes to find smallest
+    for (int i = 0; i < portfolio.getSize(); i++) { //Cycle through portfolio sampling dataset size
       int currentPositionDataset = portfolio.getPosition(i).getHistoricalDataSize();
 
-      if(currentPositionDataset < smallestDataset) {
-        smallestDataset = currentPositionDataset; //Set smallest size to this size if smaller than current smallestSize
+      if (currentPositionDataset < smallestDataset) {
+        smallestDataset = currentPositionDataset; //Set smallest size to this size
       }
     }
 
-    return smallestDataset-1; //To correct size for for loops
+    return smallestDataset - 1; //To correct size for for loops
   }
 
   /**
