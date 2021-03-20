@@ -26,15 +26,13 @@ public class DataManager {
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
    * @param position the requested stocks position object
-   * @param dataLength An int value representing the number of days to go back for historical data
+   * @param startDate Calendar object of the starting date to gather data from
+   * @param endDate Calendar object of the ending date to gather data to
    * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs or the response is invalid
    */
-  public static List<HistoricalQuote> getHistoricalPrices(Position position, int dataLength)
-      throws IOException {
-    Calendar startDate = Calendar.getInstance();
-    Calendar endDate = Calendar.getInstance();
-    startDate.add(Calendar.DAY_OF_YEAR, -dataLength);
+  public static List<HistoricalQuote> getHistoricalPrices(Position position, Calendar startDate,
+      Calendar endDate) throws IOException {
 
     Stock target = YahooFinance.get(position.getTickerSymbol(), startDate, endDate, Interval.DAILY);
 
