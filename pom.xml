@@ -38,6 +38,21 @@
       <version>15.0.1</version>
     </dependency>
     <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -88,7 +103,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>net.mdwright.var.application.Main</mainClass>
+              <mainClass>net.mdwright.var.application.Entry</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -103,7 +118,6 @@
         </configuration>
       </plugin>
     </plugins>
-
 
     <sourceDirectory>src/main/java</sourceDirectory>
 
