@@ -24,7 +24,9 @@ public class testModelBuildingVar {
 
   @Test
   public void testSingleAsset() {
-    Portfolio portfolio = new Portfolio(new Position("GOOG", 1000000));
+    Portfolio portfolio = new Portfolio(new Position("GOOG", 100));
+
+    ModelBuildingVar modelBuilding = new ModelBuildingVar();
 
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
@@ -33,7 +35,10 @@ public class testModelBuildingVar {
           modelBuilding.calculateVar(portfolio, 10, 0.99, VolatilityMethod.EWMA));
 
       System.out.println("----------------");
-      portfolio = new Portfolio(new Position("TSLA", 10000000));
+      portfolio = new Portfolio(new Position("TSLA", 1000));
+
+      DataManager.getHistoricalPrices(portfolio, 252);
+
       assertNotEquals(new BigDecimal(0.0),
           modelBuilding.calculateVar(portfolio, 10, 0.95, VolatilityMethod.EWMA));
     }  catch (IOException e) {

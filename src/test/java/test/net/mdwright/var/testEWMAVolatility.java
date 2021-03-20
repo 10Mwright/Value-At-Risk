@@ -22,7 +22,7 @@ public class testEWMAVolatility {
     Portfolio portfolio = new Portfolio(new Position[] {testPosition});
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       EWMAVolatility volCalculator = new EWMAVolatility();
 

@@ -1,7 +1,10 @@
 package test.net.mdwright.var;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import net.mdwright.var.DataManager;
 import net.mdwright.var.HistoricalSimVar;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -24,7 +27,14 @@ public class testHistoricalSimVar {
   public void testSingleAsset() { //Testing single asset calculations
     Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOGL", 100000)});
 
-    assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+      assertNotEquals(0, historicalSim.calculateVar(portfolio,
+          10, 0.99, 252));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
   @Test

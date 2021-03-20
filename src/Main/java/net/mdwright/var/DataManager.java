@@ -47,8 +47,8 @@ public class DataManager {
 
       List<HistoricalQuote> historical = target.getHistory();
 
-      for (int j = 0; i < historical.size(); i++) {
-        BigDecimal temp = historical.get(i).getAdjClose()
+      for (int j = 0; j < historical.size(); j++) {
+        BigDecimal temp = historical.get(j).getAdjClose()
             .multiply(exchangeRate); //Run through all adjusted close data to convert to GBP
         historical.get(i).setAdjClose(temp);
       }

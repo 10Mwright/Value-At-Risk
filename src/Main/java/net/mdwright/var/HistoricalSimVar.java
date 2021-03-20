@@ -40,11 +40,9 @@ public class HistoricalSimVar implements VarCalculator {
 
     BigDecimal valueAtRisk = new BigDecimal(0);
 
-    try {
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
         Position targetPosition = portfolio.getPosition(i);
-        data.getHistoricalPrices(targetPosition, historicalDataLength);
         data.getCurrentValue(portfolio.getPosition(i)); //Calculate current position value
       }
 
@@ -147,10 +145,6 @@ public class HistoricalSimVar implements VarCalculator {
       portfolio.setValueAtRisk(valueAtRisk);
 
       System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 

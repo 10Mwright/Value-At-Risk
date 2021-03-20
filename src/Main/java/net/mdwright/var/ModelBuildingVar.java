@@ -37,6 +37,8 @@ public class ModelBuildingVar implements VarCalculator {
       VolatilityMethod volatilityChoice) { //Entry method, chooses approach based on portfolio size
     BigDecimal valueAtRisk;
 
+    System.out.println("TEST");
+
     if (portfolio.getSize() == 1) { //Single asset case
       valueAtRisk = calculateVarSingle(portfolio,
           timeHorizon, probability, volatilityChoice);
