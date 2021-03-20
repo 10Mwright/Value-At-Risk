@@ -11,6 +11,7 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class testModelBuildingVar {
@@ -56,6 +57,8 @@ public class testModelBuildingVar {
     //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
+    ModelBuildingVar modelBuilding = new ModelBuildingVar();
+
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
 
@@ -70,6 +73,8 @@ public class testModelBuildingVar {
   @Test
   public void testSingleAssetSimple() {
     Portfolio portfolio = new Portfolio(new Position("GOOG", 100));
+
+    ModelBuildingVar modelBuilding = new ModelBuildingVar();
 
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
@@ -90,8 +95,11 @@ public class testModelBuildingVar {
     //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
+    ModelBuildingVar modelBuilding = new ModelBuildingVar();
+
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
+
       assertNotEquals(new BigDecimal(0), modelBuilding.calculateVarDouble(portfolio,
           10, 0.99, VolatilityMethod.SIMPLE));
     } catch (IOException e) {
@@ -108,6 +116,8 @@ public class testModelBuildingVar {
 
     //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
+
+    ModelBuildingVar modelBuilding = new ModelBuildingVar();
 
     try {
       DataManager.getHistoricalPrices(portfolio, 252);

@@ -41,7 +41,14 @@ public class testHistoricalSimVar {
   public void testMultiAsset() { //Testing multi asset calculations
     Portfolio portfolio = new Portfolio(new Position[]{new Position("GOOGL", 100000), new Position("TSLA", 10000)});
 
-    assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+
+      assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
 
