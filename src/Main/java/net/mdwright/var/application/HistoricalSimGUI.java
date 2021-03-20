@@ -1,8 +1,8 @@
 package net.mdwright.var.application;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import net.mdwright.var.DataManager;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -24,7 +23,9 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class HistoricalSimGUI implements ViewInterface {
 
-  private DecimalFormat numberFormat = new DecimalFormat("#,###.00"); //Format to be used on numbers
+  private final int positionFields = 2; //Number of fields that consitutes a new position
+
+  private final String localCurrency = "£";
 
   /**
    * {@inheritDoc}
@@ -39,49 +40,30 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public VolatilityMethod getVolatilityChoice() { //Dummy method, isn't required on this interface
     return null;
+  } //Dummy method, not required
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ObservableList getPortfolio() {
+    return portfolioList.getItems();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public Portfolio getPortfolio() {
-    int portfolioSize = portfolioList.getItems().size(); //Size of position's list on GUI
-    Position[] positions = new Position[portfolioSize];
+  public String[] getNewPosition() {
+    String[] positionValues = new String[positionFields];
 
-    for (int i = 0; i < portfolioSize; i++) {
-      positions[i] = portfolioList.getItems().get(i);
-    }
-
-    return new Portfolio(positions);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Position getNewPosition() {
     if (tickerSymbolField.getText().equals("") || assetHoldingsField.getText().equals("")) {
       return null;
     } else {
-      try {
-        if(DataManager.testStockIsValid(tickerSymbolField.getText())) {
-          Position newPositon = new Position(tickerSymbolField.getText(),
-              Double.parseDouble(assetHoldingsField.getText()));
+      positionValues[0] = tickerSymbolField.getText();
+      positionValues[1] = assetHoldingsField.getText();
 
-          //Clear fields
-          tickerSymbolField.setText("");
-          assetHoldingsField.setText("");
-
-          return newPositon;
-        } else {
-          return null;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      return null; //Failure to verify stock
+      return positionValues;
     }
   }
 
@@ -89,44 +71,41 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public int getTimeHorizon() {
-    if (!timeHorizonField.getText().equals("")) {
-      return Integer.parseInt(timeHorizonField.getText());
-    } else {
-      return 0;
-    }
+  public void emptyPositionFields() {
+    tickerSymbolField.clear();
+    assetHoldingsField.clear();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public int getProbability() {
-    if (!probabilityField.getText().equals("")) {
-      return (Integer.parseInt(probabilityField.getText()));
-    } else {
-      return 0;
-    }
+  public String getTimeHorizon() {
+    return timeHorizonField.getText();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public int getDataLength() {
-    if (!dataLengthField.getText().equals("")) {
-      return Integer.parseInt(dataLengthField.getText());
-    } else {
-      return 0;
-    }
+  public String getProbability() {
+    return probabilityField.getText();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setResult(BigDecimal varValue) {
-    resultField.setText(numberFormat.format(varValue));
+  public String getDataLength() {
+    return dataLengthField.getText();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setResult(String varValue) {
+    resultField.setText(varValue);
   }
 
   /**
@@ -135,9 +114,6 @@ public class HistoricalSimGUI implements ViewInterface {
   @Override
   public void setChart(LineChart chart) {
     graphPane.getChildren().clear();
-
-    chart.setLegendVisible(false);
-    chart.setPrefSize(670, 530);
 
     graphPane.getChildren().add(chart);
   }
@@ -154,24 +130,24 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
-  public void setPortfolioValue(BigDecimal portfolioValue) {
-    this.portfolioValue.setText("£" + numberFormat.format(portfolioValue));
+  public void setPortfolioValue(String portfolioValue) {
+    this.portfolioValue.setText(localCurrency + portfolioValue);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setValueAfterVar(BigDecimal valueAfterVar) {
-    this.valueAfterVar.setText("£" + numberFormat.format(valueAfterVar));
+  public void setValueAfterVar(String valueAfterVar) {
+    this.valueAfterVar.setText(localCurrency + valueAfterVar);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setVarPercentage(double percentage) {
-    this.varPercentage.setText(numberFormat.format(percentage) + "%");
+  public void setVarPercentage(String percentage) {
+    this.varPercentage.setText(percentage + "%");
   }
 
   /**

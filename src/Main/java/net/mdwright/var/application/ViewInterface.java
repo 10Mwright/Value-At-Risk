@@ -1,9 +1,8 @@
 package net.mdwright.var.application;
 
-import java.math.BigDecimal;
+import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import net.mdwright.var.objects.Model;
-import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 
@@ -15,46 +14,46 @@ import net.mdwright.var.objects.VolatilityMethod;
 public interface ViewInterface {
 
   /**
-   * Method to retrieve the portfolio as an array of Position objects.
+   * Method to retrieve the portfolio as an ObservableList of type Position.
    *
-   * @return An array of type Position
+   * @return An ObservableList of type Position
    */
-  Portfolio getPortfolio();
+  ObservableList getPortfolio();
 
   /**
-   * Method to retrieve the position to be added to the portfolio.
+   * Method to retrieve the new position's ticker symbol (index 0) & holdings (index 1).
    *
-   * @return An object of type Position containing user defined data
+   * @return A String array containing the ticker symbol & holdings value
    */
-  Position getNewPosition();
+  String[] getNewPosition();
 
   /**
    * Method to retrieve the user's preferred time horizon for calculation.
    *
-   * @return An int value representing the number of days to calculate Var for
+   * @return A String value representing the number of days to calculate Var for
    */
-  int getTimeHorizon();
+  String getTimeHorizon();
 
   /**
    * Method to retrieve the user's preffered confidence level/probability for calculation.
    *
-   * @return A double value representing the probability in decimal format (e.g. 0.99)
+   * @return A String value representing the probability in decimal format (e.g. 0.99)
    */
-  int getProbability();
+  String getProbability();
 
   /**
    * Method to retrieve the user's preferred data length for historical sim.
    *
-   * @return An int value representing the number of days to gather data for
+   * @return A String value representing the number of days to gather data for
    */
-  int getDataLength();
+  String getDataLength();
 
   /**
    * Method to set the result in GUI.
    *
-   * @param varValue A BigDecimal object representing the value at risk given the user's criteria
+   * @param varValue A String object representing the value at risk given the user's criteria
    */
-  void setResult(BigDecimal varValue);
+  void setResult(String varValue);
 
   /**
    * Method to set draw the price history chart in the GUI.
@@ -68,6 +67,11 @@ public interface ViewInterface {
    * @param newPos A Position object with the user defined parameters
    */
   void addNewPosition(Position newPos);
+
+  /**
+   * Method to clear the ticker symbol & holdings fields.
+   */
+  void emptyPositionFields();
 
   /**
    * Adds an observer to monitor user commands to calculate Var.
@@ -85,21 +89,21 @@ public interface ViewInterface {
 
   /**
    * Method to set the portfolio value field in GUI.
-   * @param portfolioValue BigDecimal value representing the total value of the user's portfolio
+   * @param portfolioValue String value representing the total value of the user's portfolio
    */
-  void setPortfolioValue(BigDecimal portfolioValue);
+  void setPortfolioValue(String portfolioValue);
 
   /**
    * Method to set the value after var field in GUI.
-   * @param valueAfterVar BigDecimal value representing the value after var is taken
+   * @param valueAfterVar String value representing the value after var is taken
    */
-  void setValueAfterVar(BigDecimal valueAfterVar);
+  void setValueAfterVar(String valueAfterVar);
 
   /**
    * Method to set the var as a percentage field in GUI.
-   * @param percentage double value representing the percentage out of 100
+   * @param percentage String value representing the percentage out of 100
    */
-  void setVarPercentage(double percentage);
+  void setVarPercentage(String percentage);
 
   /**
    * Method to setup the volatility choice on the model-building GUI.

@@ -18,6 +18,8 @@ public class ViewController {
   public ViewController(EntranceGUI view) {
     view.addModelBuildingObserver(this::changeToModelBuilding);
     view.addHistoricalSimObserver(this::changeToHistoricalSim);
+    view.addHelpObserver(this::showHelpScreen);
+    view.addVersionObserver(this::showVersionScreen);
   }
 
   /**
@@ -41,6 +43,25 @@ public class ViewController {
       Main.changeScene("/fxml/HistoricalSimGUI.fxml",
           "Value at Risk (Historical Simulation Methodology)");
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Method called to show the help screen as a secondary screen.
+   */
+  public void showHelpScreen() {
+    try {
+      Main.addScene("/fxml/HelpScreen.fxml", "Help Screen");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void showVersionScreen() {
+    try {
+      Main.addScene("/fxml/VersionScreen.fxml", "Version Screen");
+    } catch(IOException e) {
       e.printStackTrace();
     }
   }

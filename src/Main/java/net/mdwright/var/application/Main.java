@@ -1,21 +1,18 @@
 package net.mdwright.var.application;
 
 import java.io.IOException;
-import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.mdwright.var.VarController;
 import net.mdwright.var.ViewController;
 
 /**
  * Main entry class, sets up views.
- * Code originally provided by Dave Cohen in Software Engineering
- * course (Calculator Coursework) Reused for this project with minor tweaks.
+ * Some code originally provided by Dave Cohen in Software Engineering
+ *     course (Calculator Coursework) Reused for this project with minor tweaks.
  * @author Matthew Wright, Dave Cohen
  */
 public class Main extends Application {
@@ -31,14 +28,6 @@ public class Main extends Application {
    * @throws IOException In the event of an Application error
    */
   public static void main(String[] args) throws IOException {
-
-    System.out.println(Main.class.getResource("/fxml/EntranceGUI.fxml"));
-    loader = new FXMLLoader(Main.class.getResource("/fxml/EntranceGUI.fxml"));
-    root = (Parent) loader.load();
-    EntranceGUI view = loader.getController();
-
-    new ViewController(view);
-
     Application.launch(args);
   }
 
@@ -47,7 +36,15 @@ public class Main extends Application {
    * @param primaryStage Stage object for the primary stage to display on
    */
   @Override
-  public void start(Stage primaryStage) {
+  public void start(Stage primaryStage) throws IOException {
+    System.out.println(Main.class.getResource("/fxml/EntranceGUI.fxml"));
+
+    loader = new FXMLLoader(Main.class.getResource("/fxml/EntranceGUI.fxml"));
+    root = (Parent) loader.load();
+    EntranceGUI view = loader.getController();
+
+    new ViewController(view);
+
     this.primaryStage = primaryStage;
 
     Scene scene = new Scene(root);
@@ -79,6 +76,23 @@ public class Main extends Application {
     primaryStage.setHeight(root.getScene().getHeight());
     primaryStage.centerOnScreen(); //Centers the window on the users screen
     primaryStage.setTitle(sceneName);
+  }
 
+  /**
+   * Method to add a second scene and show it in a second stage (no controller).
+   * @param scenePath File path to fxml file
+   * @param sceneName Name of scene to be set as the title
+   * @throws IOException When the requested file path isn't valid or the fxml file isn't valid
+   */
+  public static void addScene(String scenePath, String sceneName) throws IOException {
+    Stage secondaryStage = new Stage();
+
+    loader = new FXMLLoader(Main.class.getResource(scenePath));
+    Parent secondaryRoot = loader.load();
+
+    Scene secondaryScene = new Scene(secondaryRoot);
+    secondaryStage.setScene(secondaryScene);
+    secondaryStage.setTitle(sceneName);
+    secondaryStage.show();
   }
 }

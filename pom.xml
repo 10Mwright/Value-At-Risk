@@ -6,11 +6,13 @@
 
   <groupId>IndividualProject</groupId>
   <artifactId>ValueAtRisk</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.4</version>
   <packaging>jar</packaging>
 
   <properties>
-    <java.version>1.8.0_171</java.version>
+    <maven.compiler.source>14</maven.compiler.source>
+    <maven.compiler.target>14</maven.compiler.target>
+    <java.version>14.0.1</java.version>
   </properties>
 
   <dependencies>
@@ -38,6 +40,21 @@
       <version>15.0.1</version>
     </dependency>
     <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>15.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -52,8 +69,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>14</source>
+          <target>14</target>
         </configuration>
       </plugin>
 
@@ -88,7 +105,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>net.mdwright.var.application.Main</mainClass>
+              <mainClass>net.mdwright.var.application.Entry</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -102,8 +119,29 @@
           <mainClass>net.mdwright.var.application.Main</mainClass>
         </configuration>
       </plugin>
-    </plugins>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>net.mdwright.var.application.Entry</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
 
     <sourceDirectory>src/main/java</sourceDirectory>
 
