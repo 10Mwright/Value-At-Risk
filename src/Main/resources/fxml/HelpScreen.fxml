@@ -23,12 +23,12 @@
       <Text layoutX="48.0" layoutY="408.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2. Under the &quot;Additional Settings&quot; tab fill in your desired time horizon in days (e.g. 5) and your desired probability as a percentage (e.g. 99%)." textAlignment="JUSTIFY" wrappingWidth="274.0" />
       <Text layoutX="48.0" layoutY="467.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3. Select the desired method for calculating variance/volatility from the drop down, if selecting EWMA then you can (optionally) define a preferred lambda value, this defaults to 0.94." textAlignment="JUSTIFY" wrappingWidth="274.0" />
       <Text layoutX="48.0" layoutY="540.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4. Finally once you have filled all the fields in then simply press calculate at the bottom left, the program will run for a while and output the VaR estimate in the bottom left, on the right side you will see additional information along with a portfolio price history chart." textAlignment="JUSTIFY" wrappingWidth="274.0" />
-      <Text layoutX="75.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Model-Building Approach" textAlignment="JUSTIFY" underline="true" wrappingWidth="220.0">
+      <Text layoutX="75.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Model-Building Approach" textAlignment="CENTER" underline="true" wrappingWidth="220.0">
          <font>
             <Font size="16.0" />
          </font>
       </Text>
-      <Text layoutX="393.0" layoutY="318.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Historical Simulation Appoach" textAlignment="JUSTIFY" underline="true" wrappingWidth="250.0">
+      <Text layoutX="393.0" layoutY="318.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Historical Simulation Appoach" textAlignment="CENTER" underline="true" wrappingWidth="250.0">
          <font>
             <Font size="16.0" />
          </font>
