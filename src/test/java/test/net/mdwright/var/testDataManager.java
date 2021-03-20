@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import net.mdwright.var.DataManager;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -29,9 +30,14 @@ public class testDataManager {
   @Test
   public void testGetData() { //Testing to ensure data is capable of being gathered
     Position position = new Position("GOOGL", 100);
+    Portfolio portfolio = new Portfolio(position);
 
     try {
-      data.getHistoricalPrices(position, 252);
+      Calendar startDate = Calendar.getInstance();
+      Calendar endDate = Calendar.getInstance();
+      startDate.add(Calendar.DAY_OF_YEAR, -252);
+
+      data.getHistoricalPrices(portfolio, startDate, endDate);
 
       assertNotNull(position.getHistoricalData()); //Data isn't empty
       assertNotEquals(0, position.getHistoricalDataSize());

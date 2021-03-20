@@ -27,6 +27,8 @@ public class VarModel {
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       VolatilityMethod volatilityChoice) {
+
+
     BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability,
         volatilityChoice); //Call underlying method in ModelBuildingVar
 

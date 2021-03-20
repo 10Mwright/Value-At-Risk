@@ -1,8 +1,11 @@
 package test.net.mdwright.var;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import net.mdwright.var.DataManager;
 import net.mdwright.var.ModelBuildingVar;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -21,19 +24,26 @@ public class testModelBuildingVar {
 
   @Test
   public void testSingleAsset() {
-    ModelBuildingVar calculation = new ModelBuildingVar();
     Portfolio portfolio = new Portfolio(new Position("GOOG", 1000000));
-    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.99, VolatilityMethod.EWMA));
 
-    System.out.println("----------------");
-    portfolio = new Portfolio(new Position("TSLA", 10000000));
-    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.95, VolatilityMethod.EWMA));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+
+      assertNotEquals(new BigDecimal(0.0),
+          modelBuilding.calculateVar(portfolio, 10, 0.99, VolatilityMethod.EWMA));
+
+      System.out.println("----------------");
+      portfolio = new Portfolio(new Position("TSLA", 10000000));
+      assertNotEquals(new BigDecimal(0.0),
+          modelBuilding.calculateVar(portfolio, 10, 0.95, VolatilityMethod.EWMA));
+    }  catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
   @Test
   public void testTwoAssets() {
-    ModelBuildingVar calculation = new ModelBuildingVar();
-
     //Create each position object
     Position google = new Position("GOOG", 1000000);
     Position microsoft = new Position("MSFT", 10000000);
@@ -41,45 +51,68 @@ public class testModelBuildingVar {
     //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
-    assertNotEquals(new BigDecimal(0), calculation.calculateVarDouble(portfolio, 10, 0.99, VolatilityMethod.EWMA));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+
+      assertNotEquals(new BigDecimal(0),
+          modelBuilding.calculateVarDouble(portfolio, 10, 0.99, VolatilityMethod.EWMA));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
   @Test
   public void testSingleAssetSimple() {
-    ModelBuildingVar calculation = new ModelBuildingVar();
-    Portfolio portfolio = new Portfolio(new Position("GOOG", 1000));
-    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.99, VolatilityMethod.SIMPLE));
+    Portfolio portfolio = new Portfolio(new Position("GOOG", 100));
 
-    System.out.println("----------------");
-    portfolio = new Portfolio(new Position("TSLA", 1000));
-    assertNotEquals(new BigDecimal(0.0), calculation.calculateVar(portfolio, 10, 0.95, VolatilityMethod.SIMPLE));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+      assertNotEquals(new BigDecimal(0.0), modelBuilding.calculateVar(portfolio,
+          10, 0.99, VolatilityMethod.SIMPLE));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
   @Test
   public void testTwoAssetsSimple() {
-    ModelBuildingVar calculation = new ModelBuildingVar();
-
     //Create each position object
-    Position google = new Position("GOOG", 1000000);
-    Position microsoft = new Position("MSFT", 10000000);
+    Position google = new Position("GOOG", 100);
+    Position microsoft = new Position("MSFT", 100);
 
     //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
-    assertNotEquals(new BigDecimal(0), calculation.calculateVarDouble(portfolio, 10, 0.99, VolatilityMethod.SIMPLE));
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+      assertNotEquals(new BigDecimal(0), modelBuilding.calculateVarDouble(portfolio,
+          10, 0.99, VolatilityMethod.SIMPLE));
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 
   @Test
   public void testLinearSimple() {
+    //Create each position object
     Position google = new Position("GOOG", 100);
     Position microsoft = new Position("MSFT", 1000);
+
+    //Create new portfolio object
     Portfolio portfolio = new Portfolio(new Position[] {google, microsoft});
 
-    ModelBuildingVar calculation = new ModelBuildingVar();
+    try {
+      DataManager.getHistoricalPrices(portfolio, 252);
+      BigDecimal var = modelBuilding.calculateVarLinear(portfolio,
+          10, 0.99, VolatilityMethod.EWMA);
 
-    BigDecimal var = calculation.calculateVarLinear(portfolio, 10, 0.99, VolatilityMethod.EWMA);
-    System.out.println(var);
-
-    assertNotEquals(new BigDecimal(0), var);
+      assertNotEquals(new BigDecimal(0), var);
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
   }
 }
