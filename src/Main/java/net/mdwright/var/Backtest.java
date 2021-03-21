@@ -28,11 +28,14 @@ public class Backtest {
     Position testedPosition = new Position("TSLA", 105);
     Portfolio testedPortfolio = new Portfolio(testedPosition);
 
+    Position testedPositionOne = new Position("TSLA", 105);
     Position testedPositionTwo = new Position("GOOGL", 100);
-    Portfolio testedPortfolioTwo = new Portfolio(new Position[] {testedPosition, testedPositionTwo});
+    Portfolio testedPortfolioTwo = new Portfolio(new Position[] {testedPositionOne, testedPositionTwo});
 
-    Position testedPositionThree = new Position("GME", 165);
-    Portfolio testedPortfolioThree = new Portfolio(new Position[] {testedPosition, testedPositionTwo, testedPositionThree});
+    Position testedPositionThree = new Position("TSLA", 105);
+    Position testedPositionFour = new Position("GOOGL", 100);
+    Position testedPositionFive = new Position("GME", 165);
+    Portfolio testedPortfolioThree = new Portfolio(new Position[] {testedPositionThree, testedPositionFour, testedPositionFive});
 
     try {
       DataManager.getHistoricalPrices(testedPortfolio, numberOfTests);
@@ -68,6 +71,7 @@ public class Backtest {
     }
 
     int actualSize = VarMath.getSmallestDatasetSize(testedPortfolio);
+    System.out.println("Actual Size: " + actualSize);
 
     int currentStartingBoundary = 1; //First day is used only to calculate changes
     int currentEndingBoundary = currentStartingBoundary + daysPerTest;
@@ -78,6 +82,8 @@ public class Backtest {
 
     BigDecimal[] changesInValue = getChangesInValue(testedPortfolio);
 
+    // https://stackoverflow.com/questions/8363493/hiding-system-out-print-calls-of-a-class
+    // Idea taken from Adrian.ng (https://github.com/Adrian-Ng/VaR/)
     PrintStream originalStream = System.out;
 
     PrintStream dummyStream = new PrintStream(new OutputStream(){
@@ -87,6 +93,7 @@ public class Backtest {
     });
 
     System.setOut(dummyStream);
+
 
     for (int i = 1; i < workableTests; i++) { //For each workable test
       if ((currentStartingBoundary + daysPerTest) > actualSize) {
