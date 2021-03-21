@@ -1,6 +1,8 @@
 package net.mdwright.var;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.VolatilityMethod;
 
@@ -10,6 +12,8 @@ import net.mdwright.var.objects.VolatilityMethod;
  * @author Matthew Wright
  */
 public class VarModel {
+
+  private final int defaultDataLength = 252;
 
   private VarCalculator modelBuilding = new ModelBuildingVar();
   private VarCalculator historicalSim = new HistoricalSimVar();
@@ -28,6 +32,16 @@ public class VarModel {
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       VolatilityMethod volatilityChoice) {
 
+    Calendar startDate = Calendar.getInstance();
+    startDate.add(Calendar.DAY_OF_YEAR, -defaultDataLength);
+
+    Calendar endDate = Calendar.getInstance();
+
+    try {
+      DataManager.getHistoricalPrices(portfolio, startDate, endDate);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability,
         volatilityChoice); //Call underlying method in ModelBuildingVar
@@ -50,6 +64,18 @@ public class VarModel {
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       int historicalDataLength) {
+
+    Calendar startDate = Calendar.getInstance();
+    startDate.add(Calendar.DAY_OF_YEAR, -historicalDataLength);
+
+    Calendar endDate = Calendar.getInstance();
+
+    try {
+      DataManager.getHistoricalPrices(portfolio, startDate, endDate);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability,
         historicalDataLength); //Call underlying method in HistoricalSimVar
 

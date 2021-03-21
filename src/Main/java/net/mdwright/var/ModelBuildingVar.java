@@ -83,7 +83,7 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
-      valueAtRisk = BigDecimal.valueOf(normSinV)
+      valueAtRisk = BigDecimal.valueOf(Math.abs(normSinV))
           .multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
       System.out.println("Single Day " + (probability * probabilityScale)
