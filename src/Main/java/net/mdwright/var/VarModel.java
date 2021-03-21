@@ -39,16 +39,19 @@ public class VarModel {
 
     try {
       DataManager.getHistoricalPrices(portfolio, startDate, endDate);
+
+
+      BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability,
+          volatilityChoice); //Call underlying method in ModelBuildingVar
+
+      portfolioData = modelBuilding.getData();
+
+      return var;
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    BigDecimal var = modelBuilding.calculateVar(portfolio, timeHorizon, probability,
-        volatilityChoice); //Call underlying method in ModelBuildingVar
-
-    portfolioData = modelBuilding.getData();
-
-    return var;
+    return new BigDecimal(0); //Default value of 0
   }
 
   /**
@@ -72,16 +75,18 @@ public class VarModel {
 
     try {
       DataManager.getHistoricalPrices(portfolio, startDate, endDate);
+
+      BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability,
+          historicalDataLength); //Call underlying method in HistoricalSimVar
+
+      portfolioData = historicalSim.getData();
+
+      return var;
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability,
-        historicalDataLength); //Call underlying method in HistoricalSimVar
-
-    portfolioData = historicalSim.getData();
-
-    return var;
+    return new BigDecimal(0); //Default value of 0
   }
 
   public Portfolio getPortfolioData() {

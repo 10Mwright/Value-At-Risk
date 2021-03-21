@@ -13,8 +13,8 @@ import yahoofinance.histquotes.HistoricalQuote;
 
 public class Backtest {
 
-  private static final int numberOfTests = 2000;
-  private static final int daysPerTest = 252;
+  private static final int numberOfTests = 5000;
+  private static final int daysPerTest = 512;
   private static final int numberOfMethods = 4;
 
   private static final double confidence = 0.99;
@@ -25,15 +25,15 @@ public class Backtest {
 
   public static void doTests() {
     //Backtest Single Asset Model-Building
-    Position testedPosition = new Position("TSLA", 105);
+    Position testedPosition = new Position("GOOGL", 105);
     Portfolio testedPortfolio = new Portfolio(testedPosition);
 
-    Position testedPositionOne = new Position("TSLA", 105);
-    Position testedPositionTwo = new Position("GOOGL", 100);
+    Position testedPositionOne = new Position("GOOGL", 105);
+    Position testedPositionTwo = new Position("TSLA", 100);
     Portfolio testedPortfolioTwo = new Portfolio(new Position[] {testedPositionOne, testedPositionTwo});
 
-    Position testedPositionThree = new Position("TSLA", 105);
-    Position testedPositionFour = new Position("GOOGL", 100);
+    Position testedPositionThree = new Position("STLD", 105);
+    Position testedPositionFour = new Position("TSLA", 100);
     Position testedPositionFive = new Position("GME", 165);
     Portfolio testedPortfolioThree = new Portfolio(new Position[] {testedPositionThree, testedPositionFour, testedPositionFive});
 
@@ -42,17 +42,29 @@ public class Backtest {
       DataManager.getHistoricalPrices(testedPortfolioTwo, numberOfTests);
       DataManager.getHistoricalPrices(testedPortfolioThree, numberOfTests);
 
-      double[] violationsSingleAsset = testModelBuilding(testedPortfolio);
+      double[] violationsSingleAsset = testModelBuilding(testedPortfolio, VolatilityMethod.SIMPLE);
 
-      double[] violationsDoubleAsset = testModelBuilding(testedPortfolioTwo);
+      double[] violationsDoubleAsset = testModelBuilding(testedPortfolioTwo, VolatilityMethod.SIMPLE);
 
-      double[] violationsTripleAsset = testModelBuilding(testedPortfolioThree);
+      double[] violationsTripleAsset = testModelBuilding(testedPortfolioThree, VolatilityMethod.SIMPLE);
 
-      System.out.println("Single Asset Testing: " + violationsSingleAsset[0] + " Violations out of " + violationsSingleAsset[1] + " tests!");
+      double[] violationsSingleAssetEw = testModelBuilding(testedPortfolio, VolatilityMethod.EWMA);
 
-      System.out.println("Double Asset Testing: " + violationsDoubleAsset[0] + " Violations out of " + violationsDoubleAsset[1] + " tests!");
+      double[] violationsDoubleAssetEw = testModelBuilding(testedPortfolioTwo, VolatilityMethod.EWMA);
 
-      System.out.println("Triple Asset Testing: " + violationsTripleAsset[0] + " Violations out of " + violationsTripleAsset[1] + " tests!");
+      double[] violationsTripleAssetEw = testModelBuilding(testedPortfolioThree, VolatilityMethod.EWMA);
+
+      System.out.println("Single Asset Testing (SIMPLE): " + violationsSingleAsset[0] + " Violations out of " + violationsSingleAsset[1] + " tests!");
+
+      System.out.println("Double Asset Testing (SIMPLE): " + violationsDoubleAsset[0] + " Violations out of " + violationsDoubleAsset[1] + " tests!");
+
+      System.out.println("Triple Asset Testing (SIMPLE): " + violationsTripleAsset[0] + " Violations out of " + violationsTripleAsset[1] + " tests!");
+
+      System.out.println("Single Asset Testing (EWMA): " + violationsSingleAssetEw[0] + " Violations out of " + violationsSingleAssetEw[1] + " tests!");
+
+      System.out.println("Double Asset Testing (EWMA): " + violationsDoubleAssetEw[0] + " Violations out of " + violationsDoubleAssetEw[1] + " tests!");
+
+      System.out.println("Triple Asset Testing (EWMA): " + violationsTripleAssetEw[0] + " Violations out of " + violationsTripleAssetEw[1] + " tests!");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -63,7 +75,7 @@ public class Backtest {
   /**
    * Backtesting method for the Model-Building single case
    */
-  public static double[] testModelBuilding(Portfolio testedPortfolio) {
+  public static double[] testModelBuilding(Portfolio testedPortfolio, VolatilityMethod volatilityMethod) {
     List<HistoricalQuote>[] dataToUse = new ArrayList[testedPortfolio.getSize()];
 
     for (int i = 0; i < testedPortfolio.getSize(); i++) { //for each position in the portfolio
@@ -100,20 +112,24 @@ public class Backtest {
         break; //Stop loop when there is no longer enough days to build with
       }
 
-      Portfolio testPortfolio = testedPortfolio;
-
+      Position[] clonedPositions = new Position[testedPortfolio.getSize()];
       for (int j = 0; j < testedPortfolio.getSize(); j++) { //For each position
         List<HistoricalQuote> currentDataSet = new ArrayList<HistoricalQuote>();
+
+        clonedPositions[j] = new Position(testedPortfolio.getPosition(j).getTickerSymbol(),
+            testedPortfolio.getPosition(j).getHoldings());
 
         for (int k = currentStartingBoundary; k < currentEndingBoundary;
             k++) { //Build new dataset
           currentDataSet.add(dataToUse[j].get(k));
         }
 
-        testedPortfolio.getPosition(j).setHistoricalData(currentDataSet);
+        clonedPositions[j].setHistoricalData(currentDataSet);
       }
 
-      BigDecimal singleDayVar = modelBuilding.calculateVar(testPortfolio, timeHorizon, confidence, VolatilityMethod.EWMA);
+      Portfolio testPortfolioClone = new Portfolio(clonedPositions);
+
+      BigDecimal singleDayVar = modelBuilding.calculateVar(testPortfolioClone, timeHorizon, confidence, volatilityMethod);
 
       if(singleDayVar.compareTo(changesInValue[currentEndingBoundary + 1]) < 0) {
         numberOfViolations++; //Increment violations
@@ -159,7 +175,7 @@ public class Backtest {
 
       if(i > 0) {
         changes[i] = totalValueOnDay.subtract(dailyValues[i-1]); //Subtract current value by previous day to get change
-        changes[i] = changes[i].abs();
+        changes[i] = changes[i].multiply(new BigDecimal(-1));
       } else {
         changes[i] = totalValueOnDay;
       }
