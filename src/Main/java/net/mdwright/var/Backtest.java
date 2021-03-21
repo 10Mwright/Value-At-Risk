@@ -3,7 +3,6 @@ package net.mdwright.var;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
@@ -21,6 +20,9 @@ public class Backtest {
   private static ModelBuildingVar modelBuilding = new ModelBuildingVar();
   private static HistoricalSimVar historicalSim = new HistoricalSimVar();
 
+  /**
+   * Backtesting method for the Model-Building single case
+   */
   public static void testModelSingle() {
     Position testedPosition = new Position("GOOGL", 105);
     Portfolio testedPortfolio = new Portfolio(testedPosition);
@@ -34,12 +36,6 @@ public class Backtest {
 
       int currentStartingBoundary = 0;
       int currentEndingBoundary = daysPerTest;
-
-      Calendar currentStartDate = Calendar.getInstance();
-      currentStartDate.add(Calendar.DAY_OF_YEAR, -actualSize);
-
-      Calendar currentEndDate = currentStartDate;
-      currentEndDate.add(Calendar.DAY_OF_YEAR, daysPerTest);
 
       double numberOfViolations = 0;
       double numberOfTestsCompleted = 0;
@@ -70,8 +66,6 @@ public class Backtest {
         numberOfTestsCompleted++;
         currentStartingBoundary++;
         currentEndingBoundary++;
-        currentStartDate.add(Calendar.DAY_OF_YEAR, 1); //Increment days
-        currentEndDate.add(Calendar.DAY_OF_YEAR, 1);
         System.out.println("Test " + i + " is complete!");
       }
 
