@@ -28,7 +28,7 @@ public class testBacktest {
 
   @Test
   public void testDoTests() {
-    Backtest.doTests();
+    Backtest.testModelSingle();
   }
 
 }
