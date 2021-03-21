@@ -139,7 +139,7 @@ public class ModelBuildingVar implements VarCalculator {
               * coefficientOfCorrelation * positionOneSDeviation * positionTwoSDeviation));
 
       //Finally calculate 1 day VaR
-      valueAtRisk = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
+      valueAtRisk = BigDecimal.valueOf(Math.abs(normSinV)).multiply(BigDecimal.valueOf(standardDeviation));
 
       System.out.println("Single Day " + (probability * probabilityScale)
           + "VaR is: " + valueAtRisk);
