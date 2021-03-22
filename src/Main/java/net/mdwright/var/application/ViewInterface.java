@@ -49,6 +49,24 @@ public interface ViewInterface {
   String getDataLength();
 
   /**
+   * Method to retrieve the user's preferred lambda value for the EWMA model.
+   * @return A String value representing the lambda to be used
+   */
+  String getLambda();
+
+  /**
+   * Method to retrieve the volatility choice on the model-building GUI.
+   * @return VolatilityMethod Enum object
+   */
+  VolatilityMethod getVolatilityChoice();
+
+  /**
+   * Method to retrieve the current GUI's Model.
+   * @return Model Enum object representing the GUI's respective model
+   */
+  Model getModelToUse();
+
+  /**
    * Method to set the result in GUI.
    *
    * @param varValue A String object representing the value at risk given the user's criteria
@@ -109,17 +127,5 @@ public interface ViewInterface {
    * Method to setup the volatility choice on the model-building GUI.
    */
   void setupVolatilityChoice();
-
-  /**
-   * Method to retrieve the volatility choice on the model-building GUI.
-   * @return VolatilityMethod Enum object
-   */
-  VolatilityMethod getVolatilityChoice();
-
-  /**
-   * Method to retrieve the current GUI's Model.
-   * @return Model Enum object representing the GUI's respective model
-   */
-  Model getModelToUse();
 
 }

@@ -38,6 +38,14 @@ public class HistoricalSimGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
+  public String getLambda() { //Dummy method, isn't required on this interface
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public VolatilityMethod getVolatilityChoice() { //Dummy method, isn't required on this interface
     return null;
   } //Dummy method, not required
