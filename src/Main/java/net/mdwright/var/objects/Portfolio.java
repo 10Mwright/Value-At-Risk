@@ -92,6 +92,10 @@ public class Portfolio {
     return volatilityLambda;
   }
 
+  /**
+   * Method for setting the portfolio's volatility lambda for the EWMA model of variance.
+   * @param volatilityLambda A double value representing the lambda to be used for the EWMA model
+   */
   public void setVolatilityLambda(double volatilityLambda) {
     this.volatilityLambda = volatilityLambda;
   }
