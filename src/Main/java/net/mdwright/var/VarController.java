@@ -13,7 +13,6 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -21,6 +20,7 @@ import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Controller class for Var Calculations.*
@@ -118,14 +118,16 @@ public class VarController {
       } else {
         isFailure = true;
         sendAlert("Blank Data Length",
-            "Please enter a valid number of days in the data length field!", AlertType.ERROR);
+            "Please enter a valid number of days in the data length field!",
+            AlertType.ERROR);
       }
-    } else {
-      if(view.getLambda() != null) {
+    } else if (view.getModelToUse() == Model.MODEL_BUILDING
+        && view.getVolatilityChoice() == VolatilityMethod.EWMA) {
+      if (view.getLambda() != null) { //Get lambda if model-building request
         try {
           lambda = Double.parseDouble(view.getLambda());
           portfolio.setVolatilityLambda(lambda); //Transfer to portfolio object.
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
           isFailure = true;
           sendAlert("Invalid Lambda Value",
               "Please enter a valid value for lambda (e.g. 0.94)", AlertType.ERROR);
