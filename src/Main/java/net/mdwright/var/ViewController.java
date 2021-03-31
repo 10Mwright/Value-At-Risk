@@ -58,10 +58,13 @@ public class ViewController {
     }
   }
 
+  /**
+   * Method called to show the version screen as a secondary screen.
+   */
   public void showVersionScreen() {
     try {
       Main.addScene("/fxml/VersionScreen.fxml", "Version Screen");
-    } catch(IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
