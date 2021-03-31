@@ -28,7 +28,6 @@ public class DataManager {
    * @param portfolio The portfolio object to gather data for.
    * @param startDate Calendar object of the starting date to gather data from
    * @param endDate Calendar object of the ending date to gather data to
-   * @return ArrayList of type HistoricalQuote
    * @throws IOException When a connection error occurs or the response is invalid
    */
   public static void getHistoricalPrices(Portfolio portfolio, Calendar startDate,

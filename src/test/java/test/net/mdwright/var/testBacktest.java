@@ -9,10 +9,13 @@ import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
 import org.junit.Test;
 
+/*
+ Test class to initiate backtesting
+ */
 public class testBacktest {
 
   @Test
-  public void testGetChanges() {
+  public void testGetChanges() { //Testing the get changes method for a single asset portfolio
     Position position = new Position("GOOGL", 100);
     Portfolio portfolio = new Portfolio(position);
 
@@ -27,7 +30,7 @@ public class testBacktest {
   }
 
   @Test
-  public void testDoTests() {
+  public void testDoTests() { //Entry into performing backtesting
     Backtest.doTests();
   }
 
