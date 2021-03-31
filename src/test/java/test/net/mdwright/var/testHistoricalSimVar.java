@@ -30,7 +30,7 @@ public class testHistoricalSimVar {
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
       assertNotEquals(0, historicalSim.calculateVar(portfolio,
-          10, 0.99, 252));
+          10, 0.99));
     } catch (IOException e) {
       e.printStackTrace();
       fail();
@@ -44,7 +44,7 @@ public class testHistoricalSimVar {
     try {
       DataManager.getHistoricalPrices(portfolio, 252);
 
-      assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99, 252));
+      assertNotEquals(0, historicalSim.calculateVar(portfolio, 10, 0.99));
     } catch (IOException e) {
       e.printStackTrace();
       fail();

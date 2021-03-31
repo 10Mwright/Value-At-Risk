@@ -34,8 +34,7 @@ public class HistoricalSimVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     int portfolioSize = portfolio.getSize();
 
     BigDecimal valueAtRisk = new BigDecimal(0);

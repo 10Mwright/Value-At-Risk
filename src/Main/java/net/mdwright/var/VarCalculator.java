@@ -34,8 +34,7 @@ public interface VarCalculator {
    *     data for
    * @return BigDecimal value representing the VaR of the portfolio
    */
-  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength);
+  BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability);
 
 
   Portfolio getData();

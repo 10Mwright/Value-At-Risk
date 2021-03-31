@@ -23,8 +23,7 @@ public class ModelBuildingVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data Length)");
   }

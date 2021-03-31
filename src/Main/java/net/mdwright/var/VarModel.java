@@ -76,8 +76,7 @@ public class VarModel {
     try {
       DataManager.getHistoricalPrices(portfolio, startDate, endDate);
 
-      BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability,
-          historicalDataLength); //Call underlying method in HistoricalSimVar
+      BigDecimal var =  historicalSim.calculateVar(portfolio, timeHorizon, probability); //Call underlying method in HistoricalSimVar
 
       portfolioData = historicalSim.getData();
 
