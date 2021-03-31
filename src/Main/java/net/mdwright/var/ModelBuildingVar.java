@@ -57,6 +57,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param portfolio Portfolio object containing a singular position
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum representing the variance method to be used
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
   public BigDecimal calculateVarSingle(Portfolio portfolio, int timeHorizon,
@@ -106,6 +107,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param portfolio Portfolio object containing two positions
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum object representing the variance method to be used
    * @return BigDecimal value representing the VaR of the two stock portfolio
    */
   public BigDecimal calculateVarDouble(Portfolio portfolio, int timeHorizon,

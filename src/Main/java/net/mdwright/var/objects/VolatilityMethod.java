@@ -1,7 +1,7 @@
 package net.mdwright.var.objects;
 
 /**
- * Enum object for methods for calculating variance & volatility.
+ * Enum object for methods for calculating variance and volatility.
  *
  * @author Matthew Wright
  */

@@ -18,6 +18,7 @@ public interface VarCalculator {
    *     in the portfolio
    * @param timeHorizon An int value representing the of days to calculate VaR over
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum representing the desired variance method to be used
    * @return BigDecimal value representing the VaR of the portfolio
    */
   BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
@@ -30,8 +31,6 @@ public interface VarCalculator {
    *     in the portfolio
    * @param timeHorizon An int value representing the number of days to calculate VaR over
    * @param probability A double value representing the percentage probability in decimal form
-   * @param historicalDataLength An int value representing the number of days to fetch historical
-   *     data for
    * @return BigDecimal value representing the VaR of the portfolio
    */
   BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability);

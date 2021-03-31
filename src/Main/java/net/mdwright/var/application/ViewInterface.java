@@ -21,9 +21,9 @@ public interface ViewInterface {
   ObservableList getPortfolio();
 
   /**
-   * Method to retrieve the new position's ticker symbol (index 0) & holdings (index 1).
+   * Method to retrieve the new position's ticker symbol (index 0) and holdings (index 1).
    *
-   * @return A String array containing the ticker symbol & holdings value
+   * @return A String array containing the ticker symbol and holdings value
    */
   String[] getNewPosition();
 
@@ -87,7 +87,7 @@ public interface ViewInterface {
   void addNewPosition(Position newPos);
 
   /**
-   * Method to clear the ticker symbol & holdings fields.
+   * Method to clear the ticker symbol and holdings fields.
    */
   void emptyPositionFields();
 

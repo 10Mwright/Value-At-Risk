@@ -27,7 +27,7 @@ public class Backtest {
   private static HistoricalSimVar historicalSim = new HistoricalSimVar();
 
   /**
-   * Entry method for performing tests on Model-Building & Historical Simulation.
+   * Entry method for performing tests on Model-Building and Historical Simulation.
    */
   public static void doTests() {
     //Backtest Single Asset portfolio
@@ -116,6 +116,7 @@ public class Backtest {
    * Backtesting method for the Model-Building single case.
    * @param testedPortfolio Portfolio to test upon
    * @param daysPerTest Days to use per run of the algorithm
+   * @return double array containing the number of violations and tests
    */
   public static double[] testHistoricalSimulation(Portfolio testedPortfolio, int daysPerTest) {
     List<HistoricalQuote>[] dataToUse = new ArrayList[testedPortfolio.getSize()];
@@ -206,6 +207,7 @@ public class Backtest {
    * Backtesting method for the Model-Building single case.
    * @param testedPortfolio Portfolio to test upon
    * @param volatilityMethod VolatilityMethod enum for variance model to use
+   * @return double array containing the number of violations and tests
    */
   public static double[] testModelBuilding(Portfolio testedPortfolio,
       VolatilityMethod volatilityMethod) {

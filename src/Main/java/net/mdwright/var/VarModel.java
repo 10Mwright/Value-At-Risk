@@ -27,6 +27,7 @@ public class VarModel {
    *     in the portfolio
    * @param timeHorizon An int value representing the of days to calculate VaR over
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum representing the variance method to be used
    * @return BigDecimal value representing the VaR of the portfolio
    */
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,

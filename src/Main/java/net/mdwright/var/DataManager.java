@@ -61,6 +61,7 @@ public class DataManager {
    * Method to retrieve historical stock data from Yahoo Finance via API using datalength.
    * @param portfolio The portfolio boject to gather data for.
    * @param dataLength Number of days to go back in time for data
+   * @throws IOException When a connection error occurs or the response is invalid
    */
   public static void getHistoricalPrices(Portfolio portfolio, int dataLength) throws IOException {
     Calendar startDate = Calendar.getInstance();

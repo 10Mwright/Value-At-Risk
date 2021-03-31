@@ -153,7 +153,7 @@ public class HistoricalSimVar implements VarCalculator {
 
   /**
    * Method for returning a sorted array of scenarios.
-   *
+   * @param unsortedScenarios Scenario array containing unsorted scenarios
    * @return Array of type Scenario containing a sorted array by value (Descending)
    *
    *     Code adapted from:
