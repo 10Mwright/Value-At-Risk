@@ -11,6 +11,10 @@ import net.mdwright.var.objects.Position;
 import net.mdwright.var.objects.VolatilityMethod;
 import yahoofinance.histquotes.HistoricalQuote;
 
+/**
+ * Class for performing backtests on VaR models.
+ * @author Matthew Wright
+ */
 public class Backtest {
 
   private static final int numberOfTests = 5000;
@@ -22,19 +26,26 @@ public class Backtest {
   private static ModelBuildingVar modelBuilding = new ModelBuildingVar();
   private static HistoricalSimVar historicalSim = new HistoricalSimVar();
 
+  /**
+   * Entry method for performing tests on Model-Building & Historical Simulation.
+   */
   public static void doTests() {
-    //Backtest Single Asset Model-Building
+    //Backtest Single Asset portfolio
     Position testedPosition = new Position("GOOGL", 105);
     Portfolio testedPortfolio = new Portfolio(testedPosition);
 
+    //Two asset portfolio
     Position testedPositionOne = new Position("GOOGL", 105);
     Position testedPositionTwo = new Position("TSLA", 100);
-    Portfolio testedPortfolioTwo = new Portfolio(new Position[] {testedPositionOne, testedPositionTwo});
+    Portfolio testedPortfolioTwo = new Portfolio(
+        new Position[] {testedPositionOne, testedPositionTwo});
 
+    //Triple asset portfolio
     Position testedPositionThree = new Position("GOOGL", 105);
     Position testedPositionFour = new Position("TSLA", 100);
     Position testedPositionFive = new Position("GME", 165);
-    Portfolio testedPortfolioThree = new Portfolio(new Position[] {testedPositionThree, testedPositionFour, testedPositionFive});
+    Portfolio testedPortfolioThree = new Portfolio(
+        new Position[] {testedPositionThree, testedPositionFour, testedPositionFive});
 
     try {
       DataManager.getHistoricalPrices(testedPortfolio, numberOfTests);
@@ -42,35 +53,58 @@ public class Backtest {
       DataManager.getHistoricalPrices(testedPortfolioThree, numberOfTests);
 
 
+      //Single asset EQ Weighted
       double[] violationsSingleAsset = testModelBuilding(testedPortfolio, VolatilityMethod.SIMPLE);
 
-      double[] violationsDoubleAsset = testModelBuilding(testedPortfolioTwo, VolatilityMethod.SIMPLE);
+      //Double asset EQ Weighted
+      double[] violationsDoubleAsset = testModelBuilding(testedPortfolioTwo,
+          VolatilityMethod.SIMPLE);
 
-      double[] violationsTripleAsset = testModelBuilding(testedPortfolioThree, VolatilityMethod.SIMPLE);
+      //Triple asset EQ Weighted
+      double[] violationsTripleAsset = testModelBuilding(testedPortfolioThree,
+          VolatilityMethod.SIMPLE);
 
-      double[] violationsSingleAssetEw = testModelBuilding(testedPortfolio, VolatilityMethod.EWMA);
+      //Single asset EWMA
+      double[] violationsSingleAssetEw = testModelBuilding(testedPortfolio,
+          VolatilityMethod.EWMA);
 
-      double[] violationsDoubleAssetEw = testModelBuilding(testedPortfolioTwo, VolatilityMethod.EWMA);
+      //Double asset EWMA
+      double[] violationsDoubleAssetEw = testModelBuilding(testedPortfolioTwo,
+          VolatilityMethod.EWMA);
 
-      double[] violationsTripleAssetEw = testModelBuilding(testedPortfolioThree, VolatilityMethod.EWMA);
+      //Triple asset EWMA
+      double[] violationsTripleAssetEw = testModelBuilding(testedPortfolioThree,
+          VolatilityMethod.EWMA);
 
-      //double[] hsviolations = testHistoricalSimulation(testedPortfolioThree, 252);
-      //double[] hsviolationsTwo = testHistoricalSimulation(testedPortfolioThree, 764);
+      //Historical sim using 252 days per run
+      double[] violationsHist = testHistoricalSimulation(testedPortfolioThree, 252);
 
-      System.out.println("Single Asset Testing (SIMPLE): " + violationsSingleAsset[0] + " Violations out of " + violationsSingleAsset[1] + " tests!");
+      //Historical sim using 764 days per run
+      double[] violationsHistLong = testHistoricalSimulation(testedPortfolioThree, 764);
 
-      System.out.println("Double Asset Testing (SIMPLE): " + violationsDoubleAsset[0] + " Violations out of " + violationsDoubleAsset[1] + " tests!");
+      System.out.println("Single Asset Testing (SIMPLE): " + violationsSingleAsset[0]
+          + " Violations out of " + violationsSingleAsset[1] + " tests!");
 
-      System.out.println("Triple Asset Testing (SIMPLE): " + violationsTripleAsset[0] + " Violations out of " + violationsTripleAsset[1] + " tests!");
+      System.out.println("Double Asset Testing (SIMPLE): " + violationsDoubleAsset[0]
+          + " Violations out of " + violationsDoubleAsset[1] + " tests!");
 
-      System.out.println("Single Asset Testing (EWMA): " + violationsSingleAssetEw[0] + " Violations out of " + violationsSingleAssetEw[1] + " tests!");
+      System.out.println("Triple Asset Testing (SIMPLE): " + violationsTripleAsset[0]
+          + " Violations out of " + violationsTripleAsset[1] + " tests!");
 
-      System.out.println("Double Asset Testing (EWMA): " + violationsDoubleAssetEw[0] + " Violations out of " + violationsDoubleAssetEw[1] + " tests!");
+      System.out.println("Single Asset Testing (EWMA): " + violationsSingleAssetEw[0]
+          + " Violations out of " + violationsSingleAssetEw[1] + " tests!");
 
-      System.out.println("Triple Asset Testing (EWMA): " + violationsTripleAssetEw[0] + " Violations out of " + violationsTripleAssetEw[1] + " tests!");
+      System.out.println("Double Asset Testing (EWMA): " + violationsDoubleAssetEw[0]
+          + " Violations out of " + violationsDoubleAssetEw[1] + " tests!");
 
-      //System.out.println("Triple Asset Historical Sim (252 days): " + hsviolations[0] + " Violations out of " + hsviolations[1] + " tests!");
-      //System.out.println("Triple Asset Historical Sim (512 days): " + hsviolationsTwo[0] + " Violations out of " + hsviolationsTwo[1] + " tests!");
+      System.out.println("Triple Asset Testing (EWMA): " + violationsTripleAssetEw[0]
+          + " Violations out of " + violationsTripleAssetEw[1] + " tests!");
+
+      System.out.println("Triple Asset Historical Sim (252 days): " + violationsHist[0]
+          + " Violations out of " + violationsHist[1] + " tests!");
+
+      System.out.println("Triple Asset Historical Sim (512 days): " + violationsHistLong[0]
+          + " Violations out of " + violationsHistLong[1] + " tests!");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -79,7 +113,9 @@ public class Backtest {
 
 
   /**
-   * Backtesting method for the Model-Building single case
+   * Backtesting method for the Model-Building single case.
+   * @param testedPortfolio Portfolio to test upon
+   * @param daysPerTest Days to use per run of the algorithm
    */
   public static double[] testHistoricalSimulation(Portfolio testedPortfolio, int daysPerTest) {
     List<HistoricalQuote>[] dataToUse = new ArrayList[testedPortfolio.getSize()];
@@ -104,7 +140,7 @@ public class Backtest {
     // Idea taken from Adrian.ng (https://github.com/Adrian-Ng/VaR/)
     PrintStream originalStream = System.out;
 
-    PrintStream dummyStream = new PrintStream(new OutputStream(){
+    PrintStream dummyStream = new PrintStream(new OutputStream() {
       public void write(int b) {
         // NO-OP
       }
@@ -135,9 +171,10 @@ public class Backtest {
 
       Portfolio testPortfolioClone = new Portfolio(clonedPositions);
 
-      BigDecimal singleDayVar = historicalSim.calculateVar(testPortfolioClone, timeHorizon, confidence);
+      BigDecimal singleDayVar = historicalSim.calculateVar(testPortfolioClone,
+          timeHorizon, confidence);
 
-      if(singleDayVar.compareTo(changesInValue[currentEndingBoundary + 1]) < 0) {
+      if (singleDayVar.compareTo(changesInValue[currentEndingBoundary + 1]) < 0) {
         numberOfViolations++; //Increment violations
       }
 
@@ -149,12 +186,13 @@ public class Backtest {
 
     System.setOut(originalStream);
 
-    System.out.println("Number of violations: " + numberOfViolations + " out of " + numberOfTestsCompleted + " tests which were completed!");
+    System.out.println("Number of violations: " + numberOfViolations + " out of "
+        + numberOfTestsCompleted + " tests which were completed!");
 
     double percentage = (numberOfViolations / numberOfTestsCompleted) * 100;
     System.out.println("Percentage: " + percentage + "%");
 
-    if(percentage > ((1-confidence) * 100)) {
+    if (percentage > ((1 - confidence) * 100)) {
       System.out.println("This method exceeds allowed violations!");
     }
 
@@ -165,9 +203,12 @@ public class Backtest {
 
 
   /**
-   * Backtesting method for the Model-Building single case
+   * Backtesting method for the Model-Building single case.
+   * @param testedPortfolio Portfolio to test upon
+   * @param volatilityMethod VolatilityMethod enum for variance model to use
    */
-  public static double[] testModelBuilding(Portfolio testedPortfolio, VolatilityMethod volatilityMethod) {
+  public static double[] testModelBuilding(Portfolio testedPortfolio,
+      VolatilityMethod volatilityMethod) {
     List<HistoricalQuote>[] dataToUse = new ArrayList[testedPortfolio.getSize()];
 
     for (int i = 0; i < testedPortfolio.getSize(); i++) { //for each position in the portfolio
@@ -190,7 +231,7 @@ public class Backtest {
     // Idea taken from Adrian.ng (https://github.com/Adrian-Ng/VaR/)
     PrintStream originalStream = System.out;
 
-    PrintStream dummyStream = new PrintStream(new OutputStream(){
+    PrintStream dummyStream = new PrintStream(new OutputStream() {
       public void write(int b) {
         // NO-OP
       }
@@ -221,9 +262,10 @@ public class Backtest {
 
       Portfolio testPortfolioClone = new Portfolio(clonedPositions);
 
-      BigDecimal singleDayVar = modelBuilding.calculateVar(testPortfolioClone, timeHorizon, confidence, volatilityMethod);
+      BigDecimal singleDayVar = modelBuilding.calculateVar(testPortfolioClone,
+          timeHorizon, confidence, volatilityMethod);
 
-      if(singleDayVar.compareTo(changesInValue[currentEndingBoundary + 1]) < 0) {
+      if (singleDayVar.compareTo(changesInValue[currentEndingBoundary + 1]) < 0) {
         numberOfViolations++; //Increment violations
       }
 
@@ -235,12 +277,13 @@ public class Backtest {
 
     System.setOut(originalStream);
 
-    System.out.println("Number of violations: " + numberOfViolations + " out of " + numberOfTestsCompleted + " tests which were completed!");
+    System.out.println("Number of violations: " + numberOfViolations + " out of "
+        + numberOfTestsCompleted + " tests which were completed!");
 
     double percentage = (numberOfViolations / numberOfTestsCompleted) * 100;
     System.out.println("Percentage: " + percentage + "%");
 
-    if(percentage > ((1-confidence) * 100)) {
+    if (percentage > ((1 - confidence) * 100)) {
       System.out.println("This method exceeds allowed violations!");
     }
 
@@ -249,6 +292,11 @@ public class Backtest {
     return violations;
   }
 
+  /**
+   * Method for retrieving actual changes in the value of the portfolio per day.
+   * @param portfolio Portfolio object containing position objects
+   * @return BigDecimal array of changes in the cumulative portfolio value per day
+   */
   public static BigDecimal[] getChangesInValue(Portfolio portfolio) {
     int smallestSize = VarMath.getSmallestDatasetSize(portfolio);
     BigDecimal[] dailyValues = new BigDecimal[smallestSize];
@@ -259,15 +307,17 @@ public class Backtest {
 
       for (int j = 0; j < portfolio.getSize(); j++) { //For each position
         BigDecimal positionValue = new BigDecimal(portfolio.getPosition(j).getHoldings());
-        positionValue = positionValue.multiply(portfolio.getPosition(j).getHistoricalData().get(i).getAdjClose());
+        positionValue = positionValue.multiply(portfolio.getPosition(j)
+            .getHistoricalData().get(i).getAdjClose());
 
         totalValueOnDay = totalValueOnDay.add(positionValue);
         dailyValues[i] = totalValueOnDay;
       }
 
-      if(i > 0) {
-        changes[i] = totalValueOnDay.subtract(dailyValues[i-1]); //Subtract current value by previous day to get change
-        changes[i] = changes[i].multiply(new BigDecimal(-1));
+      if (i > 0) {
+        //Subtract current value by previous day to get change
+        changes[i] = totalValueOnDay.subtract(dailyValues[i - 1]);
+        changes[i] = changes[i].multiply(new BigDecimal(- 1));
       } else {
         changes[i] = totalValueOnDay;
       }
