@@ -112,6 +112,14 @@ public class ModelBuildingGUI implements ViewInterface {
    * {@inheritDoc}
    */
   @Override
+  public String getLambda() {
+    return lambdaField.getText();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void setResult(String varValue) {
     resultField.setText(varValue);
   }

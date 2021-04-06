@@ -14,7 +14,6 @@ import net.mdwright.var.objects.VolatilityMethod;
  */
 public class ModelBuildingVar implements VarCalculator {
 
-  private final int dataLength = 252; //Default to using 1 trading year worth of data
   private final int probabilityScale = 100; //Used to scale probabilities up/down
 
   private DataManager data = new DataManager();
@@ -24,8 +23,7 @@ public class ModelBuildingVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     throw new UnsupportedOperationException(
         "Invalid operation for model-building VaR (No such thing as Historical Data Length)");
   }
@@ -37,6 +35,8 @@ public class ModelBuildingVar implements VarCalculator {
   public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
       VolatilityMethod volatilityChoice) { //Entry method, chooses approach based on portfolio size
     BigDecimal valueAtRisk;
+
+    System.out.println("TEST");
 
     if (portfolio.getSize() == 1) { //Single asset case
       valueAtRisk = calculateVarSingle(portfolio,
@@ -57,6 +57,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param portfolio Portfolio object containing a singular position
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum representing the variance method to be used
    * @return BigDecimal value representing the VaR of the single stock portfolio
    */
   public BigDecimal calculateVarSingle(Portfolio portfolio, int timeHorizon,
@@ -65,10 +66,7 @@ public class ModelBuildingVar implements VarCalculator {
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal valueAtRisk = new BigDecimal(0);
 
-    try {
       Position position = portfolio.getPosition(0); //Get the position from portfolio
-
-      data.getHistoricalPrices(position, dataLength);
 
       for (int i = 0; i < position.getHistoricalDataSize(); i++) {
         // Format: [<symbol>@<YYYY-MM-dd>: low-high, open-close (adjusted close)]
@@ -85,7 +83,7 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println("Daily Standard Deviation: " + dailyStandardDeviation);
 
-      valueAtRisk = BigDecimal.valueOf(normSinV)
+      valueAtRisk = BigDecimal.valueOf(Math.abs(normSinV))
           .multiply(BigDecimal.valueOf(dailyStandardDeviation));
 
       System.out.println("Single Day " + (probability * probabilityScale)
@@ -96,9 +94,6 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println(timeHorizon + " Day " + (probability * probabilityScale) + "VaR is: "
           + valueAtRisk);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 
@@ -112,6 +107,7 @@ public class ModelBuildingVar implements VarCalculator {
    * @param portfolio Portfolio object containing two positions
    * @param timeHorizon number of days as an integer to act as the time horizon
    * @param probability A double value representing the percentage probability in decimal form
+   * @param volatilityChoice Enum object representing the variance method to be used
    * @return BigDecimal value representing the VaR of the two stock portfolio
    */
   public BigDecimal calculateVarDouble(Portfolio portfolio, int timeHorizon,
@@ -121,12 +117,8 @@ public class ModelBuildingVar implements VarCalculator {
 
     BigDecimal valueAtRisk = new BigDecimal(0);
 
-    try {
       Position positionOne = portfolio.getPosition(0); //Get first position in portfolio
       Position positionTwo = portfolio.getPosition(1); //Get 2nd position in portfolio
-
-      data.getHistoricalPrices(positionOne, dataLength);
-      data.getHistoricalPrices(positionTwo, dataLength);
 
       double positionOneVolatility = VolatilityModelFactory.getModel(volatilityChoice)
           .calculateVolatility(portfolio, 0);
@@ -148,7 +140,7 @@ public class ModelBuildingVar implements VarCalculator {
               * coefficientOfCorrelation * positionOneSDeviation * positionTwoSDeviation));
 
       //Finally calculate 1 day VaR
-      valueAtRisk = BigDecimal.valueOf(normSinV).multiply(BigDecimal.valueOf(standardDeviation));
+      valueAtRisk = BigDecimal.valueOf(Math.abs(normSinV)).multiply(BigDecimal.valueOf(standardDeviation));
 
       System.out.println("Single Day " + (probability * probabilityScale)
           + "VaR is: " + valueAtRisk);
@@ -158,9 +150,6 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println(timeHorizon + " Day " + (probability * probabilityScale)
           + "VaR is: " + valueAtRisk);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 
@@ -183,11 +172,9 @@ public class ModelBuildingVar implements VarCalculator {
         .getNormSinV(probability); //Retrieves appropriate NormSinV value for probability
     BigDecimal valueAtRisk = new BigDecimal(0);
 
-    try {
       BigDecimal[] currentValues = new BigDecimal[portfolio.getSize()];
 
       for (int i = 0; i < portfolio.getSize(); i++) {
-        data.getHistoricalPrices(portfolio.getPosition(i), dataLength);
         currentValues[i] = data.getCurrentValue(portfolio.getPosition(i));
       }
 
@@ -220,9 +207,6 @@ public class ModelBuildingVar implements VarCalculator {
 
       System.out.println(timeHorizon + " Day " + (probability * probabilityScale)
           + "VaR is: " + valueAtRisk);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 

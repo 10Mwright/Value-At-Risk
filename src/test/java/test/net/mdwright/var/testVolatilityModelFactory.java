@@ -28,7 +28,7 @@ public class testVolatilityModelFactory {
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(testPortfolio, 252);
 
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.SIMPLE);
 
@@ -68,7 +68,7 @@ public class testVolatilityModelFactory {
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(testPortfolio, 252);
 
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
 
@@ -89,8 +89,7 @@ public class testVolatilityModelFactory {
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
 
     try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.SIMPLE);
 
@@ -111,9 +110,7 @@ public class testVolatilityModelFactory {
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo, testPositionThree});
 
     try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 252);
-      DataManager.getHistoricalPrices(testPositionThree, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       VolatilityModel volCalculator = VolatilityModelFactory.getModel(VolatilityMethod.EWMA);
 

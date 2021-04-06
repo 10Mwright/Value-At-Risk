@@ -34,17 +34,14 @@ public class HistoricalSimVar implements VarCalculator {
    * {@inheritDoc}
    */
   @Override
-  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability,
-      int historicalDataLength) {
+  public BigDecimal calculateVar(Portfolio portfolio, int timeHorizon, double probability) {
     int portfolioSize = portfolio.getSize();
 
     BigDecimal valueAtRisk = new BigDecimal(0);
 
-    try {
       //Gather data for each position in the portfolio
       for (int i = 0; i < portfolioSize; i++) {
         Position targetPosition = portfolio.getPosition(i);
-        data.getHistoricalPrices(targetPosition, historicalDataLength);
         data.getCurrentValue(portfolio.getPosition(i)); //Calculate current position value
       }
 
@@ -148,10 +145,6 @@ public class HistoricalSimVar implements VarCalculator {
 
       System.out.println("VAR VALUE: " + portfolio.getValueAtRisk());
 
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
     portfolio.setValueAtRisk(valueAtRisk); //Pass VaR to portfolio object
 
     portfolioData = portfolio; //Store portfolio object for data gathering by GUI
@@ -160,7 +153,7 @@ public class HistoricalSimVar implements VarCalculator {
 
   /**
    * Method for returning a sorted array of scenarios.
-   *
+   * @param unsortedScenarios Scenario array containing unsorted scenarios
    * @return Array of type Scenario containing a sorted array by value (Descending)
    *
    *     Code adapted from:

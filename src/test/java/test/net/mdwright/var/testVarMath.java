@@ -24,9 +24,10 @@ public class testVarMath {
   @Test
   public void testMean() { //Testing to ensure calculateMean returns a valid value
     Position testPosition = new Position("TSLA", 1000);
+    Portfolio portfolio = new Portfolio(testPosition);
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       BigDecimal mean = VarMath.calculateMean(testPosition);
 
@@ -42,10 +43,10 @@ public class testVarMath {
   public void testCoefficient() { //Testing to ensure calculateCoefficient returns a valid value
     Position testPosition = new Position("GOOGL", 10);
     Position testPositionTwo = new Position("TSLA", 100);
+    Portfolio portfolio = new Portfolio(new Position[] {testPosition, testPositionTwo});
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       double coefficientCorr = VarMath.calculateCoefficient(testPosition, testPositionTwo);
 
@@ -62,7 +63,7 @@ public class testVarMath {
     Portfolio portfolio = new Portfolio(testPosition);
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       double[] percentageChanges = VarMath.getPercentageChanges(portfolio, 0);
 
@@ -83,10 +84,15 @@ public class testVarMath {
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
 
     try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 100);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
-      int expectedSize = testPositionTwo.getHistoricalDataSize();
+      int expectedSize = portfolio.getPosition(0).getHistoricalDataSize();
+
+      for (int i = 0; i < portfolio.getSize(); i++) {
+        if(portfolio.getPosition(i).getHistoricalDataSize() < expectedSize) {
+          expectedSize = portfolio.getPosition(i).getHistoricalDataSize();
+        }
+      }
 
       int returnedSize = VarMath.getSmallestDatasetSize(portfolio);
 
@@ -104,8 +110,7 @@ public class testVarMath {
     Portfolio portfolio = new Portfolio(new Position[] {testPositionOne, testPositionTwo});
 
     try {
-      DataManager.getHistoricalPrices(testPositionOne, 252);
-      DataManager.getHistoricalPrices(testPositionTwo, 100);
+      DataManager.getHistoricalPrices(portfolio, 252);
 
       List<Map<String, BigDecimal>> portfolioPriceMaps = VarMath.getHashMaps(portfolio);
 

@@ -20,6 +20,7 @@ import net.mdwright.var.application.ViewInterface;
 import net.mdwright.var.objects.Model;
 import net.mdwright.var.objects.Portfolio;
 import net.mdwright.var.objects.Position;
+import net.mdwright.var.objects.VolatilityMethod;
 
 /**
  * Controller class for Var Calculations.*
@@ -57,6 +58,7 @@ public class VarController {
     int timeHorizon = 0;
     int probability = 0;
     int dataLength = 0; //Only applicable for historical sim.
+    double lambda = 0; //Only applicable for model-building
 
     if (getPortfolio().getSize() != 0) { //Incoming portfolio isn't empty
       portfolio = getPortfolio();
@@ -116,7 +118,24 @@ public class VarController {
       } else {
         isFailure = true;
         sendAlert("Blank Data Length",
-            "Please enter a valid number of days in the data length field!", AlertType.ERROR);
+            "Please enter a valid number of days in the data length field!",
+            AlertType.ERROR);
+      }
+    } else if (view.getModelToUse() == Model.MODEL_BUILDING
+        && view.getVolatilityChoice() == VolatilityMethod.EWMA) {
+      if (view.getLambda() != null) { //Get lambda if model-building request
+        try {
+          lambda = Double.parseDouble(view.getLambda());
+          portfolio.setVolatilityLambda(lambda); //Transfer to portfolio object.
+        } catch (NumberFormatException e) {
+          isFailure = true;
+          sendAlert("Invalid Lambda Value",
+              "Please enter a valid value for lambda (e.g. 0.94)", AlertType.ERROR);
+        }
+      } else {
+        isFailure = true;
+        sendAlert("Blank Lambda Field",
+            "Please enter a valid value for lambda (e.g. 0.94)", AlertType.ERROR);
       }
     }
 

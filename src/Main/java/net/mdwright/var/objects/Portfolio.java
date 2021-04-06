@@ -68,18 +68,34 @@ public class Portfolio {
     this.valueAtRisk = valueAtRisk;
   }
 
+  /**
+   * Method for retrieving the current cumulative value of the portfolio.
+   * @return BigDecimal value representing the current cumulative value
+   */
   public BigDecimal getCurrentValue() {
     return currentValue;
   }
 
+  /**
+   * Method for setting the current cumulative value of the portfolio.
+   * @param currentValue A BigDecimal value representing the cumulative value
+   */
   public void setCurrentValue(BigDecimal currentValue) {
     this.currentValue = currentValue;
   }
 
+  /**
+   * Method for getting the portfolio's volatility lambda for the EWMA model of variance.
+   * @return A double value representing the lambda to be used for the EWMA model
+   */
   public double getVolatilityLambda() {
     return volatilityLambda;
   }
 
+  /**
+   * Method for setting the portfolio's volatility lambda for the EWMA model of variance.
+   * @param volatilityLambda A double value representing the lambda to be used for the EWMA model
+   */
   public void setVolatilityLambda(double volatilityLambda) {
     this.volatilityLambda = volatilityLambda;
   }

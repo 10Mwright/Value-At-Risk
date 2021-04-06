@@ -22,7 +22,7 @@ public class testSimpleVolatility {
     Portfolio testPortfolio = new Portfolio(new Position[] {testPosition});
 
     try {
-      DataManager.getHistoricalPrices(testPosition, 252);
+      DataManager.getHistoricalPrices(testPortfolio, 252);
 
       SimpleVolatility volCalculator = new SimpleVolatility();
 

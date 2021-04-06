@@ -25,37 +25,50 @@ public class DataManager {
   /**
    * Method to retrieve historical stock data from Yahoo Finance via API.
    *
-   * @param position the requested stocks position object
-   * @param dataLength An int value representing the number of days to go back for historical data
-   * @return ArrayList of type HistoricalQuote
+   * @param portfolio The portfolio object to gather data for.
+   * @param startDate Calendar object of the starting date to gather data from
+   * @param endDate Calendar object of the ending date to gather data to
    * @throws IOException When a connection error occurs or the response is invalid
    */
-  public static List<HistoricalQuote> getHistoricalPrices(Position position, int dataLength)
-      throws IOException {
-    Calendar startDate = Calendar.getInstance();
-    Calendar endDate = Calendar.getInstance();
-    startDate.add(Calendar.DAY_OF_YEAR, -dataLength);
+  public static void getHistoricalPrices(Portfolio portfolio, Calendar startDate,
+      Calendar endDate) throws IOException {
 
-    Stock target = YahooFinance.get(position.getTickerSymbol(), startDate, endDate, Interval.DAILY);
+    for (int i = 0; i < portfolio.getSize(); i++) {
+      Stock target = YahooFinance
+          .get(portfolio.getPosition(i).getTickerSymbol(), startDate, endDate, Interval.DAILY);
 
-    String currencyFrom = target.getCurrency(); //Find the currency of the historical data
-    String currencyTo = localCurrency;
+      String currencyFrom = target.getCurrency(); //Find the currency of the historical data
+      String currencyTo = localCurrency;
 
-    BigDecimal exchangeRate = getFxQuote(currencyFrom,
-        currencyTo); //Retrieve the exchange rate for above currencies
-    System.out.println("EXCHANGE RATE: 1:" + exchangeRate);
+      BigDecimal exchangeRate = getFxQuote(currencyFrom,
+          currencyTo); //Retrieve the exchange rate for above currencies
+      System.out.println("EXCHANGE RATE: 1:" + exchangeRate);
 
-    List<HistoricalQuote> historical = target.getHistory();
+      List<HistoricalQuote> historical = target.getHistory();
 
-    for (int i = 0; i < historical.size(); i++) {
-      BigDecimal temp = historical.get(i).getAdjClose()
-          .multiply(exchangeRate); //Run through all adjusted close data to convert to GBP
-      historical.get(i).setAdjClose(temp);
+      for (int j = 0; j < historical.size(); j++) {
+        BigDecimal temp = historical.get(j).getAdjClose()
+            .multiply(exchangeRate); //Run through all adjusted close data to convert to GBP
+        historical.get(i).setAdjClose(temp);
+      }
+
+      System.out.println(historical); //Print out historical data
+      portfolio.getPosition(i).setHistoricalData(historical); //Transfer to position object
     }
+  }
 
-    System.out.println(historical); //Print out historical data
-    position.setHistoricalData(historical); //Transfer to position object
-    return historical;
+  /**
+   * Method to retrieve historical stock data from Yahoo Finance via API using datalength.
+   * @param portfolio The portfolio boject to gather data for.
+   * @param dataLength Number of days to go back in time for data
+   * @throws IOException When a connection error occurs or the response is invalid
+   */
+  public static void getHistoricalPrices(Portfolio portfolio, int dataLength) throws IOException {
+    Calendar startDate = Calendar.getInstance();
+    startDate.add(Calendar.DAY_OF_YEAR, -dataLength);
+    Calendar endDate = Calendar.getInstance();
+
+    getHistoricalPrices(portfolio, startDate, endDate);
   }
 
   /**
